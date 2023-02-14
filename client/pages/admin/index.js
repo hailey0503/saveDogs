@@ -6,11 +6,12 @@ import Row from 'react-bootstrap/Row';
 import { Form, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 
 
+
 function Admin() {
 
 	// register a dog to db in form submit 
-	// call POST /dogs/register via fetch in handleSubmit
-
+  // call POST /dogs/register via fetch in handleSubmit
+  
   return (
     <>
       <Head>
@@ -28,8 +29,8 @@ function Admin() {
               <Form.Control type="text" placeholder="name" />
           </Col>
           <Col>
-              <Form.Label>Shelter Name</Form.Label>
-              <Form.Control type="text" placeholder="shelter" /> 
+              <Form.Label>Dog Photo</Form.Label>
+              <Form.Control type="photo" placeholder="photo" /> 
           </Col>
         </Row>	
         <Row>
