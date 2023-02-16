@@ -11,7 +11,47 @@ function Admin() {
 
 	// register a dog to db in form submit 
   // call POST /dogs/register via fetch in handleSubmit
-  
+
+  const handleSubmit = async (event) => {
+    // Stop the form from submitting and refreshing the page.
+    event.preventDefault()
+
+    // Get data from the form.
+    const data = {
+      name: event.target.name.value,
+      contact: event.target.contact.value,
+      email: event.target.email.value,
+      kakao: event.target.kakao.value,
+      airport: event.target.airport.value,
+      message: event.target.message.value,
+    }
+
+    // Send the data to the server in JSON format.
+    const JSONdata = JSON.stringify(data)
+
+    // API endpoint where we send form data.
+    const endpoint = 'http://localhost:4800/dogs/register'
+
+    // Form the request for sending data to the server.
+    const options = {
+      // The method is POST because we are sending data.
+      method: 'POST',
+      // Tell the server we're sending JSON.
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // Body of the request is the JSON data we created above.
+      body: JSONdata,
+    }
+
+    // Send the form data to our forms API on Vercel and get a response.
+    const response = await fetch(endpoint, options)
+
+    // Get the response data from server as JSON.
+    // If server returns the name submitted, that means the form works.
+    const result = await response.json()
+    alert(`Is this your full name: ${result.data}`)
+  }
   return (
     <>
       <Head>
@@ -22,36 +62,36 @@ function Admin() {
       </Head>
       <main className={styles.main}>
       <div className="Admin">
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Row>
             <Col>
               <Form.Label>Dog Name</Form.Label>
-              <Form.Control type="text" placeholder="name" />
+              <Form.Control type="text" id = "name" placeholder="name" />
           </Col>
           <Col>
               <Form.Label>Dog Photo</Form.Label>
-              <Form.Control type="photo" placeholder="photo" /> 
+              <Form.Control type="photo" id = "photo" placeholder="photo" /> 
           </Col>
         </Row>	
         <Row>
           <Col>
               <Form.Label>Contact</Form.Label>
-              <Form.Control type="phonenumber" placeholder="number only" />	
+              <Form.Control type="phonenumber" id = "contact" placeholder="number only" />	
           </Col>
           <Col>
               <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" placeholder="name@example.com" />
+              <Form.Control type="email" id = "email" placeholder="name@example.com" />
             
           </Col>
         </Row>
         <Row>
           <Col>
               <Form.Label>Kakao ID</Form.Label>
-              <Form.Control type="kakaoID" placeholder="ID" />	
+              <Form.Control type="kakaoID" id = "kakao" placeholder="ID" />	
           </Col>
           <Col>
               <Form.Label>Destination Airport</Form.Label>
-                <Form.Select aria-label="Default select example">
+                <Form.Select aria-label="Default select example" id = "airport">
                   <option>Select Airport</option>
                   <option value="1">San Francisco</option>
                   <option value="2">New York</option>
@@ -61,11 +101,11 @@ function Admin() {
           </Col>
         </Row>	
           <Form.Label>Message</Form.Label>
-          <Form.Control as="textarea" rows={3} />
-          
+          <Form.Control as="textarea" id = "message" rows={3} />
           <Button variant="primary" type="submit">
             Submit
           </Button>
+        
         </Form>
       </div>
     </main>
