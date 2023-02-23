@@ -6,7 +6,6 @@ import Row from 'react-bootstrap/Row';
 import { Form, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
 
 
-
 function Admin() {
 
 	// register a dog to db in form submit 
@@ -62,15 +61,17 @@ function Admin() {
       </Head>
       <main className={styles.main}>
       <div className="Admin">
-        <Form onSubmit={handleSubmit}>
+        <Form>
           <Row>
             <Col>
               <Form.Label>Dog Name</Form.Label>
               <Form.Control type="text" id = "name" placeholder="name" />
           </Col>
           <Col>
-              <Form.Label>Dog Photo</Form.Label>
-              <Form.Control type="photo" id = "photo" placeholder="photo" /> 
+              <Form.Group controlId="formFileMultiple" className="mb-3">
+              <Form.Label>Please upload phoho here</Form.Label>
+              <Form.Control type="file" multiple />
+              </Form.Group>
           </Col>
         </Row>	
         <Row>
