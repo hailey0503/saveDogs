@@ -1,57 +1,74 @@
 import Head from 'next/head'
+import React, { useRef, useState } from 'react'
 //import styles from '@/styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Stack from 'react-bootstrap/Stack';
+import { Form, Button, Card, Alert } from 'react-bootstrap'
+import { useAuth } from '../../src/AuthContext'
 
 
 function Register() {
+	const emailRef = useRef()
+	const passwordlRef = useRef()
+	const passwordConfirmRef = useRef()
+	const { signUp } = useAuth()
+	const [ error, setError ] = useState('')
+	const [ loading, setLoading ] = useState(false)
+
+	const handleSubmit = async (e) => {
+		e.preventDefault()
+		
+		if (passwordlRef.current.value != passwordConfirmRef.current.value) {
+			return setError('PASSWORD DO NOT MATCH')
+		}
+	
+		try {
+			setError('')
+			setLoading(true)
+			await signUp(emailRef.current.value, passwordlRef.current.value)
+		} catch(error) {
+			console.error(error)
+			setError('failed to create an account') 
+		}
+		setLoading(false)
+	}
+
   return (
-		<Stack gap={7} className="col-md-5 mx-auto">
-			<Stack direction="horizontal" gap={2}>
-				<Form.Group className="mb-3" controlId="login"></Form.Group>
-				<Form.Label>Create an account</Form.Label>
-				<Form.Group className="mb-3 ms-auto" controlId="login"></Form.Group>
-				<Form.Label>or login</Form.Label>
-			</Stack>
+		<container className = "d-flex align-items-center justify-content-center"
+			style = {{ minHeight: "100vh" }}>
+		<div className = "w-100" style = {{ maxWidth: '400px'}}>
+			<Card>
+				<Card.Body>
+					<h2 className = "text-center mb-4">Sign Up</h2> 
+					{ error && <Alert variant = "danger"> { error } </Alert> }
+					<Form onSubmit={handleSubmit}>
+						<Form.Group id = "email">
+							<Form.Label> Email </Form.Label>
+							<Form.Control type = "email" ref = {emailRef} required />
+						</Form.Group>
+						<br />
+						<Form.Group id = "password">
+							<Form.Label> Password </Form.Label>
+							<Form.Control type = "password" ref = {passwordlRef} required />
+						</Form.Group>
+						<br />
+						<Form.Group id = "passwordConfirm">
+							<Form.Label> Confirm Password </Form.Label>
+							<Form.Control type = "password" ref = {passwordConfirmRef} required />
+						</Form.Group>
+						<br/ >
+						<Button disabled = { loading }  className = "w-100" type = "submit">Sign Up</Button>
+					</Form>
+					<div className = "w-100 text-center mt-2">
+						Already have an account? Log In
+					</div>
+				</Card.Body>
+			</Card>
 			
-			<Form>
-				<Form.Group className="mb-3" controlId="formBasicEmail">
-					<Form.Label>First name</Form.Label>
-					<Form.Control type="text" />
-				</Form.Group>
-
-				<Form.Group className="mb-3" controlId="formBasicPassword">
-					<Form.Label>Last name</Form.Label>
-					<Form.Control type="text" />
-				</Form.Group>
-
-				<Form.Group className="mb-3" controlId="formBasicEmail">
-					<Form.Label>Email</Form.Label>
-					<Form.Control type="email" />
-					<Form.Text className="text-muted">
-					We'll never share your email with anyone else.
-					</Form.Text>
-				</Form.Group>
-
-				<Form.Group className="mb-3" controlId="formBasicPassword">
-					<Form.Label>Password</Form.Label>
-					<Form.Control type="password" />
-				</Form.Group>
-
-				<Stack direction="horizontal" gap={2}>
-				<Form.Group className="mb-3" controlId="formBasicCheckbox">
-					<Form.Check type="checkbox" label="I agree to the Terms" />
-				</Form.Group>
-				<Button variant="primary" type="submit" className="mb-3 ms-auto">
-					Create an account
-				</Button>
-				</Stack>
-			</Form>
-		</Stack>
- 
-  );
+		</div>
+		
+		
+	</container>
+  )
 }
 
-export default Register;
+export default Register
