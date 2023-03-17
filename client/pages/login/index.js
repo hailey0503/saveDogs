@@ -1,59 +1,68 @@
-import Head from 'next/head'
-//import styles from '@/styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
-import Stack from 'react-bootstrap/Stack';
+import React, { useRef, useState } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { Form, Button, Card, Alert, Stack } from 'react-bootstrap'
+import { useAuth } from '../../src/AuthContext'
+import Link from 'next/link'
+import { useNavigate } from "react-router-dom"
 
 
 function Login() {
-  return (
-		<Stack gap={7} className="col-md-5 mx-auto">
-			<Stack direction="horizontal" gap={2}>
-				<Form.Group className="mb-3" controlId="login"></Form.Group>
-				<Form.Label>Log In</Form.Label>
-				<Form.Group className="mb-3 ms-auto" controlId="login"></Form.Group>
-				<Form.Label>or Create Account</Form.Label>
-			</Stack>
-			<Form>
-			<div className="d-grid gap-2">
-				<Button variant="outline-success" size="lg">
-					Continue with Google
-				</Button>
-				<Button variant="outline-primary" size="lg">
-					Continue with Apple
-				</Button>
-			</div>
-			<Form.Group className="mb-3" controlId="login"></Form.Group>
-			<Form.Label>----------------------------------------    or   ---------------------------------------</Form.Label>
-			</Form>
-			<Form>
-				<Form.Group className="mb-3" controlId="formBasicEmail">
-					<Form.Label>Email address</Form.Label>
-					<Form.Control type="email" placeholder="Enter email" />
-					<Form.Text className="text-muted">
-					We'll never share your email with anyone else.
-					</Form.Text>
-				</Form.Group>
 
-				<Form.Group className="mb-3" controlId="formBasicPassword">
-					<Form.Label>Password</Form.Label>
-					<Form.Control type="password" placeholder="Password" />
-					<Form.Text className="text-muted">
-					Forgot your password?
-					</Form.Text>
-				</Form.Group>
-				<Stack direction="horizontal" gap={2}>
-				<Form.Group className="mb-3" controlId="formBasicCheckbox">
-					<Form.Check type="checkbox" label="Remember Me" />
-				</Form.Group>
-				<Button variant="primary" type="submit" className="mb-3 ms-auto">
-					Submit
-				</Button>
-				</Stack>
-			</Form>
-		</Stack>
- 
+	const emailRef = useRef()
+	const passwordlRef = useRef()
+	const passwordConfirmRef = useRef()
+	const { logIn } = useAuth()
+	const [ error, setError ] = useState('')
+	const [ loading, setLoading ] = useState(false)
+	const history = useNavigate
+
+	const handleSubmit = async (e) => {
+		e.preventDefault()
+		
+		try {
+			setError('')
+			setLoading(true)
+			await logIn(emailRef.current.value, passwordlRef.current.value)
+			history.push("../dashboard")
+		} catch(error) {
+			console.error(error)
+			setError('failed to sign in') 
+		}
+		setLoading(false)
+	}
+  return (
+
+	<container className = "d-flex align-items-center justify-content-center"
+	style = {{ minHeight: "100vh" }}>
+	<div className = "w-100" style = {{ maxWidth: '400px'}}>
+		<Card>
+			<Card.Body>
+				<h2 className = "text-center mb-4">Log In</h2> 
+				{ error && <Alert variant = "danger"> { error } </Alert> }
+				<Form onSubmit={handleSubmit}>
+					<Form.Group id = "email">
+						<Form.Label> Email </Form.Label>
+						<Form.Control type = "email" ref = {emailRef} required />
+					</Form.Group>
+					<br />
+					<Form.Group id = "password">
+						<Form.Label> Password </Form.Label>
+						<Form.Control type = "password" ref = {passwordlRef} required />
+						<Form.Text className="text-muted">
+						<Link href="../login/index">Forgot your password?</Link>
+						</Form.Text>
+					</Form.Group>		
+					<br/ >
+					<Button disabled = { loading }  className = "w-100" type = "submit">Log In</Button>
+				</Form>
+				<div className = "w-100 text-center mt-2">
+					Don't have an account? <Link href="../register">Sign Up</Link> 
+				</div>
+			</Card.Body>
+		</Card>
+	</div>
+	</container>
   );
 }
 

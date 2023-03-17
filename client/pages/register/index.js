@@ -1,9 +1,9 @@
-import Head from 'next/head'
 import React, { useRef, useState } from 'react'
-//import styles from '@/styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button, Card, Alert } from 'react-bootstrap'
 import { useAuth } from '../../src/AuthContext'
+import Link from 'next/link'
+import { useNavigate } from "react-router-dom"
 
 
 function Register() {
@@ -13,6 +13,7 @@ function Register() {
 	const { signUp } = useAuth()
 	const [ error, setError ] = useState('')
 	const [ loading, setLoading ] = useState(false)
+	//const history = useNavigate
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
@@ -20,15 +21,16 @@ function Register() {
 		if (passwordlRef.current.value != passwordConfirmRef.current.value) {
 			return setError('PASSWORD DO NOT MATCH')
 		}
-	
 		try {
 			setError('')
-			setLoading(true)
+			setLoading(true) 
 			await signUp(emailRef.current.value, passwordlRef.current.value)
+			//history.push("/")
 		} catch(error) {
 			console.error(error)
 			setError('failed to create an account') 
 		}
+		
 		setLoading(false)
 	}
 
@@ -59,7 +61,7 @@ function Register() {
 						<Button disabled = { loading }  className = "w-100" type = "submit">Sign Up</Button>
 					</Form>
 					<div className = "w-100 text-center mt-2">
-						Already have an account? Log In
+						Already have an account? <Link href="../login/">Log In</Link>
 					</div>
 				</Card.Body>
 			</Card>
