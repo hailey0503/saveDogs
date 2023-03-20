@@ -1,19 +1,24 @@
 import Head from 'next/head'
-import styles from '@/styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Form from 'react-bootstrap/Form';
+
+import { Form, Button, Card } from 'react-bootstrap'
 
 
 function Users() {
   return (
-    <div>
+    <container className = "d-flex align-items-center justify-content-center"
+	  style = {{ minHeight: "100vh" }}>
     	<div className="Users">
-		<Form.Group controlId="formFileMultiple" className="mb-3">
-        <Form.Label>Please upload phoho here</Form.Label>
-        <Form.Control type="file" multiple />
-      </Form.Group>
+        <Card>
+          <Card.Body>
+            <Form.Group controlId="formFileMultiple" className = "mb-4">
+              <Form.Label>Please upload phoho here</Form.Label>
+              <Form.Control type="file" multiple />
+            </Form.Group>
+        </Card.Body>
+      </Card>
     	</div>
-    </div>
+    </container>
   );
 }
 

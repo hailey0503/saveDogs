@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button, Card, Alert } from 'react-bootstrap'
 import { useAuth } from '../../src/AuthContext'
 import Link from 'next/link'
-import { useNavigate } from "react-router-dom"
+import { useRouter } from 'next/navigation'
 
 
 function Register() {
@@ -13,7 +13,7 @@ function Register() {
 	const { signUp } = useAuth()
 	const [ error, setError ] = useState('')
 	const [ loading, setLoading ] = useState(false)
-	//const history = useNavigate
+	const router = useRouter()
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
@@ -21,17 +21,22 @@ function Register() {
 		if (passwordlRef.current.value != passwordConfirmRef.current.value) {
 			return setError('PASSWORD DO NOT MATCH')
 		}
+		const { result, error } = await signUp(emailRef.current.value, passwordlRef.current.value)
+		
 		try {
 			setError('')
 			setLoading(true) 
-			await signUp(emailRef.current.value, passwordlRef.current.value)
-			//history.push("/")
-		} catch(error) {
+			
+			
+		} catch (error) {
 			console.error(error)
 			setError('failed to create an account') 
 		}
-		
+
 		setLoading(false)
+		console.log(result)
+		// you have successfully signed up. now log in
+		return router.push("../login")
 	}
 
   return (

@@ -1,36 +1,38 @@
-import 'bootstrap/dist/css/bootstrap.min.css';
 import React, { useRef, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button, Card, Alert, Stack } from 'react-bootstrap'
 import { useAuth } from '../../src/AuthContext'
 import Link from 'next/link'
-import { useNavigate } from "react-router-dom"
+import { useRouter } from 'next/navigation'
 
 
 function Login() {
 
 	const emailRef = useRef()
 	const passwordlRef = useRef()
-	const passwordConfirmRef = useRef()
 	const { logIn } = useAuth()
 	const [ error, setError ] = useState('')
 	const [ loading, setLoading ] = useState(false)
-	const history = useNavigate
+	const router = useRouter()
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
+		const { result, error } = await logIn(emailRef.current.value, passwordlRef.current.value)
 		
 		try {
 			setError('')
-			setLoading(true)
-			await logIn(emailRef.current.value, passwordlRef.current.value)
-			history.push("../dashboard")
+			setLoading(true)	
+			
 		} catch(error) {
 			console.error(error)
 			setError('failed to sign in') 
 		}
 		setLoading(false)
+		console.log(result)
+		//send to admin (dog register page)
+		return router.push("../admin")
 	}
+	
   return (
 
 	<container className = "d-flex align-items-center justify-content-center"

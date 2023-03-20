@@ -103,6 +103,7 @@ function Admin() {
         </Row>	
           <Form.Label>Message</Form.Label>
           <Form.Control as="textarea" id = "message" rows={3} />
+          <br/>
           <Button variant="primary" type="submit">
             Submit
           </Button>
