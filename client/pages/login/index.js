@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button, Card, Alert, Stack } from 'react-bootstrap'
-import { useAuth } from '../../src/AuthContext'
+import { useAuth } from '../../src/context/AuthContext'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -17,20 +17,17 @@ function Login() {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
-		const { result, error } = await logIn(emailRef.current.value, passwordlRef.current.value)
 		
 		try {
 			setError('')
-			setLoading(true)	
-			
-		} catch(error) {
-			console.error(error)
+			setLoading(true)
+			await logIn(emailRef.current.value, passwordlRef.current.value)
+			return router.push("../mypage")
+		} catch {	
 			setError('failed to sign in') 
 		}
 		setLoading(false)
-		console.log(result)
-		//send to admin (dog register page)
-		return router.push("../admin")
+			
 	}
 	
   return (

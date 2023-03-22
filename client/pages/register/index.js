@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button, Card, Alert } from 'react-bootstrap'
-import { useAuth } from '../../src/AuthContext'
+import { useAuth } from '../../src/context/AuthContext'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
@@ -21,22 +21,24 @@ function Register() {
 		if (passwordlRef.current.value != passwordConfirmRef.current.value) {
 			return setError('PASSWORD DO NOT MATCH')
 		}
-		const { result, error } = await signUp(emailRef.current.value, passwordlRef.current.value)
+		if (passwordlRef.current.value.length < 7) {
+			return setError('PASSWORD SHOULD BE LONGER THAN 6 CHARACTERS')
+		}
 		
 		try {
 			setError('')
 			setLoading(true) 
+			const { result, error } = await signUp(emailRef.current.value, passwordlRef.current.value)
+			// you have successfully signed up. now log in
+			return router.push("../login")
 			
-			
-		} catch (error) {
-			console.error(error)
+		} catch {
+	
 			setError('failed to create an account') 
 		}
 
 		setLoading(false)
-		console.log(result)
-		// you have successfully signed up. now log in
-		return router.push("../login")
+		
 	}
 
   return (
