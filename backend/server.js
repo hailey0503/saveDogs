@@ -15,7 +15,7 @@ app.use(cors());
 app.use('/', postRoutes); 
 app.use('/dogs', dogRoutes);
 
-const dbURL = process.env.dbURL
+const dbURL = process.env.DB_URL 
 const PORT = process.env.PORT || 4800;
 
 mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true})
@@ -23,7 +23,6 @@ mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true})
 	.catch((error) => console.log(error.message));
 
 mongoose.set('useFindAndModify', false);
-
 
 
 
