@@ -37,14 +37,11 @@ router.post("/register", async (req, res) => {
 				contact: req.body.contact,
 				email: req.body.email,
 				kakao: req.body.kakao,
-				image: {
-					data:req.file.filename,
-					contentType: 'image/png'
-				},
+				image: req.file.path,
 				airport: req.body.airport,
 				message: req.body.message
 			});
-			try {
+			try { 
 				addDog.save();
 				res.send("item saved");
 				}
@@ -57,8 +54,15 @@ router.post("/register", async (req, res) => {
   
 // delete from db
 router.delete('/:id', async (req, res) => {
-	await Dog.findByIdAndDelete(res.params.id)
-	
+	const _id = req.params.result._id;
+	console.log(_id)
+	try {
+	const deleted_data = await Dog.findByIdAndDelete(_id);
+	if (!deleted_data) return res.sendStatus(404);
+	return res.send(deleted_data);
+	} catch (e) {
+	return res.sendStatus(400);
+	}
 });
 
 export default router;

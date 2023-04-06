@@ -19,9 +19,10 @@ const dogSchema = new Schema({
 		required: true
 	},
 	image: {
-		data: Buffer,
-		contentType: String
+		type: String,
+		required: true
 	},
+	
 	airport: {
 		type: String,
 		required: true
