@@ -5,8 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row';
 import { Form, Button, FormGroup, FormControl, ControlLabel } from "react-bootstrap";
-import { useAuth } from "@/src/context/AuthContext";
-import { useRouter } from "next/navigation";
+import { withProtected } from '@/src/app/routes';
 
 function Admin() {
 
@@ -111,4 +110,4 @@ function Admin() {
   );
 }
 
-export default Admin;
+export default withProtected(Admin);

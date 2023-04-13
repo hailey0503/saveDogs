@@ -17,16 +17,14 @@ app.use('/', postRoutes);
 app.use('/dogs', dogRoutes);
 app.use('/uploads', uploadsRoutes);
 
-const dbURL = process.env.DB_URL 
-const PORT = process.env.PORT || 4800;
+const dbURL = process.env.DB_URL;
+const port = process.env.PORT;
+
 
 mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true})
-	.then(() => app.listen(PORT, () => console.log("Server running on port: " + PORT)))
+	.then(() => app.listen(port, () => console.log("Server running on port: " + port)))
 	.catch((error) => console.log(error.message));
 
 mongoose.set('useFindAndModify', false);
 
 
-
-//clinet address : www.myapp.com - react
-//server address : api.myapp.com - nodejs

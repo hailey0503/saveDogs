@@ -1,39 +1,59 @@
 import React, { useRef, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, Button, Card, Alert, Stack } from 'react-bootstrap'
-import { useAuth } from '../../src/context/AuthContext'
+import { Form, Button, Card, Alert, Navbar, Nav, Container } from 'react-bootstrap'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { withPublic } from '@/src/app/routes'; 
 
 
-function Login() {
+function Login ( {auth} ) {
 
 	const emailRef = useRef()
 	const passwordlRef = useRef()
-	const { logIn } = useAuth()
+	const { logIn } = auth
+	
 	const [ error, setError ] = useState('')
 	const [ loading, setLoading ] = useState(false)
 	const router = useRouter()
-
+	
 	const handleSubmit = async (e) => {
 		e.preventDefault()
 		
 		try {
 			setError('')
 			setLoading(true)
-			await logIn(emailRef.current.value, passwordlRef.current.value)
-			return router.push("../mypage")
+			const { result, error } = await logIn(emailRef.current.value, passwordlRef.current.value)
+			console.log("Success. The user is logged in")
+			
 		} catch {	
 			setError('failed to sign in') 
 		}
-		setLoading(false)
+		//setLoading(false)
 			
 	}
 	
   return (
+	<>
+		 <nav>
+          <Navbar bg="dark" variant="dark">
+          <Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
+            <Nav className="mr-auto">
+              <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="../register">Sign Up</Nav.Link>
+              <Nav.Link href="../login" >Log In</Nav.Link>
+              <form className="d-flex" role="search">
+                <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                <button className="btn btn-outline-success" type="submit">Search</button>
+              </form>
+            </Nav>     
+          </Navbar>
+        </nav>
+	
 
-	<container className = "d-flex align-items-center justify-content-center"
+	<Container className = "d-flex align-items-center justify-content-center"
 	style = {{ minHeight: "100vh" }}>
+
+
 	<div className = "w-100" style = {{ maxWidth: '400px'}}>
 		<Card>
 			<Card.Body>
@@ -61,8 +81,9 @@ function Login() {
 			</Card.Body>
 		</Card>
 	</div>
-	</container>
+	</Container>
+	</>
   );
 }
 
-export default Login;
+export default withPublic(Login)

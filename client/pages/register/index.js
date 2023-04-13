@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, Button, Card, Alert } from 'react-bootstrap'
+import { Form, Button, Card, Alert, Navbar, Nav } from 'react-bootstrap'
 import { useAuth } from '../../src/context/AuthContext'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -30,6 +30,7 @@ function Register() {
 			setLoading(true) 
 			const { result, error } = await signUp(emailRef.current.value, passwordlRef.current.value)
 			// you have successfully signed up. now log in
+			console.log("Success. The user is created in firebase")
 			return router.push("../login")
 			
 		} catch {
@@ -42,7 +43,22 @@ function Register() {
 	}
 
   return (
-		<container className = "d-flex align-items-center justify-content-center"
+	<>
+		<nav>
+          <Navbar bg="dark" variant="dark">
+          <Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
+            <Nav className="mr-auto">
+              <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="../register">Sign Up</Nav.Link>
+              <Nav.Link href="../login" >Log In</Nav.Link>
+              <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                <button class="btn btn-outline-success" type="submit">Search</button>
+              </form>
+            </Nav>     
+          </Navbar>
+        </nav>
+	<container className = "d-flex align-items-center justify-content-center"
 			style = {{ minHeight: "100vh" }}>
 		<div className = "w-100" style = {{ maxWidth: '400px'}}>
 			<Card>
@@ -72,11 +88,9 @@ function Register() {
 					</div>
 				</Card.Body>
 			</Card>
-			
 		</div>
-		
-		
 	</container>
+	</>
   )
 }
 

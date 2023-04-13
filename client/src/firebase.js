@@ -14,7 +14,7 @@ const firebaseConfig = {
 	messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDER_ID,
 	appId: process.env.NEXT_PUBLIC_APP_ID
 }
-let app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
+let app =  getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
 export const auth = getAuth(app);
 //export default app;

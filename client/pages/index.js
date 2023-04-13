@@ -2,14 +2,13 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
+import Navbar from 'react-bootstrap/Navbar'
+import Nav from 'react-bootstrap/Nav'
 
-import Button from 'react-bootstrap/Button';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Form from 'react-bootstrap/Form'
+import { FormControl, Form, Card, Container, Button } from 'react-bootstrap'
 import Col from 'react-bootstrap/Col'
 import Row from 'react-bootstrap/Row'
-import Container from 'react-bootstrap/Container'
-import Card from 'react-bootstrap/Card'
 import Carousel from 'react-bootstrap/Carousel'
 
 import Dog1 from "../public/dog_1.jpg"
@@ -25,9 +24,28 @@ import Dog10 from "../public/dog_10.jpeg"
 
 
 const inter = Inter({ subsets: ['latin'] })
+export const getServerSideProps = async (ctx) => {
+  
+  const res = await fetch('http://localhost:4800/dogs/');
 
-export default function Home() {
+  ctx.res.setHeader(
+    "Cache-Control",
+    "public, s-maxage=10, stale-while-revalidate=59"
+  );
+
+  const data = await res.json();
+  
+  console.log(data.result)
+
+  return {
+    props: { dogs : data }
+    
+  }
+  
+}
+export default function Home( {dogs} ) {
   return (
+    
     <>
       <Head>
         <title>Create Next App</title>
@@ -35,10 +53,24 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <nav>
+          <Navbar bg="dark" variant="dark">
+          <Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
+            <Nav className="mr-auto">
+              <Nav.Link href="/">Home</Nav.Link>
+              <Nav.Link href="../register">Sign Up</Nav.Link>
+              <Nav.Link href="../login" >Log In</Nav.Link>
+              <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
+                <button class="btn btn-outline-success" type="submit">Search</button>
+              </form>
+            </Nav>     
+          </Navbar>
+        </nav>
+      
       <main className={styles.main}>
         <div>
         <div className="Home">
-          
           <Container>
             <Carousel>
               <Carousel.Item>
@@ -93,7 +125,7 @@ export default function Home() {
 
                 <Col xs= {5}>
                   <Form.Label htmlFor="inlineFormInputGroup" srOnly>
-                    Data
+                    Date
                   </Form.Label>
                   
                   
@@ -102,29 +134,31 @@ export default function Home() {
                   
                 </Col>
                 <Col xs= {2}>
-                <Button type="info" className="mb-2"> Submit</Button>
+                <button class="btn btn-success" type="submit">Search</button>
                 </Col>
               </Row>
             </Form>
+        
+            <Row xs={2} md={2} className="g-4">
           
-
-            <Row xs={1} md={2} className="g-4">
-              {Array.from({ length: 4 }).map((_, idx) => (
-                <Col key={idx}>
+            {dogs.result && dogs.result.map(dog => 
+               <div key={dog._id}>
+                <Col>
                 <Card>
-                  <Card.Img variant="top" src="dog_1.jpg" />
+                
+                <Card.Img variant="top" src={" http://localhost:4800/" + dog.image } />
                   <Card.Body>
-                    <Card.Title>DOGE_1</Card.Title>
+                    <Card.Title>{ dog.name }</Card.Title>
                     <Card.Text>
-                      This doge wants to go to LA
+                    { dog.name } wants to go to { dog.airport }
                     </Card.Text>
+                    <Button variant="primary">click for detail</Button>
                   </Card.Body>
-                  <Card.Footer>
-                    <small className="text-muted">Last updated 3 mins ago</small>
-                  </Card.Footer>
                 </Card>
               </Col>
-              ))}
+              </div>
+              )}
+
             </Row>
           </Container>
         </div>
