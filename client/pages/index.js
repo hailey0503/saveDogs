@@ -2,22 +2,11 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '@/styles/Home.module.css'
-import Navbar from 'react-bootstrap/Navbar'
-import Nav from 'react-bootstrap/Nav'
-
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { FormControl, Form, Card, Container, Button } from 'react-bootstrap'
-import Col from 'react-bootstrap/Col'
-import Row from 'react-bootstrap/Row'
-import Carousel from 'react-bootstrap/Carousel'
-
-import Dog1 from "../public/dog_1.jpg"
-import Dog2 from "../public/dog_2.jpg"
-import Dog3 from "../public/dog_3.png"
-import Dog4 from "../public/dog_4.jpeg"
-import Dog5 from "../public/dog_5.jpeg"
-import Dog6 from "../public/dog_6.jpeg"
-import Dog7 from "../public/dog_7.jpeg"
+import { Carousel, Form, Card, Container, Button, Nav, Navbar, Col, Row, NavDropdown } from 'react-bootstrap'
+import { useAuth } from '../src/context/AuthContext'
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Dog8 from "../public/dog_8.jpeg"
 import Dog9 from "../public/dog_9.jpeg"
 import Dog10 from "../public/dog_10.jpeg"
@@ -38,12 +27,33 @@ export const getServerSideProps = async (ctx) => {
   console.log(data.result)
 
   return {
-    props: { dogs : data }
-    
+
+    props: { dogs : data }  
+
   }
   
 }
+
 export default function Home( {dogs} ) {
+  const [ error, setError ] = useState('');
+  const { currentUser, logOut } = useAuth();
+  const router = useRouter();
+
+  async function handleLogOut() {
+  
+    try {
+  
+      setError("")
+      await logOut();
+      console.log("you are logged out")
+      return router.push("../login")
+    } catch {
+  
+      setError("Failed to Log Out")
+  
+    }
+  }
+
   return (
     
     <>
@@ -54,19 +64,34 @@ export default function Home( {dogs} ) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <nav>
-          <Navbar bg="dark" variant="dark">
-          <Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
-            <Nav className="mr-auto">
-              <Nav.Link href="/">Home</Nav.Link>
-              <Nav.Link href="../register">Sign Up</Nav.Link>
-              <Nav.Link href="../login" >Log In</Nav.Link>
-              <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>
-                <button class="btn btn-outline-success" type="submit">Search</button>
-              </form>
-            </Nav>     
-          </Navbar>
-        </nav>
+        <Navbar bg="dark" variant="dark">
+            <Container fluid>
+              <Navbar.Brand href="#home">Dog Transportation</Navbar.Brand>
+              <Navbar.Toggle aria-controls="navbar-dark-example" />
+              <Navbar.Collapse id="navbar-dark-example">
+                <Nav>
+                  <NavDropdown
+                    id="nav-dropdown-dark-example"
+                    title="Menu"
+                    menuVariant="dark"
+                    //className="ml-auto"
+                  >
+                    <NavDropdown.Item href="/">Home</NavDropdown.Item>
+                    <NavDropdown.Item href="../mypage">My Page</NavDropdown.Item>
+                    <NavDropdown.Item href="../register">Log out</NavDropdown.Item>
+                    <NavDropdown.Divider />
+                    <NavDropdown.Item href="../login" >Log In</NavDropdown.Item>
+                  </NavDropdown>
+                </Nav>
+              </Navbar.Collapse>
+              <Nav>
+              <Nav.Item> 
+                <Nav.Link href="../login">Log In</Nav.Link>
+              </Nav.Item>
+              </Nav>
+          </Container>
+        </Navbar>
+      </nav>
       
       <main className={styles.main}>
         <div>
@@ -75,6 +100,7 @@ export default function Home( {dogs} ) {
             <Carousel>
               <Carousel.Item>
                 <Image
+                  style={{ height: '30rem'  }}
                   className="d-block w-100"
                   src={Dog8}
                   alt="First slide"
@@ -84,25 +110,27 @@ export default function Home( {dogs} ) {
                   <p>Help Dogs to Meet New Family</p>
                 </Carousel.Caption>
               </Carousel.Item>
+
               <Carousel.Item>
                 <Image
+                  style={{ height: '30rem'  }}
                   className="d-block w-100"
                   src={Dog9}
                   alt="Third slide"
                 />
-
                 <Carousel.Caption>
                   <h3>Travel with dogs</h3>
                   <p>Dogs Travel with You</p>
                 </Carousel.Caption>
               </Carousel.Item>
+
               <Carousel.Item>
                 <Image
+                  style={{ height: '30rem'  }}
                   className="d-block w-100"
                   src={Dog10}
                   alt="Third slide"
                 />
-
                 <Carousel.Caption>
                   <h3>Third slide label</h3>
                   <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
@@ -110,60 +138,54 @@ export default function Home( {dogs} ) {
               </Carousel.Item>
             </Carousel>
 
-
-
+            <Container>
             <Form>
               <Row className="align-items-center">
                 <Col xs= {5}>
-                  <Form.Label htmlFor="inlineFormInput" srOnly>
-                    Destination
-                  </Form.Label>
-                  
-                    <Form.Control className="mb-2" type="text" placeholder="Destination" />
-                
+                  <Form.Label htmlFor="inlineFormInput" srOnly></Form.Label>
+                  <Form.Control className="mb-2" type="text" placeholder="Destination" />
                 </Col>
 
                 <Col xs= {5}>
-                  <Form.Label htmlFor="inlineFormInputGroup" srOnly>
-                    Date
-                  </Form.Label>
-                  
-                  
-                    <Form.Control className="mb-2" type="date" id="start" name="trip-start" value="2021-01-22"
-                    min="2021-01-01" max="2021-12-31" />
-                  
+                  <Form.Label htmlFor="inlineFormInputGroup" srOnly></Form.Label>
+                  <Form.Control className="mb-2" type="date" id="start" name="trip-start" value="2021-01-22"
+                    min="2021-01-01" max="2021-12-31" />  
                 </Col>
+
                 <Col xs= {2}>
                 <button class="btn btn-success" type="submit">Search</button>
                 </Col>
               </Row>
             </Form>
-        
-            <Row xs={2} md={2} className="g-4">
-          
-            {dogs.result && dogs.result.map(dog => 
-               <div key={dog._id}>
-                <Col>
-                <Card>
-                
-                <Card.Img variant="top" src={" http://localhost:4800/" + dog.image } />
-                  <Card.Body>
-                    <Card.Title>{ dog.name }</Card.Title>
-                    <Card.Text>
-                    { dog.name } wants to go to { dog.airport }
-                    </Card.Text>
-                    <Button variant="primary">click for detail</Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-              </div>
-              )}
+            </Container>
 
-            </Row>
+            <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
+              <Row xs={2} md={2} className="g-4">
+                {dogs.result && dogs.result.map(dog => 
+                  <div key={dog._id}>
+                    <Col>
+                      <Card style={{ width: '30rem', height: '30rem' }}>
+                    
+                        <Card.Img variant="top" style={{ width: '30rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
+                        <Card.Body>
+                          <Card.Title>
+                            { dog.name }
+                          </Card.Title>
+                          <Card.Text> 
+                            { dog.name } wants to go to { dog.airport }
+                          </Card.Text>
+                          <Button variant="primary">click for detail</Button>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  </div>
+                )}
+              </Row>
+            </Container>
           </Container>
         </div>
       </div>
-      </main>
-    </>
+    </main>
+  </>
   )
 }

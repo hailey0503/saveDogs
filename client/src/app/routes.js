@@ -1,6 +1,5 @@
 import React from 'react'
 import { useAuth } from '../context/AuthContext'
-//import { useRouter } from 'next/router'
 import { useRouter } from 'next/navigation'
 
 export function withPublic(Components) {
