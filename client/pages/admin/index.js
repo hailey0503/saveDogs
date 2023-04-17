@@ -30,7 +30,7 @@ function Admin({auth}) {
     const JSONdata = JSON.stringify(data)
 
     // API endpoint where we send form data.
-    const endpoint = 'http://localhost:4800/dogs/register'
+    const endpoint = process.env.API_ENDPOINT
 
     // Form the request for sending data to the server.
     const options = {
