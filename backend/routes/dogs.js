@@ -6,11 +6,6 @@ import multer from 'multer';
 const router = express.Router();
 const Storage = multer.diskStorage({
 	destination: 'uploads'
-	/*
-	filename: (req, file, cb) => {
-		cb(null, file.originalname);
-	},
-	*/
 });
 
 
@@ -31,7 +26,7 @@ router.get('/', async (req, res) => {
 router.post("/register", async (req, res) => {
 	register(req, res, (err)=>{
 		if (err) {
-			console.log(err)
+			console.log(err);
 		} else {
 		
 			const addDog = new Dog ({
@@ -54,17 +49,39 @@ router.post("/register", async (req, res) => {
 		});
 	});	
   
-// delete from db
-router.delete('/:id', async (req, res) => {
-	const _id = req.params.result._id;
-	console.log(_id)
-	try {
-	const deleted_data = await Dog.findByIdAndDelete(_id);
-	if (!deleted_data) return res.sendStatus(404);
-	return res.send(deleted_data);
-	} catch (e) {
-	return res.sendStatus(400);
-	}
+// delete from db but it's deleted in order not by _id
+
+router.delete('/:_id', async (req, res) => {
+	console.log("deleting a dog data");
+	const _id = req.params._id;
+	
+	await Dog.findByIdAndRemove(_id, function(err, deleted_data){
+		if (err) {
+			res.send("errer deleting a dog data");
+		} else {
+			res.json(deleted_data);
+		}
+	});
+});
+
+router.put("/:_id", async (req, res) => {
+	console.log("updating a dog data");
+	const _id = req.params._id;
+	await Dog.findByIdAndUpdate(_id, 
+		   {
+				$set: {name: req.body.name, contact: req.body.contact, email: req.body.email} 
+		   },
+		   {
+				new: true
+		   },
+		   function(err, updated_data) {
+			if (err) {
+				res.send("Error updating data");
+			} else {
+				res.json(updated_data);
+			}
+		   }
+		 );
 });
 
 export default router;

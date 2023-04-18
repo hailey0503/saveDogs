@@ -1,4 +1,4 @@
-FROM node:latest
+ FROM node:latest
 
 RUN mkdir -p /usr/Desktop/dog_transport_backend
 
@@ -10,6 +10,6 @@ RUN npm istall
 
 COPY . /usr/Desktop/dog_transport_backend
 
-EXPOSE 3000
+EXPOSE 4800
 
-CMD [ "npm", "start" ]
+CMD [ "node", "server.js" ]
