@@ -1,10 +1,10 @@
 import Head from 'next/head'
-import React,  { useState, useEffect } from 'react';
+import React,  { useState } from 'react';
 import { Col, Row, Card, Alert, Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { withProtected } from '@/src/app/routes';
+import { withProtected } from '../../src/app/routes';
 
 
 function myPage( {auth} ) {

@@ -1,9 +1,9 @@
 import Head from 'next/head'
 import React from "react";
-import styles from '@/styles/Home.module.css'
+import styles from '../../styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button, Nav, Navbar, Col, Row, NavDropdown, Container } from "react-bootstrap";
-import { withProtected } from '@/src/app/routes';
+import { withProtected } from '../../src/app/routes';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation'
 
@@ -17,31 +17,37 @@ function Admin({auth}) {
     event.preventDefault()
 
     // Get data from the form.
-    const data = {
-      name: event.target.name.value,
-      contact: event.target.contact.value,
-      email: event.target.email.value,
-      kakao: event.target.kakao.value,
-      airport: event.target.airport.value,
-      message: event.target.message.value,
-    }
+    const data = new FormData()
+    data.append('name', event.target.name.value)
+    data.append('contact', event.target.contact.value)
+    data.append('email', event.target.email.value)
+    data.append('kakao', event.target.kakao.value)
+    data.append('airport', event.target.airport.value)
+    data.append('message', event.target.message.value)
+    data.append('testImage', event.target.image.files[0])
+
+    console.log(data.testImage)
+    console.log(event.target.image)
 
     // Send the data to the server in JSON format.
-    const JSONdata = JSON.stringify(data)
+    //const JSONdata = JSON.stringify(data)
 
     // API endpoint where we send form data.
-    const endpoint = process.env.API_ENDPOINT
-
+    //const endpoint = process.env.API_ENDPOINT
+    const endpoint = "http://localhost:4800/dogs/register"
     // Form the request for sending data to the server.
     const options = {
       // The method is POST because we are sending data.
       method: 'POST',
       // Tell the server we're sending JSON.
+      /*
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'multipart/form-data',
       },
+       */
       // Body of the request is the JSON data we created above.
-      body: JSONdata,
+      body: data,
+       
     }
 
     // Send the form data to our forms API on Vercel and get a response.
@@ -50,7 +56,9 @@ function Admin({auth}) {
     // Get the response data from server as JSON.
     // If server returns the name submitted, that means the form works.
     const result = await response.json()
-    alert(`Is this your full name: ${result.data}`)
+    //alert(`Is this your full name: ${result.data}`)
+    alert(`successfully uploaded`)
+
   }
 
   const [ error, setError ] = useState('')
@@ -109,7 +117,7 @@ function Admin({auth}) {
       
       <main className={styles.main}>
       <div className="Admin">
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Row>
             <Col>
               <Form.Label>Dog Name</Form.Label>
@@ -118,7 +126,7 @@ function Admin({auth}) {
           <Col>
               <Form.Group controlId="formFileMultiple" className="mb-3">
               <Form.Label>Please upload phoho here</Form.Label>
-              <Form.Control type="file" multiple />
+              <Form.Control type="file" id = 'image' multiple />
               </Form.Group>
           </Col>
         </Row>	
@@ -146,6 +154,8 @@ function Admin({auth}) {
                   <option value="2">New York</option>
                   <option value="3">Los Angeles</option>
                   <option value="4">Toronto</option>
+                  <option value="5">Vancouver</option>
+                  <option value="6">Seattle</option>
                 </Form.Select>
           </Col>
         </Row>	

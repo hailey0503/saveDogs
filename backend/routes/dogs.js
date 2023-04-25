@@ -11,7 +11,7 @@ const Storage = multer.diskStorage({
 
 const register = multer({
 	storage: Storage
-}).single('testImage')
+}).single('testImage') 
 
 
 // get dogs from db 
@@ -24,30 +24,32 @@ router.get('/', async (req, res) => {
 
 // store to db
 router.post("/register", async (req, res) => {
+	console.log("post a dog");
 	register(req, res, (err)=>{
+		console.log(req)
 		if (err) {
 			console.log(err);
 		} else {
-		
+	
 			const addDog = new Dog ({
 				name: req.body.name,
+				image: req.file.path,
 				contact: req.body.contact,
 				email: req.body.email,
 				kakao: req.body.kakao,
-				image: req.file.path,
 				airport: req.body.airport,
 				message: req.body.message
 			});
-			try { 
-				addDog.save();
-				res.send("item saved");
+			addDog.save(function(err, postedDog) {
+				if (err) {
+					console.log("Error saving dog info");
+				} else {
+					res.json(postedDog)
 				}
-				catch(err) {
-				res.status(400).send("unable to save");
-				}
-			}		
-		});
-	});	
+			});
+		}
+	})
+});	
   
 // delete from db but it's deleted in order not by _id
 

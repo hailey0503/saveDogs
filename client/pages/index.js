@@ -1,7 +1,7 @@
 import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
-import styles from '@/styles/Home.module.css'
+import styles from '../styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Carousel, Form, Card, Container, Button, Nav, Navbar, Col, Row, NavDropdown } from 'react-bootstrap'
 import { useAuth } from '../src/context/AuthContext'

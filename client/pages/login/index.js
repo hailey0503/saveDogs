@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button, Card, Alert, Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { withPublic } from '@/src/app/routes'; 
+import { withPublic } from '../../src/app/routes'; 
 
 
 function Login ( {auth} ) {
