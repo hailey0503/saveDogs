@@ -69,6 +69,7 @@ export default function Home( {dogs} ) {
               <Navbar.Brand href="#home">Dog Transportation</Navbar.Brand>
               <Navbar.Toggle aria-controls="navbar-dark-example" />
               <Navbar.Collapse id="navbar-dark-example">
+
                 <Nav>
                   <NavDropdown
                     id="nav-dropdown-dark-example"
@@ -85,8 +86,9 @@ export default function Home( {dogs} ) {
                 </Nav>
               </Navbar.Collapse>
               <Nav>
+                
               <Nav.Item> 
-                <Nav.Link href="../login">Log In</Nav.Link>
+                <Nav.Link href="../login">Log In Here</Nav.Link>
               </Nav.Item>
               </Nav>
           </Container>

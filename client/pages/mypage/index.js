@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import React,  { useState } from 'react';
-import { Col, Row, Card, Alert, Navbar, Nav, NavDropdown, Container } from 'react-bootstrap';
+import { Col, Row, Card, Alert, Navbar, Nav, NavDropdown, Container, Offcanvas } from 'react-bootstrap';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -33,35 +33,39 @@ function myPage( {auth} ) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <nav>
-        <Navbar bg="dark" variant="dark">
-            <Container fluid>
-              <Navbar.Brand href="#home">Dog Transportation</Navbar.Brand>
-              <Navbar.Toggle aria-controls="navbar-dark-example" />
-              <Navbar.Collapse id="navbar-dark-example">
-                <Nav>
-                  <NavDropdown
-                    id="nav-dropdown-dark-example"
-                    title="Menu"
-                    menuVariant="dark"
-                    //className="ml-auto"
-                  >
-                    <NavDropdown.Item href="/">Home</NavDropdown.Item>
-                    <NavDropdown.Item href="../mypage">My Page</NavDropdown.Item>
-                    <NavDropdown.Item href="../register">Log out</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="../login" >Log In</NavDropdown.Item>
-                  </NavDropdown>
+      {[false].map((expand) => (
+        <Navbar key={expand} bg="dark" variant="dark" expand={expand} className="mb-3">
+          <Container fluid>
+          <Navbar.Brand href="#home">Dog Transportation</Navbar.Brand>
+            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
+            <Navbar.Offcanvas
+              id={`offcanvasNavbar-expand-${expand}`}
+              aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
+              placement="end"
+            >
+              <Offcanvas.Header closeButton>
+                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
+               
+                { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
+                </Offcanvas.Title>
+              </Offcanvas.Header>
+              <Offcanvas.Body>
+                <Nav className="justify-content-end flex-grow-1 pe-3">
+                  <Nav.Link href="/">View my profile</Nav.Link>
+                  <Nav.Link href="/admin">Upload dogs</Nav.Link>
+                  <Nav.Link href="/admin">Manage my dogs</Nav.Link>
+                  <Nav.Link href="../message">My Message</Nav.Link>
+                  <Nav.Item> 
+                    <Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>
+                  </Nav.Item>
                 </Nav>
-              </Navbar.Collapse>
-              <Nav>
-              <Nav.Item> 
-                <Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>
-              </Nav.Item>
-              </Nav>
+              </Offcanvas.Body>
+            </Navbar.Offcanvas>
           </Container>
         </Navbar>
-      </nav>
+      ))}
+      <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s page</div> } </h2>
+      <h3>Dogs to travel</h3>
       <Container className = "d-flex align-items-center justify-content-center"
 	style = {{ minHeight: "100vh" }}>
       <div className = "w-100" style = {{ maxWidth: '400px'}}>
@@ -69,9 +73,10 @@ function myPage( {auth} ) {
         <Card.Body>
           <h2 className = "text-center mb-4">My Page</h2> 
           { error && <Alert variant = "danger"> { error } </Alert> }
-          { currentUser && <div>Congratulations {currentUser?.email}! You are logged in.</div>}
+          { currentUser && <div>Congratulations! You are logged in.</div>}
+          <p>You have not uploaded any dogs yet</p>
           <Link href= "../admin" className="btn btn-primary w-100 mt-3">
-            Upload Dogs  
+            Go Upload Dogs  
           </Link>
         </Card.Body>
       </Card>  

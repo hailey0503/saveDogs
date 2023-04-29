@@ -88,7 +88,7 @@ function Admin({auth}) {
       <nav>
         <Navbar bg="dark" variant="dark">
             <Container fluid>
-              <Navbar.Brand href="#home">Dog Transportation</Navbar.Brand>
+              <Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
               <Navbar.Toggle aria-controls="navbar-dark-example" />
               <Navbar.Collapse id="navbar-dark-example">
                 <Nav>

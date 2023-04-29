@@ -5,9 +5,12 @@ import { Form, Button, Card, Alert, Navbar, Nav, Container } from 'react-bootstr
 import { useAuth } from '../../src/context/AuthContext'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import { setDoc, doc } from 'firebase/firestore'
+import { AuthErrorCodes } from 'firebase/auth';
 
 
 function Register() {
+	const usernameRef = useRef()
 	const emailRef = useRef()
 	const passwordlRef = useRef()
 	const passwordConfirmRef = useRef()
@@ -22,21 +25,33 @@ function Register() {
 		if (passwordlRef.current.value != passwordConfirmRef.current.value) {
 			return setError('PASSWORD DO NOT MATCH')
 		}
-		if (passwordlRef.current.value.length < 7) {
-			return setError('PASSWORD SHOULD BE LONGER THAN 6 CHARACTERS')
-		}
 		
 		try {
 			setError('')
 			setLoading(true) 
-			const { result, error } = await signUp(emailRef.current.value, passwordlRef.current.value)
+			const { result, error } = await signUp(emailRef.current.value, passwordlRef.current.value, username)
 			// you have successfully signed up. now log in
+			console.log(result.user)
+			const ref = doc(db, 'userInfo', result.user.uid)
+			const docRef = await setDoc(ref, { username })
 			console.log("Success. The user is created in firebase")
 			return router.push("../login")
 			
-		} catch {
-	
-			setError('failed to create an account') 
+		} catch (error) {
+			console.log(error)
+			if (error.code === 'auth/email-already-in-use') {
+				setError("email is already in use try another email")
+
+			} else if (error.code === 'auth/email-already-in-use') {
+				setError("passward must be at least 6 characters")
+
+			} else if (error.code === 'auth/invalid-email') {
+				setError("Thrown if the email address is not valid")
+
+			} else {
+				setError(error.code) 
+			}
+			
 		}
 
 		setLoading(false)
@@ -66,6 +81,11 @@ function Register() {
 					<h2 className = "text-center mb-4">Sign Up</h2> 
 					{ error && <Alert variant = "danger"> { error } </Alert> }
 					<Form onSubmit={handleSubmit}>
+						<Form.Group id = "username">
+							<Form.Label> Username </Form.Label>
+							<Form.Control type = "username" ref = {usernameRef} required />
+						</Form.Group>
+						<br />
 						<Form.Group id = "email">
 							<Form.Label> Email </Form.Label>
 							<Form.Control type = "email" ref = {emailRef} required />
