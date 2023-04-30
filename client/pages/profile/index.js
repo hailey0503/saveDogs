@@ -2,12 +2,14 @@ import Head from 'next/head'
 import React from "react";
 import styles from '../../styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, Button, Nav, Navbar, Col, Row, Offcanvas, Container } from "react-bootstrap";
+import { Form, Button, Nav, Navbar, Col, Row, Offcanvas, Container, Image } from "react-bootstrap";
 import { withProtected } from '../../src/app/routes';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/navigation' 
+import { updateProfile } from "firebase/auth";
 
-function Admin({auth}) {
+
+function Profile({auth}) {
 
 	// register a dog to db in form submit 
   // call POST /dogs/register via fetch in handleSubmit
@@ -21,8 +23,6 @@ function Admin({auth}) {
     data.append('name', event.target.name.value)
     data.append('contact', event.target.contact.value)
     data.append('email', event.target.email.value)
-    data.append('kakao', event.target.kakao.value)
-    data.append('airport', event.target.airport.value)
     data.append('message', event.target.message.value)
     data.append('testImage', event.target.image.files[0])
 
@@ -77,6 +77,20 @@ function Admin({auth}) {
 
     }
   }
+
+  async function update(event) {
+    updateProfile(auth.currentUser, {
+    displayName: event.target.name.value, 
+    photoURL: event.target.image.value//it's uploaded as fakepath 
+  }).then(() => {
+    console.log('User Profile Updated Successfully');
+    console.log(currentUser)
+  }).catch((error) => {
+    console.log(error.message)
+    setError(error.message)
+  });
+
+}
   return (
     <>
        <Head>
@@ -116,56 +130,36 @@ function Admin({auth}) {
           </Container>
         </Navbar>
       ))}
-      
       <main className={styles.main}>
-      <div className="Admin">
-        <Form onSubmit={handleSubmit}>
+      <h2> { currentUser && <div>Hello, {currentUser.displayName? currentUser.displayName: currentUser.email}! </div> } </h2>
+      <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "30vh" }}>
+      <Row>
+       
+        <Col xs={6} md={4}>
+          <Image src= "../../public/dog_1.jpg" roundedCircle />
+        </Col>
+        
+      </Row>
+    </Container>
+      <div className="Profile">
+        <Form onSubmit={update}>
           <Row>
             <Col>
-              <Form.Label>Dog Name</Form.Label>
+              <Form.Label>Username</Form.Label>
               <Form.Control type="text" id = "name" placeholder="name" />
           </Col>
           <Col>
               <Form.Group controlId="formFileMultiple" className="mb-3">
-              <Form.Label>Please upload photo here</Form.Label>
+              <Form.Label>Your photo</Form.Label>
               <Form.Control type="file" id = 'image' multiple />
               </Form.Group>
           </Col>
         </Row>	
-        <Row>
-          <Col>
-              <Form.Label>Contact</Form.Label>
-              <Form.Control type="phonenumber" id = "contact" placeholder="number only" />	
-          </Col>
-          <Col>
-              <Form.Label>Email address</Form.Label>
-              <Form.Control type="email" id = "email" placeholder="name@example.com" />
-            
-          </Col>
-        </Row>
-        <Row>
-          <Col>
-              <Form.Label>Kakao ID</Form.Label>
-              <Form.Control type="kakaoID" id = "kakao" placeholder="ID" />	
-          </Col>
-          <Col>
-              <Form.Label>Destination Airport</Form.Label>
-                <Form.Select aria-label="Default select example" id = "airport">
-                  <option>Select Airport</option>
-                  <option value="1">San Francisco</option>
-                  <option value="2">New York</option>
-                  <option value="3">Los Angeles</option>
-                  <option value="4">Toronto</option>
-                  <option value="5">Vancouver</option>
-                  <option value="6">Seattle</option>
-                </Form.Select>
-          </Col>
-        </Row>	
-          <Form.Label>Message</Form.Label>
+          <Form.Label>About me</Form.Label>
           <Form.Control as="textarea" id = "message" rows={3} />
           <br/>
           <Button variant="primary" type="submit">
-            Submit
+            Update 
           </Button>
         
         </Form>
@@ -175,4 +169,4 @@ function Admin({auth}) {
   );
 }
 
-export default withProtected(Admin);
+export default withProtected(Profile);

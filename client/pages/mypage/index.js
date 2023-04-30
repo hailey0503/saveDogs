@@ -1,10 +1,11 @@
 import Head from 'next/head'
 import React,  { useState } from 'react';
-import { Col, Row, Card, Alert, Navbar, Nav, NavDropdown, Container, Offcanvas } from 'react-bootstrap';
+import { Col, Row, Card, Alert, Navbar, Nav, Container, Offcanvas, Image } from 'react-bootstrap';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
+import Dog1 from "../../public/dog_1.jpg"
 
 
 function myPage( {auth} ) {
@@ -36,7 +37,7 @@ function myPage( {auth} ) {
       {[false].map((expand) => (
         <Navbar key={expand} bg="dark" variant="dark" expand={expand} className="mb-3">
           <Container fluid>
-          <Navbar.Brand href="#home">Dog Transportation</Navbar.Brand>
+          <Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
             <Navbar.Offcanvas
               id={`offcanvasNavbar-expand-${expand}`}
@@ -51,7 +52,7 @@ function myPage( {auth} ) {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                  <Nav.Link href="/">View my profile</Nav.Link>
+                <Nav.Link href="/mypage">View my page</Nav.Link>
                   <Nav.Link href="/admin">Upload dogs</Nav.Link>
                   <Nav.Link href="/admin">Manage my dogs</Nav.Link>
                   <Nav.Link href="../message">My Message</Nav.Link>
@@ -64,22 +65,31 @@ function myPage( {auth} ) {
           </Container>
         </Navbar>
       ))}
-      <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s page</div> } </h2>
-      <h3>Dogs to travel</h3>
-      <Container className = "d-flex align-items-center justify-content-center"
-	style = {{ minHeight: "100vh" }}>
-      <div className = "w-100" style = {{ maxWidth: '400px'}}>
-      <Card>
-        <Card.Body>
-          <h2 className = "text-center mb-4">My Page</h2> 
-          { error && <Alert variant = "danger"> { error } </Alert> }
-          { currentUser && <div>Congratulations! You are logged in.</div>}
-          <p>You have not uploaded any dogs yet</p>
-          <Link href= "../admin" className="btn btn-primary w-100 mt-3">
-            Go Upload Dogs  
-          </Link>
-        </Card.Body>
-      </Card>  
+      <Container style = {{ minHeight: "20vh" }}>
+      <div className = "w-100" style = {{ maxWidth: '400px'}}></div>
+      <div>
+        <Row>
+          <Col xs={6} md={3}>
+            <Row>
+            <Image src="../../public/dog_7.jpeg" roundedCircle />
+            </Row>
+            <Row>
+            <Link href = '/profile' className = 'profile-update'>update profile</Link>
+            </Row>
+          </Col>
+          <Col xs={6} md={8}>
+            <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s page</div> } </h2>
+          </Col>
+        </Row>
+      </div>
+      </Container>
+      
+      <Container style = {{ minHeight: "100vh" }}>
+      <div className = "w-300" style = {{ maxWidth: '400px'}}>
+        <h3>My Dogs</h3>
+        <Link href= "../admin" className="btn btn-primary w-500 mt-3">
+          Go Upload Dogs  
+        </Link>
       </div>
       </Container>  
     </>
