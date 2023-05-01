@@ -1,19 +1,27 @@
 import Head from 'next/head'
-import React,  { useState } from 'react';
+import React,  { useState, useEffect } from 'react';
 import { Col, Row, Card, Alert, Navbar, Nav, Container, Offcanvas, Image } from 'react-bootstrap';
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
 import Dog1 from "../../public/dog_1.jpg"
+import Dog8 from "../../public/dog_8.jpeg"
 
 
 function myPage( {auth} ) {
 
   const [ error, setError ] = useState('')
   const { currentUser, logOut } = auth;
-  const router = useRouter()
+  const [ userInfo, setUserInfo ] = useState(null);
+  //const router = useRouter()
 
+  useEffect(() => {
+
+  });
+  
+  console.log("mypage")
+  console.log(currentUser)
   async function handleLogOut() {
   
     try {
@@ -46,14 +54,12 @@ function myPage( {auth} ) {
             >
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
-               
                 { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                <Nav.Link href="/mypage">View my page</Nav.Link>
-                  <Nav.Link href="/admin">Upload dogs</Nav.Link>
+                  <Nav.Link href="/mypage">View my page</Nav.Link>
                   <Nav.Link href="/admin">Manage my dogs</Nav.Link>
                   <Nav.Link href="../message">My Message</Nav.Link>
                   <Nav.Item> 
@@ -71,7 +77,12 @@ function myPage( {auth} ) {
         <Row>
           <Col xs={6} md={3}>
             <Row>
-            <Image src="../../public/dog_7.jpeg" roundedCircle />
+            <Image
+                  style={{ height: '10rem'  }}
+                  className="d-block w-100"
+                  src="http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdog_9.77c974bd.jpeg&w=640&q=75"
+                  roundedCircle 
+                />
             </Row>
             <Row>
             <Link href = '/profile' className = 'profile-update'>update profile</Link>

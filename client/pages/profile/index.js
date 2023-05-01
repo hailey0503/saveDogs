@@ -111,14 +111,12 @@ function Profile({auth}) {
             >
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
-               
                 { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Nav.Link href="/mypage">View my page</Nav.Link>
-                  <Nav.Link href="/admin">Upload dogs</Nav.Link>
                   <Nav.Link href="/admin">Manage my dogs</Nav.Link>
                   <Nav.Link href="../message">My Message</Nav.Link>
                   <Nav.Item> 
@@ -136,7 +134,7 @@ function Profile({auth}) {
       <Row>
        
         <Col xs={6} md={4}>
-          <Image src= "../../public/dog_1.jpg" roundedCircle />
+          <Image src= "http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdog_9.77c974bd.jpeg&w=640&q=75" roundedCircle />
         </Col>
         
       </Row>

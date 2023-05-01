@@ -3,10 +3,13 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Carousel, Form, Card, Container, Button, Nav, Navbar, Col, Row, NavDropdown } from 'react-bootstrap'
+import { Carousel, Form, Card, Container, Button, Nav, Navbar, Col, Row } from 'react-bootstrap'
 import { useAuth } from '../src/context/AuthContext'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
+
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import Dog8 from "../public/dog_8.jpeg"
 import Dog9 from "../public/dog_9.jpeg"
 import Dog10 from "../public/dog_10.jpeg"
@@ -38,6 +41,8 @@ export default function Home( {dogs} ) {
   const [ error, setError ] = useState('');
   const { currentUser, logOut } = useAuth();
   const router = useRouter();
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
 
   async function handleLogOut() {
   
@@ -69,21 +74,6 @@ export default function Home( {dogs} ) {
               <Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
               <Navbar.Toggle aria-controls="navbar-dark-example" />
               <Navbar.Collapse id="navbar-dark-example">
-
-                <Nav>
-                  <NavDropdown
-                    id="nav-dropdown-dark-example"
-                    title="Menu"
-                    menuVariant="dark"
-                    //className="ml-auto"
-                  >
-                    <NavDropdown.Item href="/">Home</NavDropdown.Item>
-                    <NavDropdown.Item href="../mypage">My Page</NavDropdown.Item>
-                    <NavDropdown.Item href="../register">Log out</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="../login" >Log In</NavDropdown.Item>
-                  </NavDropdown>
-                </Nav>
               </Navbar.Collapse>
               <Nav>
                 
@@ -143,17 +133,25 @@ export default function Home( {dogs} ) {
             <Container>
             <Form>
               <Row className="align-items-center">
-                <Col xs= {5}>
-                  <Form.Label htmlFor="inlineFormInput" srOnly></Form.Label>
-                  <Form.Control className="mb-2" type="text" placeholder="Destination" />
+                <Col xs= {5} md = {6}>
+                  <Form.Select aria-label="Default select example" id = "airport">
+                    <option>Select Airport</option>
+                    <option value="1">San Francisco</option>
+                    <option value="2">New York</option>
+                    <option value="3">Los Angeles</option>
+                    <option value="4">Toronto</option>
+                    <option value="5">Vancouver</option>
+                    <option value="6">Seattle</option>
+                  </Form.Select>
                 </Col>
-
-                <Col xs= {5}>
-                  <Form.Label htmlFor="inlineFormInputGroup" srOnly></Form.Label>
-                  <Form.Control className="mb-2" type="date" id="start" name="trip-start" value="2021-01-22"
-                    min="2021-01-01" max="2021-12-31" />  
+              
+                <Col xs = {3} md = {2}>
+                <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} /> 
                 </Col>
-
+                <Col xs = {3} md = {2}>
+                <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} /> 
+                </Col>
+              
                 <Col xs= {2}>
                 <button class="btn btn-success" type="submit">Search</button>
                 </Col>

@@ -36,7 +36,9 @@ function Login ( {auth} ) {
 			setError('')
 			setLoading(true)
 			const { result, error } = await loginWithGoogle()
-			console.log(result.user)
+			const credential = auth.GoogleAuthProvider.credentialFromResult(result);
+			console.log(result)
+			console.log(credential.accessToken)
 			console.log(result.user.uid)
 			console.log(result.user.displayName)
 			const uid = result.user.uid
@@ -66,20 +68,6 @@ function Login ( {auth} ) {
               <Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
               <Navbar.Toggle aria-controls="navbar-dark-example" />
               <Navbar.Collapse id="navbar-dark-example">
-                <Nav>
-                  <NavDropdown
-                    id="nav-dropdown-dark-example"
-                    title="Menu"
-                    menuVariant="dark"
-                    //className="ml-auto"
-                  >
-                    <NavDropdown.Item href="/">Home</NavDropdown.Item>
-                    <NavDropdown.Item href="../mypage">My Page</NavDropdown.Item>
-                    <NavDropdown.Item href="../register">Log out</NavDropdown.Item>
-                    <NavDropdown.Divider />
-                    <NavDropdown.Item href="../login" >Log In</NavDropdown.Item>
-                  </NavDropdown>
-                </Nav>
               </Navbar.Collapse>
           </Container>
         </Navbar>
@@ -90,9 +78,9 @@ function Login ( {auth} ) {
 	style = {{ minHeight: "100vh" }}>
 	
 	<div className = "w-100" style = {{ maxWidth: '400px'}}>
-		<div>
+		
       	<Button variant="primary" size="lg" onClick = { handleClick }><p>Log in with Google</p></Button>
-		</div>
+		
 		<Card>
 			<Card.Body>
 				<h2 className = "text-center mb-4">Log In</h2> 

@@ -1,23 +1,21 @@
 import Head from 'next/head'
 import React, { useRef, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, Button, Card, Alert, Navbar, Nav, Container } from 'react-bootstrap'
-import { useAuth } from '../../src/context/AuthContext'
+import { Form, Button, Card, Alert, Navbar, Container } from 'react-bootstrap'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { setDoc, doc } from 'firebase/firestore'
-import { AuthErrorCodes } from 'firebase/auth';
+import { updateProfile } from "firebase/auth";
+import { withPublic } from '../../src/app/routes';
+//import { setDoc, doc } from 'firebase/firestore'
 
 
-function Register() {
+function Register( { auth }) {
 	const usernameRef = useRef()
 	const emailRef = useRef()
 	const passwordlRef = useRef()
 	const passwordConfirmRef = useRef()
-	const { signUp } = useAuth()
+	const { signUp, currentUser} = auth
 	const [ error, setError ] = useState('')
 	const [ loading, setLoading ] = useState(false)
-	const router = useRouter()
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
@@ -25,18 +23,20 @@ function Register() {
 		if (passwordlRef.current.value != passwordConfirmRef.current.value) {
 			return setError('PASSWORD DO NOT MATCH')
 		}
-		
 		try {
 			setError('')
 			setLoading(true) 
-			const { result, error } = await signUp(emailRef.current.value, passwordlRef.current.value, username)
-			// you have successfully signed up. now log in
-			console.log(result.user)
-			const ref = doc(db, 'userInfo', result.user.uid)
-			const docRef = await setDoc(ref, { username })
-			console.log("Success. The user is created in firebase")
-			return router.push("../login")
-			
+			const userCredential = await signUp(emailRef.current.value, passwordlRef.current.value)
+			console.log(userCredential.user) //???? why undefined?
+			console.log('you are in!');
+			updateProfile(userCredential.user, {
+				displayName: usernameRef.current.value, 
+			}).then(() => {
+				console.log('User Profile Updated Successfully');
+				console.log(userCredential.user)
+			}).catch((error) => {
+				setError(error.message)
+			});
 		} catch (error) {
 			console.log(error)
 			if (error.code === 'auth/email-already-in-use') {
@@ -53,9 +53,7 @@ function Register() {
 			}
 			
 		}
-
-		setLoading(false)
-		
+		setLoading(false)	
 	}
 
   return (
@@ -113,5 +111,4 @@ function Register() {
 	</>
   )
 }
-
-export default Register
+export default withPublic(Register)

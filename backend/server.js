@@ -6,6 +6,14 @@ import 'dotenv/config';
 import postRoutes from './routes/posts.js';
 import dogRoutes from './routes/dogs.js'; // router for dogs
 import uploadsRoutes from './routes/uploads.js';
+//import * as admin from 'firebase-admin';
+//import credentials from './credentials.json' assert { type: "json" };
+/*
+admin.initializeApp( {
+	credential: admin.credential.cert(credentials);
+
+}) 
+*/
 
 console.log("Hello World")
 
