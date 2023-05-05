@@ -26,17 +26,27 @@ function Register( { auth }) {
 		try {
 			setError('')
 			setLoading(true) 
-			const userCredential = await signUp(emailRef.current.value, passwordlRef.current.value)
+			const userCredential = await signUp(emailRef.current.value, passwordlRef.current.value, usernameRef.current.value)
+			
 			console.log(userCredential.user) //???? why undefined?
-			console.log('you are in!');
-			updateProfile(userCredential.user, {
+			const token = userCredential.user.getIdToken();
+			console.log(token)
+
+			await updateProfile(userCredential.user, {
 				displayName: usernameRef.current.value, 
 			}).then(() => {
 				console.log('User Profile Updated Successfully');
 				console.log(userCredential.user)
+			})
+			await axios.post('/users/', {
+				id : userCredential.user.uid,
+				userInfo :  usernameRef.current.value , 
+			},  {
+					headers : {authtoken: token},
 			}).catch((error) => {
 				setError(error.message)
 			});
+			
 		} catch (error) {
 			console.log(error)
 			if (error.code === 'auth/email-already-in-use') {
@@ -53,7 +63,8 @@ function Register( { auth }) {
 			}
 			
 		}
-		setLoading(false)	
+		
+		setLoading(false)	 
 	}
 
   return (

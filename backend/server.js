@@ -6,6 +6,7 @@ import 'dotenv/config';
 import postRoutes from './routes/posts.js';
 import dogRoutes from './routes/dogs.js'; // router for dogs
 import uploadsRoutes from './routes/uploads.js';
+import userRoutes from './routes/users.js';
 //import * as admin from 'firebase-admin';
 //import credentials from './credentials.json' assert { type: "json" };
 /*
@@ -23,6 +24,7 @@ app.use(bodyParser.urlencoded({ limit: "30mb", extended: true}));
 app.use(cors());
 app.use('/', postRoutes); 
 app.use('/dogs', dogRoutes);
+app.use('/users', userRoutes);
 app.use('/uploads', uploadsRoutes);
 
 const dbURL = process.env.DB_URL;

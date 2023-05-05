@@ -2,24 +2,34 @@ import Head from 'next/head'
 import React,  { useState, useEffect } from 'react';
 import { Col, Row, Card, Alert, Navbar, Nav, Container, Offcanvas, Image } from 'react-bootstrap';
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+//import { useRouter } from 'next/navigation'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
-import Dog1 from "../../public/dog_1.jpg"
-import Dog8 from "../../public/dog_8.jpeg"
+
 
 
 function myPage( {auth} ) {
 
-  const [ error, setError ] = useState('')
+  const [ error, setError ] = useState('');
   const { currentUser, logOut } = auth;
-  const [ userInfo, setUserInfo ] = useState(null);
-  //const router = useRouter()
-
+  const [ userInfo, setUserInfo ] = useState('');
+ 
   useEffect(() => {
+    const loadUserInfo = async () => {
+      const token = await currentUser.getIdToken();
+      console.log(token)
+      /*
+      const res = await axios.get('/users/${currentUser.uid}', {
+        headers: { authtoken: token }
+      });
+      setUserInfo(res.data)
+      */
+    }
+    if (currentUser) {
+      loadUserInfo();
+    }
+  }, [currentUser]);
 
-  });
-  
   console.log("mypage")
   console.log(currentUser)
   async function handleLogOut() {
@@ -60,7 +70,7 @@ function myPage( {auth} ) {
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Nav.Link href="/mypage">View my page</Nav.Link>
-                  <Nav.Link href="/admin">Manage my dogs</Nav.Link>
+                  <Nav.Link href="/mydogs">Manage my dogs</Nav.Link>
                   <Nav.Link href="../message">My Message</Nav.Link>
                   <Nav.Item> 
                     <Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>
@@ -99,7 +109,10 @@ function myPage( {auth} ) {
       <div className = "w-300" style = {{ maxWidth: '400px'}}>
         <h3>My Dogs</h3>
         <Link href= "../admin" className="btn btn-primary w-500 mt-3">
-          Go Upload Dogs  
+          go upload my dogs  
+        </Link>
+        <Link href= "../mydogs" className="btn btn-primary w-500 mt-3">
+          go manage my dogs  
         </Link>
       </div>
       </Container>  

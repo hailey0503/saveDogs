@@ -8,6 +8,9 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation'
 
 function Admin({auth}) {
+  const [ error, setError ] = useState('')
+  const { currentUser, logOut } = auth;
+  const router = useRouter()
 
 	// register a dog to db in form submit 
   // call POST /dogs/register via fetch in handleSubmit
@@ -26,6 +29,9 @@ function Admin({auth}) {
     data.append('message', event.target.message.value)
     data.append('testImage', event.target.image.files[0])
 
+    const token = await currentUser.getIdToken();
+    console.log(token)
+
     console.log(data.testImage)
     console.log(event.target.image)
 
@@ -40,11 +46,12 @@ function Admin({auth}) {
       // The method is POST because we are sending data.
       method: 'POST',
       // Tell the server we're sending JSON.
-      /*
+      
       headers: {
-        'Content-Type': 'multipart/form-data',
+        //'Content-Type': 'multipart/form-data',
+        authtoken: token 
       },
-       */
+      
       // Body of the request is the JSON data we created above.
       body: data,
        
@@ -56,14 +63,10 @@ function Admin({auth}) {
     // Get the response data from server as JSON.
     // If server returns the name submitted, that means the form works.
     const result = await response.json()
-    //alert(`Is this your full name: ${result.data}`)
+    alert(`Is this your full name: ${result.body}`)
     alert(`successfully uploaded`)
 
   }
-
-  const [ error, setError ] = useState('')
-  const { currentUser, logOut } = auth;
-  const router = useRouter()
 
   async function handleLogOut() {
   
@@ -105,7 +108,7 @@ function Admin({auth}) {
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Nav.Link href="/mypage">View my page</Nav.Link>
                   <Nav.Link href="/admin">Upload dogs</Nav.Link>
-                  <Nav.Link href="/admin">Manage my dogs</Nav.Link>
+                  <Nav.Link href="/mydogs">Manage my dogs</Nav.Link>
                   <Nav.Link href="../message">My Message</Nav.Link>
                   <Nav.Item> 
                     <Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>

@@ -1,19 +1,14 @@
 //import winston from '../config/winston.js'
-import * as admin from 'firebase-admin';
-//import credentials from './credentials.json' assert { type: "json" };
-
-/*
-admin.initializeApp( {
-	credential: admin.credential.cert(credentials)
-
-}) 
-*/
+import admin from 'firebase-admin';
+//import credentials from '../credentials.json' assert { type: "json" };
 
 const defaultApp = admin.initializeApp({
   credential: admin.credential.cert({
     projectId: process.env.FIREBASE_PROJECT_ID,
     clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
     privateKey: process.env.FIREBASE_PRIVATE_KEY
+                ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/gm, "\n")
+                : undefined,
   })
 });
 
@@ -30,7 +25,8 @@ export const decode = async (req, res, next) => {
     req.uid = decodedToken.uid;
     return next();
   } catch (error) {
-    winston.error('decode error: ', error)
+    //winston.error('decode error: ', error)
+    console.log('error')
     return res.status(401).json({ success: false, message: error.message });
   }
 };

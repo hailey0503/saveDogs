@@ -1,9 +1,10 @@
 import Head from 'next/head'
 import React, { useRef, useState } from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, Button, Card, Alert, Navbar, Nav, Container, NavDropdown } from 'react-bootstrap'
+import { Form, Button, Card, Alert, Navbar, Nav, Container } from 'react-bootstrap'
 import Link from 'next/link'
 import { withPublic } from '../../src/app/routes'; 
+import { GoogleAuthProvider } from "firebase/auth";
 
 
 function Login ( {auth} ) {
@@ -20,7 +21,9 @@ function Login ( {auth} ) {
 		try {
 			setError('')
 			setLoading(true)
-			const { result, error } = await logIn(emailRef.current.value, passwordlRef.current.value)
+			const result = await logIn(emailRef.current.value, passwordlRef.current.value)
+			const token = result.user.getIdToken();
+			console.log(token)
 			console.log("Success. The user is logged in")
 			
 		} catch (error) {	
@@ -35,13 +38,14 @@ function Login ( {auth} ) {
 		try {
 			setError('')
 			setLoading(true)
-			const { result, error } = await loginWithGoogle()
-			const credential = auth.GoogleAuthProvider.credentialFromResult(result);
+			const result = await loginWithGoogle()
+			const credential = GoogleAuthProvider.credentialFromResult(result);
 			console.log(result)
 			console.log(credential.accessToken)
+			const token = result.user.getIdToken()
+			console.log(token)
 			console.log(result.user.uid)
 			console.log(result.user.displayName)
-			const uid = result.user.uid
 
 			console.log("Success. The user is logged in with Google")
 		} catch (error) {

@@ -7,15 +7,42 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
 
 
-function mydogs_admin( {auth} ) {
-
+function mydogs( { auth } ) {
 	const [ error, setError ] = useState('')
-	const { currentUser, logOut } = auth;
 	const router = useRouter()
-
-	const [isLoading, setLoading] = useState(false);
-
+	const [ dogs, setDogs ] = useState("")
+	const { currentUser, logOut } = auth;
+	const [isLoading, setLoading] = useState(false); 
 	const handleClick = () => setLoading(true);
+
+
+	const loadMyDogs = async () => {
+		const token = await currentUser.getIdToken();
+		  console.log(token)
+
+		const res = await fetch('http://localhost:4800/users', {
+  				headers: {authorization: `Bearer ${token}`}
+		})
+	  
+		setDogs(await res.json())
+	  
+	}
+
+	useEffect(() => {
+		if (currentUser) {
+			loadMyDogs();
+		}
+	}, [currentUser]);
+	
+
+	const saveChanges = async () => {
+		const token = await currentUser.getIdToken();
+		const res = await axios.put(
+			'/users/${currentUser.uid}', 
+			{ updates: {name} },
+			{ header: {authtoken: token }}
+		);	
+	};
   
 	async function handleLogOut() {
 	
@@ -29,7 +56,7 @@ function mydogs_admin( {auth} ) {
   
 	  }
 	}
-
+/*
 	function LoadingButton() {
 	  
 		useEffect(() => {
@@ -44,8 +71,9 @@ function mydogs_admin( {auth} ) {
 		  }
 		}, [isLoading]);
 	  
-		
-	}  
+	
+	} 
+*/ 
 	return (
 	  <>
 		<Head>
@@ -84,49 +112,37 @@ function mydogs_admin( {auth} ) {
 			</Container>
 		  </Navbar>
 		))}
-		<Container className = "d-flex align-items-center justify-content-center"
-	  style = {{ minHeight: "100vh" }}>
-		<div className = "w-100" style = {{ maxWidth: '400px'}}>
-			<Card style={{ width: '18rem' }}>
-				<Card.Img variant="top" src="holder.js/100px180?text=Image cap" />
-				<Card.Body>
-					<Card.Title>Card Title</Card.Title>
-					<Card.Text>
-					Some 
-					</Card.Text>
-				</Card.Body>
-				<ListGroup className="list-group-flush">
-					<ListGroup.Item>Cras justo odio</ListGroup.Item>
-					<ListGroup.Item>Dapibus ac facilisis in</ListGroup.Item>
-				</ListGroup>
-				<Card.Body>
-					<div className="d-grid gap-2">
-						<Button
-							href="#"
-							variant="primary" size="md"
-							disabled={isLoading}
-							onClick={!isLoading ? handleClick : null}
-						>
-							{isLoading ? 'Loading…' : 'Update'} 
-						</Button> {'                          '}
+		 <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s dogs</div> } </h2>
+		 <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
+              <Row xs={2} md={2} className="g-4">
+                {dogs.result && dogs.result.map(dog => 
+                  <div key={dog._id}>
+                    <Col>
+                      <Card style={{ width: '30rem', height: '30rem' }}>
+                    
+                        <Card.Img variant="top" style={{ width: '30rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
+                        <Card.Body>
+                          <Card.Title>
+                            { dog.name }
+                          </Card.Title>
+                          <Card.Text> 
+                            { dog.name } wants to go to { dog.airport }
+                          </Card.Text>
+						 
+                          <Button variant="primary">update</Button>
+						  <Button variant="primary">delete</Button>
 						
-						<Button
-							href="#"
-							variant="secondary" size="md"
-							disabled={isLoading}
-							onClick={!isLoading ? handleClick : null}
-						>
-							{isLoading ? 'Loading…' : 'Delete'}
-						</Button>
-					</div>
-				</Card.Body>
-			</Card>
-		</div>
-		</Container>  
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  </div>
+                )}
+              </Row>
+            </Container>
 	  </>
 	 
 	)
   }
   
-  export default withProtected(mydogs_admin)
+  export default withProtected(mydogs)
   

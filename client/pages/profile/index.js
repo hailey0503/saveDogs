@@ -34,7 +34,7 @@ function Profile({auth}) {
 
     // API endpoint where we send form data.
     //const endpoint = process.env.API_ENDPOINT
-    const endpoint = "http://localhost:4800/dogs/register"
+    const endpoint = process.env.API_ENDPOINT  
     // Form the request for sending data to the server.
     const options = {
       // The method is POST because we are sending data.
