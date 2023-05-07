@@ -2,14 +2,17 @@ import Head from 'next/head'
 import React from "react";
 import styles from '../../styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Form, Button, Nav, Navbar, Col, Row, Offcanvas, Container, Image } from "react-bootstrap";
+import { Form, Button, Nav, Navbar, Col, Row, Offcanvas, Container } from "react-bootstrap";
 import { withProtected } from '../../src/app/routes';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation' 
-import { updateProfile } from "firebase/auth";
+import { useRouter } from 'next/navigation'
+//import Popup from './components/Popup';
 
-
-function Profile({auth}) {
+function Admin({auth}) {
+  const [ error, setError ] = useState('')
+  //const [ buttonPopup, setButtonPopup  ] = useState(false)
+  const { currentUser, logOut } = auth;
+  const router = useRouter()
 
 	// register a dog to db in form submit 
   // call POST /dogs/register via fetch in handleSubmit
@@ -23,8 +26,14 @@ function Profile({auth}) {
     data.append('name', event.target.name.value)
     data.append('contact', event.target.contact.value)
     data.append('email', event.target.email.value)
+    data.append('kakao', event.target.kakao.value)
+    data.append('airport', event.target.airport.value)
     data.append('message', event.target.message.value)
     data.append('testImage', event.target.image.files[0])
+    data.append('uid', currentUser.uid)
+
+    const token = await currentUser.getIdToken();
+    console.log(token)
 
     console.log(data.testImage)
     console.log(event.target.image)
@@ -34,17 +43,19 @@ function Profile({auth}) {
 
     // API endpoint where we send form data.
     //const endpoint = process.env.API_ENDPOINT
-    const endpoint = process.env.API_ENDPOINT  
+    const endpoint = "http://localhost:4800/users/{currentUser.uid}" //how to get id from this dog?
     // Form the request for sending data to the server.
     const options = {
       // The method is POST because we are sending data.
-      method: 'POST',
+      method: 'PUT',
       // Tell the server we're sending JSON.
       /*
       headers: {
-        'Content-Type': 'multipart/form-data',
+        //'Content-Type': 'multipart/form-data',
+        authtoken: token 
       },
-       */
+      */
+      headers: {authorization: `Bearer ${token}`},
       // Body of the request is the JSON data we created above.
       body: data,
        
@@ -56,14 +67,11 @@ function Profile({auth}) {
     // Get the response data from server as JSON.
     // If server returns the name submitted, that means the form works.
     const result = await response.json()
-    //alert(`Is this your full name: ${result.data}`)
-    alert(`successfully uploaded`)
+    //alert(`Is this your full name: ${result.body}`)
+    //alert(`successfully uploaded`)
+	router.push('./mydogs')
 
   }
-
-  const [ error, setError ] = useState('')
-  const { currentUser, logOut } = auth;
-  const router = useRouter()
 
   async function handleLogOut() {
   
@@ -76,21 +84,6 @@ function Profile({auth}) {
       setError("Failed to Log Out")
 
     }
-  }
-
-  async function update(event) {
-    updateProfile(auth.currentUser, {
-    displayName: event.target.name.value, 
-    photoURL: event.target.image.value//it's uploaded as fakepath 
-    }).then(() => {
-      alert('User Profile Updated Successfully');
-      console.log(currentUser)
-    }).catch((error) => {
-      console.log(error.message)
-      setError(error.message)
-    });
-    alert('User Profile Updated Successfully');
-    router.push('./mypage')
   }
   return (
     <>
@@ -112,13 +105,15 @@ function Profile({auth}) {
             >
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
+               
                 { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Nav.Link href="/mypage">View my page</Nav.Link>
-                  <Nav.Link href="/admin">Manage my dogs</Nav.Link>
+                  <Nav.Link href="/admin">Upload dogs</Nav.Link>
+                  <Nav.Link href="/mydogs">Manage my dogs</Nav.Link>
                   <Nav.Link href="../message">My Message</Nav.Link>
                   <Nav.Item> 
                     <Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>
@@ -129,36 +124,56 @@ function Profile({auth}) {
           </Container>
         </Navbar>
       ))}
+      
       <main className={styles.main}>
-      <h2> { currentUser && <div>Hello, {currentUser.displayName? currentUser.displayName: currentUser.email}! </div> } </h2>
-      <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "30vh" }}>
-      <Row>
-       
-        <Col xs={6} md={4}>
-          <Image src= "http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdog_9.77c974bd.jpeg&w=640&q=75" roundedCircle />
-        </Col>
-        
-      </Row>
-    </Container>
-      <div className="Profile">
-        <Form onSubmit={update}>
+      <div className="Admin">
+        <Form onSubmit={handleSubmit}>
           <Row>
             <Col>
-              <Form.Label>Username</Form.Label>
+              <Form.Label>Dog Name</Form.Label>
               <Form.Control type="text" id = "name" placeholder="name" />
           </Col>
           <Col>
               <Form.Group controlId="formFileMultiple" className="mb-3">
-              <Form.Label>Your photo</Form.Label>
+              <Form.Label>Please upload photo here</Form.Label>
               <Form.Control type="file" id = 'image' multiple />
               </Form.Group>
           </Col>
         </Row>	
-          <Form.Label>About me</Form.Label>
+        <Row>
+          <Col>
+              <Form.Label>Contact</Form.Label>
+              <Form.Control type="phonenumber" id = "contact" placeholder="number only" />	
+          </Col>
+          <Col>
+              <Form.Label>Email address</Form.Label>
+              <Form.Control type="email" id = "email" placeholder="name@example.com" />
+            
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+              <Form.Label>Kakao ID</Form.Label>
+              <Form.Control type="kakaoID" id = "kakao" placeholder="ID" />	
+          </Col>
+          <Col>
+              <Form.Label>Destination Airport</Form.Label>
+                <Form.Select aria-label="Default select example" id = "airport">
+                  <option>Select Airport</option>
+                  <option value="1">San Francisco</option>
+                  <option value="2">New York</option>
+                  <option value="3">Los Angeles</option>
+                  <option value="4">Toronto</option>
+                  <option value="5">Vancouver</option>
+                  <option value="6">Seattle</option>
+                </Form.Select>
+          </Col>
+        </Row>	
+          <Form.Label>Message</Form.Label>
           <Form.Control as="textarea" id = "message" rows={3} />
           <br/>
           <Button variant="primary" type="submit">
-            update 
+            update
           </Button>
         
         </Form>
@@ -168,4 +183,4 @@ function Profile({auth}) {
   );
 }
 
-export default withProtected(Profile);
+export default withProtected(Admin);

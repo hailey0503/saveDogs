@@ -5,7 +5,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button, Nav, Navbar, Col, Row, Offcanvas, Container } from "react-bootstrap";
 import { withProtected } from '../../src/app/routes';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router';
 
 function Admin({auth}) {
   const [ error, setError ] = useState('')
@@ -18,7 +18,7 @@ function Admin({auth}) {
   const handleSubmit = async (event) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault()
-
+    console.log( event.target.image.files[0])
     // Get data from the form.
     const data = new FormData()
     data.append('name', event.target.name.value)
@@ -28,12 +28,13 @@ function Admin({auth}) {
     data.append('airport', event.target.airport.value)
     data.append('message', event.target.message.value)
     data.append('testImage', event.target.image.files[0])
+    data.append('uid', currentUser.uid)
 
     const token = await currentUser.getIdToken();
     console.log(token)
+    console.log('data',data)
 
-    console.log(data.testImage)
-    console.log(event.target.image)
+    console.log(event.target.image.files[0])
 
     // Send the data to the server in JSON format.
     //const JSONdata = JSON.stringify(data)
@@ -46,12 +47,7 @@ function Admin({auth}) {
       // The method is POST because we are sending data.
       method: 'POST',
       // Tell the server we're sending JSON.
-      
-      headers: {
-        //'Content-Type': 'multipart/form-data',
-        authtoken: token 
-      },
-      
+      headers: {authorization: `Bearer ${token}`},
       // Body of the request is the JSON data we created above.
       body: data,
        
@@ -63,8 +59,9 @@ function Admin({auth}) {
     // Get the response data from server as JSON.
     // If server returns the name submitted, that means the form works.
     const result = await response.json()
-    alert(`Is this your full name: ${result.body}`)
+    //alert(`Is this your full name: ${result.body}`)
     alert(`successfully uploaded`)
+    router.reload()
 
   }
 
@@ -101,7 +98,7 @@ function Admin({auth}) {
               <Offcanvas.Header closeButton>
                 <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
                
-                { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
+                { currentUser && <div>Hello {currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
                 </Offcanvas.Title>
               </Offcanvas.Header>
               <Offcanvas.Body>
@@ -129,10 +126,8 @@ function Admin({auth}) {
               <Form.Control type="text" id = "name" placeholder="name" />
           </Col>
           <Col>
-              <Form.Group controlId="formFileMultiple" className="mb-3">
               <Form.Label>Please upload photo here</Form.Label>
               <Form.Control type="file" id = 'image' multiple />
-              </Form.Group>
           </Col>
         </Row>	
         <Row>
@@ -168,7 +163,7 @@ function Admin({auth}) {
           <Form.Control as="textarea" id = "message" rows={3} />
           <br/>
           <Button variant="primary" type="submit">
-            Submit
+            update
           </Button>
         
         </Form>

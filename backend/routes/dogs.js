@@ -2,35 +2,19 @@ import express from 'express';
 import mongoose from 'mongoose';
 import Dog from '../models/dogs.js';
 import multer from 'multer';
-//import user from '../controllers/user.js';
 import { decode } from '../middlewares/firebase.js';
 import admin from 'firebase-admin';
 
 const router = express.Router();
+
 const Storage = multer.diskStorage({
 	destination: 'uploads'
 });
-
 
 const register = multer({
 	storage: Storage
 }).single('testImage') 
 
-/*
-router.use(async (req, res, next) => {
-	const { authtoken } = req.headers;
-	const { userId } = req.params
-	try {
-		const authUser = await admin.auth().verifyIdToken(authtoken);
-		if (authUser.uid != userId) {
-			return res.sendStatue(403)
-		}
-	} catch(e) {
-		res.sendStatue(e)
-	}
-	next();
-});
-*/
 // get dogs from db 
 router.get('/', async (req, res) => {
 	const dogData = await Dog.find()
@@ -57,15 +41,18 @@ router.get('/:userId', async (req, res) => {
 
 })
 */
-//router.get('/username', user.onIsUsernameAvailable)
 
 // store to db
 router.post("/register", async (req, res) => {
 	console.log("post a dog");
 	const { authtoken } = req.headers;
 	console.log(authtoken)
+	console.log('req', req)
+	console.log('req.body',req.body)
 	register(req, res, (err)=>{
-		//console.log(req)
+		//console.log('req in reqest', req)
+		console.log('req.body in register',req.body)
+		
 		if (err) {
 			console.log(err);
 		} else {
@@ -76,7 +63,8 @@ router.post("/register", async (req, res) => {
 				email: req.body.email,
 				kakao: req.body.kakao,
 				airport: req.body.airport,
-				message: req.body.message
+				message: req.body.message,
+				uid: req.body.uid
 			});
 			addDog.save(function(err, postedDog) {
 				if (err) {

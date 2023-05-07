@@ -1,9 +1,10 @@
 import express from 'express';
-//import user from '../controllers/user.js';
 import { decode } from '../middlewares/firebase.js';
 import Dog from '../models/dogs.js';
 import multer from 'multer';
+import bodyParser from 'body-parser';
 
+import _  from "lodash"; 
 
 const Storage = multer.diskStorage({
 	destination: 'uploads'
@@ -20,26 +21,26 @@ router
   
   .get('/', decode, async (req, res) => {
     console.log("get a dog");
-    const { userId } = req.params
-    console.log(userId)
   
     const dogData = await Dog.find()
     return res.status(200).json({
       result: dogData
-      });
+    });
   
   });
 
 router
-  .put('/:_id', decode, async (req, res) => {
+  .put('/:_id', decode, bodyParser.json(),async (req, res) => {
     console.log("updating a dog data");
-    const { updates } =req.body
+    //console.log(req)
     const _id = req.params._id;
+    console.log(_id)
+    console.log('req.body',req.body)
   
     await Dog.findByIdAndUpdate(_id, 
-         {
-          $set: {name: req.body.name, contact: req.body.contact, email: req.body.email} 
-         },
+        {
+          $set: _.pickBy(req.body, _.identity)
+        },
          {
           new: true
          },
@@ -48,13 +49,15 @@ router
           res.send("Error updating data");
         } else {
           res.json(updated_data);
+          console.log(updated_data)
         }
          }
        );
+       
   });
 
 router
-  .delete('/:_id', decode, async (req, res) => {
+  .delete('/delete/:_id', decode, async (req, res) => {
     console.log("deleting a dog data");
     
     const _id = req.params._id;

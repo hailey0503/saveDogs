@@ -30,6 +30,10 @@ const dogSchema = new Schema({
 	message: {
 		type: String,
 		required: true
+	},
+	uid: {
+		type:String,
+		required: true
 	}
 });
 

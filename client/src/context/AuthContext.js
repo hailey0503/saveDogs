@@ -28,9 +28,9 @@ export function AuthProvider({ children }) {
 	}
 	React.useEffect(() => {
 		const unsubscribe = auth.onAuthStateChanged(user => {
-			console.log(user)
+			//console.log(user)
 			setCurrentUser(user);
-			console.log(auth.currentUser)
+			//console.log(auth.currentUser)
 			if (auth.currentUser) {
 				const uid = auth.currentUser.uid;
 				const displayName = auth.currentUser.displayName;
