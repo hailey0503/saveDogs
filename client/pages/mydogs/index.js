@@ -122,7 +122,7 @@ function mydogs( { auth } ) {
 		const result = await response.json()
 		//alert(`Is this your full name: ${result.body}`)
 		alert(`successfully updated`)
-		router.push('./mydogs')
+		router.reload()
 	
 	  }
 	

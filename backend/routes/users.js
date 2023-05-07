@@ -32,28 +32,39 @@ router
 router
   .put('/:_id', decode, bodyParser.json(),async (req, res) => {
     console.log("updating a dog data");
-    //console.log(req)
     const _id = req.params._id;
     console.log(_id)
     console.log('req.body',req.body)
+    register(req, res, (err)=>{
+      const bodyInput = req.body
+      //console.log(bodyInput)
+      if (req.file) {
+        bodyInput['image'] = req.file.path
+      }
+      console.log(bodyInput)
+      
+      if (err) {
+        console.log(err);
+      } else {
   
-    await Dog.findByIdAndUpdate(_id, 
-        {
-          $set: _.pickBy(req.body, _.identity)
-        },
-         {
-          new: true
-         },
-         function(err, updated_data) {
-        if (err) {
-          res.send("Error updating data");
-        } else {
-          res.json(updated_data);
-          console.log(updated_data)
-        }
-         }
-       );
-       
+        Dog.findByIdAndUpdate(_id, 
+          {
+            $set: _.pickBy(bodyInput, _.identity)
+          },
+          {
+            new: true
+          },
+          function(err, updated_data) {
+          if (err) {
+            res.send("Error updating data");
+          } else {
+            res.json(updated_data);
+            console.log(updated_data)
+          }
+          }
+        );
+      }
+    });  
   });
 
 router

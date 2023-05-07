@@ -41,7 +41,6 @@ router.get('/:userId', async (req, res) => {
 
 })
 */
-
 // store to db
 router.post("/register", async (req, res) => {
 	console.log("post a dog");
@@ -49,6 +48,8 @@ router.post("/register", async (req, res) => {
 	console.log(authtoken)
 	console.log('req', req)
 	console.log('req.body',req.body)
+	console.log('req.file',req.file)
+
 	register(req, res, (err)=>{
 		//console.log('req in reqest', req)
 		console.log('req.body in register',req.body)
@@ -77,44 +78,5 @@ router.post("/register", async (req, res) => {
 		}
 	})
 });	
-//router.post('/', decode, user.onCreateUser)
-// delete from db but it's deleted in order not by _id
-/*
-router.delete('/:_id', async (req, res) => {
-	console.log("deleting a dog data");
-	
-	const _id = req.params._id;
-	
-	await Dog.findByIdAndRemove(_id, function(err, deleted_data){
-		if (err) {
-			res.send("errer deleting a dog data");
-		} else {
-			res.json(deleted_data);
-		}
-	});
-});
-
-router.put("/:_id", async (req, res) => {
-	console.log("updating a dog data");
-	const { updates } =req.body
-	const _id = req.params._id;
-
-	await Dog.findByIdAndUpdate(_id, 
-		   {
-				$set: {name: req.body.name, contact: req.body.contact, email: req.body.email} 
-		   },
-		   {
-				new: true
-		   },
-		   function(err, updated_data) {
-			if (err) {
-				res.send("Error updating data");
-			} else {
-				res.json(updated_data);
-			}
-		   }
-		 );
-});
-*/
 
 export default router;
