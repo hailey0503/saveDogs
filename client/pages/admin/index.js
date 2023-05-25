@@ -163,7 +163,7 @@ function Admin({auth}) {
           <Form.Control as="textarea" id = "message" rows={3} />
           <br/>
           <Button variant="primary" type="submit">
-            update
+            upload
           </Button>
         
         </Form>

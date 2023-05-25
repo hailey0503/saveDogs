@@ -7,12 +7,19 @@ import { Carousel, Form, Card, Container, Button, Nav, Navbar, Col, Row } from '
 import { useAuth } from '../src/context/AuthContext'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-
+import Link from 'next/link'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import Dog8 from "../public/dog_8.jpeg"
 import Dog9 from "../public/dog_9.jpeg"
 import Dog10 from "../public/dog_10.jpeg"
+import FormControlLabel from "@mui/material/FormControlLabel";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import Checkbox from "@mui/material/Checkbox";
+import Swal from 'sweetalert2';
+import 'animate.css';
+
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -43,6 +50,7 @@ export default function Home( {dogs} ) {
   const router = useRouter();
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [ favorites, setFavorite ] = useState([])
 
   async function handleLogOut() {
   
@@ -58,6 +66,26 @@ export default function Home( {dogs} ) {
   
     }
   }
+  async function addFavorite(e, dogID) {
+    e.preventDefault()
+    const {value, checked} = e.target
+    if (!currentUser) {
+      Swal.fire({title: 'please sign in first',
+      icon: 'info',
+      showClass: {
+        popup: 'animate__animated animate__fadeInDown'
+      },
+      hideClass: {
+        popup: 'animate__animated animate__fadeOutUp'
+      },
+      footer: '<a href="../login">Sign in Here</a>'
+    })
+    } 
+    if (checked) {
+      setFavorite(pre => [...pre, dogID])
+    }
+  }
+  console.log(favorites)
 
   return (
     
@@ -170,11 +198,24 @@ export default function Home( {dogs} ) {
                         <Card.Body>
                           <Card.Title>
                             { dog.name }
+                            <FormControlLabel
+                              control = {
+                                <Checkbox
+                                  icon = {<FavoriteBorderIcon />}
+                                  checkedIcon = {<FavoriteIcon />}
+                                  onChange=
+                                  {e => addFavorite(e, dog._id)}
+                                />
+                              }
+                              Label = "Like"
+                            />
                           </Card.Title>
                           <Card.Text> 
                             { dog.name } wants to go to { dog.airport }
                           </Card.Text>
-                          <Button variant="primary">click for detail</Button>
+                          <Link href= "../detail" className="btn btn-primary w-500 mt-3">
+                              click for detail
+                          </Link>
                         </Card.Body>
                       </Card>
                     </Col>

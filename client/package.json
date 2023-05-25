@@ -10,7 +10,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.0",
     "@next/font": "13.1.6",
+    "animate.css": "^4.1.1",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
     "eslint": "8.33.0",
@@ -22,6 +27,7 @@
     "react-datepicker": "^4.11.0",
     "react-dom": "18.2.0",
     "react-router-dom": "^6.8.2",
-    "sharp": "^0.31.3"
+    "sharp": "^0.31.3",
+    "sweetalert2": "^11.7.5"
   }
 }

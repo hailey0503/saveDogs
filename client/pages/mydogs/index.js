@@ -8,6 +8,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
 import Overlay from 'react-bootstrap/Overlay';
 import Popover from 'react-bootstrap/Popover';
+import Swal from 'sweetalert2';
+import 'animate.css';
+
 
 
 
@@ -20,7 +23,6 @@ function mydogs( { auth } ) {
  	const [target, setTarget] = useState(null);
   	const ref = useRef(null);
 	const { currentUser, logOut } = auth;
-	//const [isLoading, setLoading] = useState(false); 
 	//const handleClick = () => setLoading(true);
 
 	const loadMyDogs = async () => {
@@ -50,8 +52,28 @@ function mydogs( { auth } ) {
 		setShow(!show);
     	setTarget(event.target);
 	};
-
+	const deletealert = async (event, dog) => {
+		Swal.fire({
+			title: 'Are you sure?',
+			text: "You won't be able to revert this!",
+			icon: 'warning',
+			showCancelButton: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes, delete it!'
+		  }).then((result) => {
+			if (result.isConfirmed) {
+				deleteClick(event, dog)
+			 	Swal.fire(
+					'Deleted!',
+					'Your file has been deleted.',
+					'success'
+			  	)
+			}
+		  })
+	}
 	const deleteClick = async (event, dog) => {
+		
 		const token = await currentUser.getIdToken();
 		const dog_id = dog._id
 		const endpoint = "http://localhost:4800/users/delete/" + dog_id
@@ -62,18 +84,15 @@ function mydogs( { auth } ) {
 		  // Tell the server we're sending JSON.
 		  headers: {authorization: `Bearer ${token}`}, 
 		}
-	
+		
 		// Send the form data to our forms API on Vercel and get a response.
 		const response = await fetch(endpoint, options)
 	
 		// Get the response data from server as JSON.
 		// If server returns the name submitted, that means the form works.
 		const result = await response.json()
-		//alert(`Is this your full name: ${result.body}`)
-		alert(`successfully deleted`)
+		
 		router.reload()
-		
-		
 
 	}
 
@@ -174,7 +193,7 @@ function mydogs( { auth } ) {
 				</Offcanvas.Header>
 				<Offcanvas.Body>
 				  <Nav className="justify-content-end flex-grow-1 pe-3">
-					<Nav.Link href="/">View my profile</Nav.Link>
+					<Nav.Link href="/mypage">View my profile</Nav.Link>
 					<Nav.Link href="/admin">Upload dogs</Nav.Link>
 					<Nav.Link href="/admin">Manage my dogs</Nav.Link>
 					<Nav.Link href="../message">My Message</Nav.Link>
@@ -267,7 +286,7 @@ function mydogs( { auth } ) {
 									</Popover>
 								</Overlay>
 							</div>
-							<Button onClick = {e => deleteClick(e, dog)} variant="primary" type="submit">
+							<Button onClick = {e => deletealert(e, dog)} variant="primary" type="submit">
 											delete
 										</Button>
                         </Card.Body>

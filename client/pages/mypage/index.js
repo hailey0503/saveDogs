@@ -5,6 +5,7 @@ import Link from 'next/link'
 //import { useRouter } from 'next/navigation'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
+import Stack from 'react-bootstrap/Stack';
 
 
 
@@ -13,20 +14,17 @@ function myPage( {auth} ) {
   const [ error, setError ] = useState('');
   const { currentUser, logOut } = auth;
   const [ userInfo, setUserInfo ] = useState('');
+  const [ dogs, setDogs ] = useState("")
  
   useEffect(() => {
     const loadUserInfo = async () => {
       const token = await currentUser.getIdToken();
       console.log(token)
-      /*
-      const res = await axios.get('/users/${currentUser.uid}', {
-        headers: { authtoken: token }
-      });
-      setUserInfo(res.data)
-      */
+
     }
     if (currentUser) {
       loadUserInfo();
+      loadMyDogs();
     }
   }, [currentUser]);
 
@@ -44,6 +42,23 @@ function myPage( {auth} ) {
 
     }
   }
+  const loadMyDogs = async () => {
+		const token = await currentUser.getIdToken();
+		console.log(token)
+		const cur_uid = currentUser.uid
+
+
+		const res = await fetch('http://localhost:4800/users', {
+  				headers: {authorization: `Bearer ${token}`}
+		})
+		const response = await res.json()
+		console.log(response.result)
+		const dogs = response.result.filter(item => item.uid === cur_uid )
+		console.log(dogs)
+		setDogs(dogs)
+	  
+	}
+  
   return (
     <>
       <Head>
@@ -82,40 +97,78 @@ function myPage( {auth} ) {
         </Navbar>
       ))}
       <Container style = {{ minHeight: "20vh" }}>
-      <div className = "w-100" style = {{ maxWidth: '400px'}}></div>
-      <div>
-        <Row>
-          <Col xs={6} md={3}>
-            <Row>
-            <Image
-                  style={{ height: '10rem'  }}
-                  className="d-block w-100"
-                  src="http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdog_9.77c974bd.jpeg&w=640&q=75"
-                  roundedCircle 
-                />
-            </Row>
-            <Row>
-            <Link href = '/profile' className = 'profile-update'>update profile</Link>
-            </Row>
-          </Col>
-          <Col xs={6} md={8}>
-            <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s page</div> } </h2>
-          </Col>
-        </Row>
-      </div>
+     
+      <Stack direction="horizontal" gap={2}>
+    
+          <div>
+          <Image
+                style={{ height: '10rem'  }}
+                className="d-block w-100"
+                src="http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdog_9.77c974bd.jpeg&w=640&q=75"
+                roundedCircle 
+              />
+          
+          </div>
+        <div>
+          <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s page</div> } </h2>
+          <Link href = '/profile' className = 'profile-update'>update profile</Link>
+        </div>
+       
+       </Stack>
       </Container>
       
       <Container style = {{ minHeight: "100vh" }}>
       <div className = "w-300" style = {{ maxWidth: '400px'}}>
-        <h3>My Dogs</h3>
-        <Link href= "../admin" className="btn btn-primary w-500 mt-3">
-          go upload my dogs  
-        </Link>
-        <Link href= "../mydogs" className="btn btn-primary w-500 mt-3">
-          go manage my dogs  
-        </Link>
-      </div>
-      </Container>  
+  
+        <Stack gap={4}>
+          <div className="favorites"> 
+          
+            
+          <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s favorites</div> } </h2>
+          <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
+          {dogs.result && dogs.result.map(dog => 
+                  <div key={dog._id}>
+                    <Col>
+                      <Card style={{ width: '30rem', height: '30rem' }}>
+                    
+                        <Card.Img variant="top" style={{ width: '30rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
+                        <Card.Body>
+                          <Card.Title>
+                            { dog.name }
+                          </Card.Title>
+                          <Card.Text> 
+                            { dog.name } wants to go to { dog.airport }
+                          </Card.Text>
+                          <Link href= "../detail" className="btn btn-primary w-500 mt-3">
+                              click for detail
+                          </Link>
+                        </Card.Body>
+                      </Card>
+                    </Col>
+                  </div>
+                )}
+                </Container>
+              
+              </div> 
+              <div>
+                <Link href= "../mydogs" className="btn btn-primary w-500 mt-3">
+                  massage box
+                </Link>
+              </div>
+              <div>
+                <Link href= "../admin" className="btn btn-primary w-500 mt-3">
+                  upload dogs  
+                </Link>
+              </div>
+              <div>
+                <Link href= "../mydogs" className="btn btn-primary w-500 mt-3">
+                  manage my dogs  
+                </Link>
+              </div>
+            </Stack>
+            
+          </div>
+          </Container>  
     </>
    
   )
