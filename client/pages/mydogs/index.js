@@ -23,7 +23,6 @@ function mydogs( { auth } ) {
  	const [target, setTarget] = useState(null);
   	const ref = useRef(null);
 	const { currentUser, logOut } = auth;
-	//const handleClick = () => setLoading(true);
 
 	const loadMyDogs = async () => {
 		const token = await currentUser.getIdToken();

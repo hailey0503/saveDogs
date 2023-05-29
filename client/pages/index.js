@@ -6,7 +6,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Carousel, Form, Card, Container, Button, Nav, Navbar, Col, Row } from 'react-bootstrap'
 import { useAuth } from '../src/context/AuthContext'
 import React, { useState } from 'react'
-import { useRouter } from 'next/navigation'
+//import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router';
 import Link from 'next/link'
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -68,7 +69,7 @@ export default function Home( {dogs} ) {
   }
   async function addFavorite(e, dogID) {
     e.preventDefault()
-    const {value, checked} = e.target
+   
     if (!currentUser) {
       Swal.fire({title: 'please sign in first',
       icon: 'info',
@@ -80,9 +81,41 @@ export default function Home( {dogs} ) {
       },
       footer: '<a href="../login">Sign in Here</a>'
     })
-    } 
-    if (checked) {
-      setFavorite(pre => [...pre, dogID])
+    } else {
+      const {value, checked} = e.target
+      if (checked) {
+        const data = {
+          uid: currentUser.uid,
+          dogId: dogID
+        }
+  
+        const token = await currentUser.getIdToken();
+        const endpoint = "http://localhost:4800/favorite"
+      // Form the request for sending data to the server.
+        const options = {
+          // The method is POST because we are sending data.
+          method: 'POST',
+          // Tell the server we're sending JSON.
+          //headers: {authorization: `Bearer ${token}`},
+          // Body of the request is the JSON data we created above.
+          headers: {
+            'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+          
+        }
+        console.log(data)
+        // Send the form data to our forms API on Vercel and get a response.
+        const response = await fetch(endpoint, options)
+
+        // Get the response data from server as JSON.
+        // If server returns the name submitted, that means the form works.
+        const result = await response.json()
+        console.log(result)
+        alert(`successfully added to favorite`)
+        //router.reload()
+        //setFavorite(pre => [...pre, dogID])
+      }
     }
   }
   console.log(favorites)

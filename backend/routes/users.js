@@ -33,8 +33,7 @@ router
   .put('/:_id', decode, bodyParser.json(),async (req, res) => {
     console.log("updating a dog data");
     const _id = req.params._id;
-    console.log(_id)
-    console.log('req.body',req.body)
+   
     register(req, res, (err)=>{
       const bodyInput = req.body
       //console.log(bodyInput)

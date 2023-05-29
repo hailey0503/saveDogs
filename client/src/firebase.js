@@ -1,6 +1,7 @@
 import { initializeApp, getApps } from "firebase/app"
 import { getAuth } from "firebase/auth";
 import { getFirestore } from 'firebase/firestore';
+import { getDatabase, ref } from 'firebase/database';
 
 console.log(process.env.NEXT_PUBLIC_API_KEY);
 console.log(process.env.NEXT_PUBLIC_AUTH_DOMAIN);
@@ -18,7 +19,8 @@ const firebaseConfig = {
 let app =  getApps().length === 0 ? initializeApp(firebaseConfig) : getApps()[0];
 
 const auth = getAuth(app);
-const db = getFirestore(app);
+//const db = getFirestore(app);
+const db = getDatabase();
 
 export {
 	auth,
