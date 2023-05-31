@@ -158,7 +158,7 @@ function myPage( {auth} ) {
             </Container>    
           </div> 
           <div>
-            <Link href= "../mydogs" className="btn btn-primary w-500 mt-3">
+            <Link href= "../chat" className="btn btn-primary w-500 mt-3">
               massage box
             </Link>
           </div>
