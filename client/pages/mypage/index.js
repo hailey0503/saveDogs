@@ -28,7 +28,9 @@ function myPage( {auth} ) {
     const res = await fetch('http://localhost:4800/userprofile/')
     console.log(res)
     const response = await res.json()
-    const favDogs = response.result[0].favorite
+    const myData = response.result.filter(item => item.uid === cur_uid)[0]
+    console.log(myData)
+    const favDogs = myData.favorite
     console.log('fd',favDogs)
     const dogs = await fetch('http://localhost:4800/dogs/')
     const dogs_data = await dogs.json()
@@ -97,7 +99,7 @@ function myPage( {auth} ) {
                 <Nav className="justify-content-end flex-grow-1 pe-3">
                   <Nav.Link href="/mypage">View my page</Nav.Link>
                   <Nav.Link href="/mydogs">Manage my dogs</Nav.Link>
-                  <Nav.Link href="../message">My Message</Nav.Link>
+                  <Nav.Link href="../chat">My Message</Nav.Link>
                   <Nav.Item> 
                     <Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>
                   </Nav.Item>
@@ -137,7 +139,7 @@ function myPage( {auth} ) {
               {dogs_rep && dogs_rep.map(dog => 
                 <div key={dog.id}>
                   <Col>
-                    <Card style={{ width: '20rem', height: '30rem' }}>
+                    <Card style={{ width: '30rem', height: '30rem' }}>
                   
                       <Card.Img variant="top" style={{ width: '30rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
                       <Card.Body>
