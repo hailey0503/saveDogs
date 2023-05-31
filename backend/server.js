@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import 'dotenv/config';
 import postRoutes from './routes/posts.js';
 import dogRoutes from './routes/dogs.js'; // router for dogs
-import favoriteRoutes from './routes/favorite.js'; // router for favorite
+import userProfileRoutes from './routes/userprofile.js'; // router for favorite
 import uploadsRoutes from './routes/uploads.js';
 import userRoutes from './routes/users.js';
 
@@ -20,7 +20,7 @@ app.use('/', postRoutes);
 app.use('/dogs', dogRoutes);
 app.use('/users', userRoutes);
 app.use('/uploads', uploadsRoutes);
-app.use('/favorite', favoriteRoutes);
+app.use('/userprofile', userProfileRoutes);
 
 const dbURL = process.env.DB_URL;
 const port = process.env.PORT;

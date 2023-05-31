@@ -1,17 +1,17 @@
 import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
-const favoriteSchema = new Schema({
+const userProfileSchema = new Schema({
 	uid: {
 		type:String,
 		required: true
 	},
-	dogId: {
-		type:String,
+	favorite: {
+		type:Array,
 		required: true
 	}
 	
 });
 
 
-export default mongoose.model("Favorite", favoriteSchema);
+export default mongoose.model("UserProfile", userProfileSchema);

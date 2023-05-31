@@ -46,18 +46,47 @@ function Login ( {auth} ) {
 			console.log(token)
 			console.log(result.user.uid)
 			console.log(result.user.displayName)
-
+			const data = {
+				uid: result.user.uid,
+				favorite: []
+			}
+		
+			  //const token = await currentUser.getIdToken();
+			const endpoint = "http://localhost:4800/userprofile"
+			// Form the request for sending data to the server.
+			const options = {
+				// The method is POST because we are sending data.
+				method: 'POST',
+				// Tell the server we're sending JSON.
+				//headers: {authorization: `Bearer ${token}`},
+				// Body of the request is the JSON data we created above.
+				headers: {
+				  'Content-Type': 'application/json',
+				  },
+				  body: JSON.stringify(data),
+				
+			}
+			console.log(endpoint, options) 
+			postProfile(endpoint, options)
+		
 			console.log("Success. The user is logged in with Google")
 		} catch (error) {
 			console.log(error.message)
 			setError('fail to log in')
 		}
 	}
-	
+	async function postProfile(endpoint, options) {
+		// Send the form data to our forms API on Vercel and get a response.
+		const response = await fetch(endpoint, options)
+  
+		// Get the response data from server as JSON.
+		// If server returns the name submitted, that means the form works.
+		const result = await response.json()
+		console.log(result)
+		alert(`successfully added to userprofile`)
+		//setLoading(false)
+	}
 
-
-
-	
   return (
 	<>
 		<Head>

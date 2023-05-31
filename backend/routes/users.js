@@ -20,7 +20,7 @@ const router = express.Router();
 router
   
   .get('/', decode, async (req, res) => {
-    console.log("get a dog");
+    console.log("get a dog->routes.users 23");
   
     const dogData = await Dog.find()
     return res.status(200).json({

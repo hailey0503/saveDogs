@@ -22,25 +22,7 @@ router.get('/', async (req, res) => {
 		result: dogData
 	  });
 });
-/*
-router.get('/:userId', async (req, res) => {
-	console.log("post a dog");
-	const { userId } = req.params
-	const _id = req.params._id;
-	console.log(authtoken)
-	console.log(userId)
 
-	
-	const [respond, error] = await decode(req, res, next)
-	const user = onGetUserByUid(userId)
-	if (user) {
-		res.json(user)
-	} else {
-		res.setStatus(404)
-	}
-
-})
-*/
 // store to db
 router.post("/register", async (req, res) => {
 	console.log("post a dog");

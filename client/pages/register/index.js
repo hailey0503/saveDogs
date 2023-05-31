@@ -19,7 +19,7 @@ function Register( { auth }) {
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
-		
+		let uid = ''
 		if (passwordlRef.current.value != passwordConfirmRef.current.value) {
 			return setError('PASSWORD DO NOT MATCH')
 		}
@@ -29,6 +29,7 @@ function Register( { auth }) {
 			const userCredential = await signUp(emailRef.current.value, passwordlRef.current.value, usernameRef.current.value)
 			
 			console.log(userCredential.user) //???? why undefined?
+			uid = userCredential.user.uid
 			const token = userCredential.user.getIdToken();
 			console.log(token)
 
@@ -37,15 +38,8 @@ function Register( { auth }) {
 			}).then(() => {
 				console.log('User Profile Updated Successfully');
 				console.log(userCredential.user)
+				
 			})
-			await axios.post('/users/', {
-				id : userCredential.user.uid,
-				userInfo :  usernameRef.current.value , 
-			},  {
-					headers : {authtoken: token},
-			}).catch((error) => {
-				setError(error.message)
-			});
 			
 		} catch (error) {
 			console.log(error)
@@ -63,8 +57,42 @@ function Register( { auth }) {
 			}
 			
 		}
-		
-		setLoading(false)	 
+		const data = {
+			uid: uid,
+			favorite: []
+		}
+	
+		  //const token = await currentUser.getIdToken();
+		const endpoint = "http://localhost:4800/userprofile"
+		// Form the request for sending data to the server.
+		const options = {
+			// The method is POST because we are sending data.
+			method: 'POST',
+			// Tell the server we're sending JSON.
+			//headers: {authorization: `Bearer ${token}`},
+			// Body of the request is the JSON data we created above.
+			headers: {
+			  'Content-Type': 'application/json',
+			  },
+			  body: JSON.stringify(data),
+			
+		}
+		console.log(endpoint, options)
+		  
+		postProfile(endpoint, options)
+		console.log('bw')
+			 
+	}
+	async function postProfile(endpoint, options) {
+		// Send the form data to our forms API on Vercel and get a response.
+		const response = await fetch(endpoint, options)
+  
+		// Get the response data from server as JSON.
+		// If server returns the name submitted, that means the form works.
+		const result = await response.json()
+		console.log(result)
+		alert(`successfully added to userprofile`)
+		setLoading(false)
 	}
 
   return (

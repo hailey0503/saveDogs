@@ -14,7 +14,7 @@ function myPage( {auth} ) {
   const [ error, setError ] = useState('');
   const { currentUser, logOut } = auth;
   const [ userInfo, setUserInfo ] = useState('');
-  const [ dogs, setDogs ] = useState("")
+  const [ dogs_rep, setDogs ] = useState("")
 
   const loadUserInfo = async () => {
     const token = await currentUser.getIdToken();
@@ -22,17 +22,28 @@ function myPage( {auth} ) {
 
   }
   const loadMyDogs = async () => {
-    const token = await currentUser.getIdToken();
     const cur_uid = currentUser.uid
+    console.log('cuid', cur_uid)
 
-    const res = await fetch('http://localhost:4800/users', {
-          headers: {authorization: `Bearer ${token}`}
-    })
+    const res = await fetch('http://localhost:4800/userprofile/')
+    console.log(res)
     const response = await res.json()
-    console.log(response.result)
-    const dogs = response.result.filter(item => item.uid === cur_uid )
-    console.log(dogs)
-    setDogs(dogs)
+    const favDogs = response.result[0].favorite
+    console.log('fd',favDogs)
+    const dogs = await fetch('http://localhost:4800/dogs/')
+    const dogs_data = await dogs.json()
+    const dogs_result = dogs_data.result
+    console.log('rep',dogs_result)
+    var dogs_rep = []
+    
+          var loopData = ''
+          for(var d in favDogs){
+            console.log('d', favDogs[d])
+            dogs_rep.push(dogs_result.filter(item => item._id === favDogs[d]));
+            console.log(dogs_rep)
+          }
+              
+    setDogs(dogs_rep.flat())
   
   }
  
@@ -119,15 +130,14 @@ function myPage( {auth} ) {
     
       <Container style = {{ minHeight: "100vh" }}>
       <div className = "w-300" style = {{ maxWidth: '400px'}}>
-  
         <Stack gap={4}>
           <div className="favorites"> 
-            <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s favorites</div> } </h2>
+          <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s favorites</div> } </h2>
             <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
-              {dogs && dogs.map(dog => 
-                <div key={dog._id}>
+              {dogs_rep && dogs_rep.map(dog => 
+                <div key={dog.id}>
                   <Col>
-                    <Card style={{ width: '30rem', height: '30rem' }}>
+                    <Card style={{ width: '20rem', height: '30rem' }}>
                   
                       <Card.Img variant="top" style={{ width: '30rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
                       <Card.Body>

@@ -86,11 +86,11 @@ export default function Home( {dogs} ) {
       if (checked) {
         const data = {
           uid: currentUser.uid,
-          dogId: dogID
+          favorite: [dogID]
         }
   
         const token = await currentUser.getIdToken();
-        const endpoint = "http://localhost:4800/favorite"
+        const endpoint = "http://localhost:4800/userprofile"
       // Form the request for sending data to the server.
         const options = {
           // The method is POST because we are sending data.
@@ -104,7 +104,7 @@ export default function Home( {dogs} ) {
             body: JSON.stringify(data),
           
         }
-        console.log(data)
+        console.log('107',data)
         // Send the form data to our forms API on Vercel and get a response.
         const response = await fetch(endpoint, options)
 
