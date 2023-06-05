@@ -5,7 +5,9 @@ import { Form, Button, Card, Alert, Navbar, Container } from 'react-bootstrap'
 import Link from 'next/link'
 import { updateProfile } from "firebase/auth";
 import { withPublic } from '../../src/app/routes';
-//import { setDoc, doc } from 'firebase/firestore'
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { collection, doc, addDoc, setDoc } from "firebase/firestore";
+import { db } from "../../src/firebase"
 
 
 function Register( { auth }) {
@@ -23,66 +25,106 @@ function Register( { auth }) {
 		if (passwordlRef.current.value != passwordConfirmRef.current.value) {
 			return setError('PASSWORD DO NOT MATCH')
 		}
+		const displayName = usernameRef.current.value;
+    	const email = emailRef.current.value;
+    	const password = passwordlRef.current.value;
+    	//const file = e.target[3].files[0];
+
 		try {
 			setError('')
 			setLoading(true) 
-			const userCredential = await signUp(emailRef.current.value, passwordlRef.current.value, usernameRef.current.value)
-			
+			const userCredential = await signUp(email, password)
+
+			//Create a unique image name
+			//const date = new Date().getTime();
+			//const storageRef = ref(storage, `${displayName + date}`);
+
+			// check if user created
+			const user = userCredential.user
 			console.log(userCredential.user) //???? why undefined?
 			uid = userCredential.user.uid
-			const token = userCredential.user.getIdToken();
-			console.log(token)
 
 			await updateProfile(userCredential.user, {
-				displayName: usernameRef.current.value, 
+				displayName: displayName, 
 			}).then(() => {
 				console.log('User Profile Updated Successfully');
 				console.log(userCredential.user)
 				
 			})
 			
+			await addDoc(collection(db, "users"), {
+			uid: user.uid,
+			displayName,
+			email
+			});
+  
+			const data = {
+				uid: uid,
+				favorite: []
+			}
+		
+			  //const token = await currentUser.getIdToken();
+			const endpoint = "http://localhost:4800/userprofile"
+			// Form the request for sending data to the server.
+			const options = {
+				// The method is POST because we are sending data.
+				method: 'POST',
+				// Tell the server we're sending JSON.
+				//headers: {authorization: `Bearer ${token}`},
+				// Body of the request is the JSON data we created above.
+				headers: {
+				  'Content-Type': 'application/json',
+				  },
+				  body: JSON.stringify(data),
+				
+			}
+			console.log(endpoint, options)  
+			
+			await postProfile(endpoint, options)
+			//await updateProfile(user, displayName)
+			console.log('bw')
+			
 		} catch (error) {
 			console.log(error)
 			if (error.code === 'auth/email-already-in-use') {
 				setError("email is already in use try another email")
+				setLoading(false)
 
 			} else if (error.code === 'auth/email-already-in-use') {
 				setError("passward must be at least 6 characters")
+				setLoading(false)
 
 			} else if (error.code === 'auth/invalid-email') {
 				setError("Thrown if the email address is not valid")
+				setLoading(false)
 
 			} else {
 				setError(error.code) 
 			}
 			
-		}
-		const data = {
-			uid: uid,
-			favorite: []
-		}
-	
-		  //const token = await currentUser.getIdToken();
-		const endpoint = "http://localhost:4800/userprofile"
-		// Form the request for sending data to the server.
-		const options = {
-			// The method is POST because we are sending data.
-			method: 'POST',
-			// Tell the server we're sending JSON.
-			//headers: {authorization: `Bearer ${token}`},
-			// Body of the request is the JSON data we created above.
-			headers: {
-			  'Content-Type': 'application/json',
-			  },
-			  body: JSON.stringify(data),
-			
-		}
-		console.log(endpoint, options)
-		  
-		postProfile(endpoint, options)
-		console.log('bw')
-			 
+		}		 
 	}
+/*
+	async function updateProfile(user, displayName, db) {
+		try {
+			//create user on firestore
+			
+			await setDoc(doc(db, "users", user.uid), {
+				uid: user.uid,
+				displayName,
+				email,	
+			});
+			//create empty user chats on firestore
+			await setDoc(doc(db, "userChats", res.user.uid), {});
+			
+		} catch (err) {
+            console.log(err);
+            setError(true);
+            setLoading(false);
+        }
+
+	}
+*/	
 	async function postProfile(endpoint, options) {
 		// Send the form data to our forms API on Vercel and get a response.
 		const response = await fetch(endpoint, options)
@@ -110,7 +152,7 @@ function Register( { auth }) {
         	</Container>   
           </Navbar>
         </nav>
-	<container className = "d-flex align-items-center justify-content-center"
+	<Container className = "d-flex align-items-center justify-content-center"
 			style = {{ minHeight: "100vh" }}>
 		<div className = "w-100" style = {{ maxWidth: '400px'}}>
 			<Card>
@@ -146,7 +188,7 @@ function Register( { auth }) {
 				</Card.Body>
 			</Card>
 		</div>
-	</container>
+	</Container>
 	</>
   )
 }

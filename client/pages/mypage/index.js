@@ -26,27 +26,28 @@ function myPage( {auth} ) {
     console.log('cuid', cur_uid)
 
     const res = await fetch('http://localhost:4800/userprofile/')
-    console.log(res)
     const response = await res.json()
+    console.log('mypage 30', response)
     const myData = response.result.filter(item => item.uid === cur_uid)[0]
     console.log(myData)
-    const favDogs = myData.favorite
-    console.log('fd',favDogs)
-    const dogs = await fetch('http://localhost:4800/dogs/')
-    const dogs_data = await dogs.json()
-    const dogs_result = dogs_data.result
-    console.log('rep',dogs_result)
-    var dogs_rep = []
-    
-          var loopData = ''
-          for(var d in favDogs){
-            console.log('d', favDogs[d])
-            dogs_rep.push(dogs_result.filter(item => item._id === favDogs[d]));
-            console.log(dogs_rep)
-          }
-              
-    setDogs(dogs_rep.flat())
-  
+    if (myData != null) {
+      const favDogs = myData.favorite
+      console.log('fd',favDogs)
+      const dogs = await fetch('http://localhost:4800/dogs/')
+      const dogs_data = await dogs.json()
+      const dogs_result = dogs_data.result
+      console.log('rep',dogs_result)
+      var dogs_rep = []
+      
+            var loopData = ''
+            for(var d in favDogs){
+              console.log('d', favDogs[d])
+              dogs_rep.push(dogs_result.filter(item => item._id === favDogs[d]));
+              console.log(dogs_rep)
+            }
+                
+      setDogs(dogs_rep.flat())
+    }
   }
  
   useEffect(() => {
