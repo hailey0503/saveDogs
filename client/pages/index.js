@@ -20,6 +20,8 @@ import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Checkbox from "@mui/material/Checkbox";
 import Swal from 'sweetalert2';
 import 'animate.css';
+import { BsChatDots } from "react-icons/bs";
+import { BiDetail } from "react-icons/bi";
 
 
 
@@ -214,7 +216,7 @@ export default function Home( {dogs} ) {
                 </Col>
               
                 <Col xs= {2}>
-                <button class="btn btn-success" type="submit">Search</button>
+                <button className="btn btn-success" type="submit">Search</button>
                 </Col>
               </Row>
             </Form>
@@ -231,6 +233,7 @@ export default function Home( {dogs} ) {
                         <Card.Body>
                           <Card.Title>
                             { dog.name }
+                      
                             <FormControlLabel
                               control = {
                                 <Checkbox
@@ -242,13 +245,15 @@ export default function Home( {dogs} ) {
                               }
                               Label = "Like"
                             />
+                            <a href="../chat"><BsChatDots /></a>
+
+                            <a href= "../detail"><BiDetail /> </a>
+                    
                           </Card.Title>
                           <Card.Text> 
                             { dog.name } wants to go to { dog.airport }
                           </Card.Text>
-                          <Link href= "../detail" className="btn btn-primary w-500 mt-3">
-                              click for detail
-                          </Link>
+                         
                         </Card.Body>
                       </Card>
                     </Col>

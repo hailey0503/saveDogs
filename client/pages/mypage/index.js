@@ -6,22 +6,23 @@ import Link from 'next/link'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
 import Stack from 'react-bootstrap/Stack';
+import NavComp from "../../comps/NavComp.js";
 
 
 
 function myPage( {auth} ) {
 
-  const [ error, setError ] = useState('');
   const { currentUser, logOut } = auth;
   const [ userInfo, setUserInfo ] = useState('');
-  const [ dogs_rep, setDogs ] = useState("")
+  const [ dogs_resp, setFavDogs ] = useState("")
+  const [ dogs, setDogs ] = useState("")
 
   const loadUserInfo = async () => {
     const token = await currentUser.getIdToken();
     console.log(token)
 
   }
-  const loadMyDogs = async () => {
+  const loadMyFavDogs = async () => {
     const cur_uid = currentUser.uid
     console.log('cuid', cur_uid)
 
@@ -36,43 +37,47 @@ function myPage( {auth} ) {
       const dogs = await fetch('http://localhost:4800/dogs/')
       const dogs_data = await dogs.json()
       const dogs_result = dogs_data.result
-      console.log('rep',dogs_result)
-      var dogs_rep = []
-      
-            var loopData = ''
+      console.log('resp',dogs_result)
+      var dogs_resp = []
+
             for(var d in favDogs){
               console.log('d', favDogs[d])
-              dogs_rep.push(dogs_result.filter(item => item._id === favDogs[d]));
-              console.log(dogs_rep)
+              dogs_resp.push(dogs_result.filter(item => item._id === favDogs[d]));
+              console.log(dogs_resp.flat())
             }
                 
-      setDogs(dogs_rep.flat())
+      setFavDogs(dogs_resp.flat())
     }
   }
- 
+  const loadMyDogs = async () => {
+		const token = await currentUser.getIdToken();
+		console.log(token)
+		const cur_uid = currentUser.uid
+
+
+		const res = await fetch('http://localhost:4800/users', {
+  				headers: {authorization: `Bearer ${token}`}
+		})
+		const response = await res.json()
+		console.log(response.result)
+		const dogs = response.result.filter(item => item.uid === cur_uid )
+		console.log(dogs)
+		setDogs(dogs)
+	  
+	}
   useEffect(() => {
     
     if (currentUser) {
       loadUserInfo();
+      loadMyFavDogs();
       loadMyDogs();
     }
   }, [currentUser]);
   
   console.log("mypage")
   console.log(currentUser)
-  async function handleLogOut() {
-  
-    try {
 
-      setError("")
-      await logOut();
-    } catch {
-
-      setError("Failed to Log Out")
-
-    }
-  }
-  
+ 
   return (
     <>
       <Head>
@@ -81,35 +86,7 @@ function myPage( {auth} ) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {[false].map((expand) => (
-        <Navbar key={expand} bg="dark" variant="dark" expand={expand} className="mb-3">
-          <Container fluid>
-          <Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
-            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
-            <Navbar.Offcanvas
-              id={`offcanvasNavbar-expand-${expand}`}
-              aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-              placement="end"
-            >
-              <Offcanvas.Header closeButton>
-                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
-                { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
-                </Offcanvas.Title>
-              </Offcanvas.Header>
-              <Offcanvas.Body>
-                <Nav className="justify-content-end flex-grow-1 pe-3">
-                  <Nav.Link href="/mypage">View my page</Nav.Link>
-                  <Nav.Link href="/mydogs">Manage my dogs</Nav.Link>
-                  <Nav.Link href="../chat">My Message</Nav.Link>
-                  <Nav.Item> 
-                    <Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>
-                  </Nav.Item>
-                </Nav>
-              </Offcanvas.Body>
-            </Navbar.Offcanvas>
-          </Container>
-        </Navbar>
-      ))}
+      <NavComp />
       <Container style = {{ minHeight: "20vh" }}>
      
       <Stack direction="horizontal" gap={2}>
@@ -135,9 +112,10 @@ function myPage( {auth} ) {
       <div className = "w-300" style = {{ maxWidth: '400px'}}>
         <Stack gap={4}>
           <div className="favorites"> 
-          <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s favorites</div> } </h2>
+          <h2>{ currentUser && <div>---{currentUser.displayName? currentUser.displayName: currentUser.email}'s favorites---</div> } </h2>
             <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
-              {dogs_rep && dogs_rep.map(dog => 
+              
+              {dogs_resp? dogs_resp.map(dog => 
                 <div key={dog.id}>
                   <Col>
                     <Card style={{ width: '30rem', height: '30rem' }}>
@@ -157,23 +135,45 @@ function myPage( {auth} ) {
                     </Card>
                   </Col>
                 </div>
-              )}
+              ):<h3>add favorite dogs</h3> }
             </Container>    
           </div> 
           <div>
-            <Link href= "../chat" className="btn btn-primary w-500 mt-3">
-              massage box
+          <h2>{ currentUser && <div>---{currentUser.displayName? currentUser.displayName: currentUser.email}'s messages---</div> } </h2>
+            <Link href= "../chatroom" className="btn btn-primary w-500 mt-3">
+              click for chat
             </Link>
           </div>
+          <div>
+          <h2> { currentUser && <div>---{currentUser.displayName? currentUser.displayName: currentUser.email}'s dogs---</div> } </h2>
           <div>
             <Link href= "../admin" className="btn btn-primary w-500 mt-3">
               upload dogs  
             </Link>
           </div>
-          <div>
-            <Link href= "../mydogs" className="btn btn-primary w-500 mt-3">
-              manage my dogs  
-            </Link>
+            <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
+              <Row xs={2} md={2} className="g-4">
+                {dogs && dogs.map(dog => 
+                  <div key={dog._id}>
+                    <Col>
+                      <Card style={{ width: '30rem', height: '30rem' }}>
+                    
+                        <Card.Img variant="top" style={{ width: '30rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
+                        <Card.Body>
+                        	<Card.Title>
+                            	{ dog.name }
+                          	</Card.Title>
+                          	<Card.Text> 
+                            	{ dog.name } wants to go to { dog.airport }
+                          	</Card.Text>
+                          </Card.Body>
+                        </Card>
+                      </Col>
+                    </div>
+                  )}
+                </Row>
+            </Container>
+
           </div>
         </Stack>
   

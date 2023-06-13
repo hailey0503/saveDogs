@@ -132,7 +132,7 @@ function detail({ auth }) {
 						</Col>
 							
 							<Card.Title></Card.Title>
-							<Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>
+						
 							<Card.Text variant = "right" >
 							<FormControlLabel
 								control = {

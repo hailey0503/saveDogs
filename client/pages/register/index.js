@@ -51,13 +51,16 @@ function Register( { auth }) {
 				console.log(userCredential.user)
 				
 			})
+
+			await setDoc(doc(db, "users", user.uid), {
+				uid: user.uid,
+				displayName,
+				email
+			  });
 			
-			await addDoc(collection(db, "users"), {
-			uid: user.uid,
-			displayName,
-			email
-			});
-  
+			await setDoc(doc(db, "userChats", user.uid), {});
+
+	
 			const data = {
 				uid: uid,
 				favorite: []
@@ -104,27 +107,7 @@ function Register( { auth }) {
 			
 		}		 
 	}
-/*
-	async function updateProfile(user, displayName, db) {
-		try {
-			//create user on firestore
-			
-			await setDoc(doc(db, "users", user.uid), {
-				uid: user.uid,
-				displayName,
-				email,	
-			});
-			//create empty user chats on firestore
-			await setDoc(doc(db, "userChats", res.user.uid), {});
-			
-		} catch (err) {
-            console.log(err);
-            setError(true);
-            setLoading(false);
-        }
 
-	}
-*/	
 	async function postProfile(endpoint, options) {
 		// Send the form data to our forms API on Vercel and get a response.
 		const response = await fetch(endpoint, options)

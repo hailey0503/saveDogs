@@ -6,9 +6,9 @@ import { Form, Button, Nav, Navbar, Col, Row, Offcanvas, Container } from "react
 import { withProtected } from '../../src/app/routes';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import NavComp from "../../comps/NavComp.js";
 
 function Admin({auth}) {
-  const [ error, setError ] = useState('')
   const { currentUser, logOut } = auth;
   const router = useRouter()
 
@@ -65,18 +65,6 @@ function Admin({auth}) {
 
   }
 
-  async function handleLogOut() {
-  
-    try {
-
-      setError("")
-      await logOut();
-    } catch {
-
-      setError("Failed to Log Out")
-
-    }
-  }
   return (
     <>
        <Head>
@@ -85,38 +73,7 @@ function Admin({auth}) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {[false].map((expand) => (
-        <Navbar key={expand} bg="dark" variant="dark" expand={expand} className="mb-3">
-          <Container fluid>
-          <Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
-            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
-            <Navbar.Offcanvas
-              id={`offcanvasNavbar-expand-${expand}`}
-              aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-              placement="end"
-            >
-              <Offcanvas.Header closeButton>
-                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
-               
-                { currentUser && <div>Hello {currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
-                </Offcanvas.Title>
-              </Offcanvas.Header>
-              <Offcanvas.Body>
-                <Nav className="justify-content-end flex-grow-1 pe-3">
-                  <Nav.Link href="/mypage">View my page</Nav.Link>
-                  <Nav.Link href="/admin">Upload dogs</Nav.Link>
-                  <Nav.Link href="/mydogs">Manage my dogs</Nav.Link>
-                  <Nav.Link href="../message">My Message</Nav.Link>
-                  <Nav.Item> 
-                    <Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>
-                  </Nav.Item>
-                </Nav>
-              </Offcanvas.Body>
-            </Navbar.Offcanvas>
-          </Container>
-        </Navbar>
-      ))}
-      
+      <NavComp />
       <main className={styles.main}>
       <div className="Admin">
         <Form onSubmit={handleSubmit}>

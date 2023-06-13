@@ -10,13 +10,15 @@ import Overlay from 'react-bootstrap/Overlay';
 import Popover from 'react-bootstrap/Popover';
 import Swal from 'sweetalert2';
 import 'animate.css';
+import { GrEdit } from "react-icons/gr";
+import { BsTrash } from "react-icons/bs"
+import NavComp from "../../comps/NavComp.js";
 
 
 
 
 
 function mydogs( { auth } ) {
-	const [ error, setError ] = useState('')
 	const router = useRouter()
 	const [ dogs, setDogs ] = useState("")
 	const [show, setShow] = useState(false);
@@ -153,20 +155,7 @@ function mydogs( { auth } ) {
 			{ header: {authtoken: token }}
 		);	
 	};
-  
-	async function handleLogOut() {
-	
-	  try {
-  
-		setError("")
-		await logOut();
-	  } catch {
-  
-		setError("Failed to Log Out")
-  
-	  }
-	}
-
+ 
 	return (
 	  <>
 		<Head>
@@ -175,36 +164,9 @@ function mydogs( { auth } ) {
 		  <meta name="viewport" content="width=device-width, initial-scale=1" />
 		  <link rel="icon" href="/favicon.ico" />
 		</Head>
-		{[false].map((expand) => (
-		  <Navbar key={expand} bg="dark" variant="dark" expand={expand} className="mb-3">
-			<Container fluid>
-			<Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
-			  <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
-			  <Navbar.Offcanvas
-				id={`offcanvasNavbar-expand-${expand}`}
-				aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-				placement="end"
-			  >
-				<Offcanvas.Header closeButton>
-				  <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
-				  { currentUser && <div>Hello {currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
-				  </Offcanvas.Title>
-				</Offcanvas.Header>
-				<Offcanvas.Body>
-				  <Nav className="justify-content-end flex-grow-1 pe-3">
-					<Nav.Link href="/mypage">View my profile</Nav.Link>
-					<Nav.Link href="/admin">Upload dogs</Nav.Link>
-					<Nav.Link href="/admin">Manage my dogs</Nav.Link>
-					<Nav.Link href="../message">My Message</Nav.Link>
-					<Nav.Item> 
-					  <Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>
-					</Nav.Item>
-				  </Nav>
-				</Offcanvas.Body>
-			  </Navbar.Offcanvas>
-			</Container>
-		  </Navbar>
-		))}
+
+		<NavComp />
+
 		 <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s dogs</div> } </h2>
 		 <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
               <Row xs={2} md={2} className="g-4">
@@ -223,7 +185,7 @@ function mydogs( { auth } ) {
                           	</Card.Text>
 						 
                           	<div ref ={ref}>
-								<Button onClick={ updateClick }>edit</Button>
+								<Button onClick={ updateClick }><GrEdit /></Button>
 
 								<Overlay
 									show={show}
@@ -286,7 +248,7 @@ function mydogs( { auth } ) {
 								</Overlay>
 							</div>
 							<Button onClick = {e => deletealert(e, dog)} variant="primary" type="submit">
-											delete
+											<BsTrash />
 										</Button>
                         </Card.Body>
                       </Card>
