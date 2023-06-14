@@ -5,7 +5,7 @@ import { Col, Row, Card, Image, Navbar, Nav, Form, Container, Offcanvas, Button 
 import Link from 'next/link'
 import { useRouter } from 'next/router';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { withPublic } from '../../src/app/routes';
+import { withProtected } from '../../src/app/routes';
 import Overlay from 'react-bootstrap/Overlay';
 import Popover from 'react-bootstrap/Popover';
 import FormControlLabel from "@mui/material/FormControlLabel";
@@ -159,5 +159,5 @@ function detail({ auth }) {
 	)
   }
   
-  export default withPublic(detail)
+  export default withProtected(detail)
   

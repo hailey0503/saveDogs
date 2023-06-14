@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
 import Stack from 'react-bootstrap/Stack';
 import NavComp from "../../comps/NavComp.js";
+import { BsChatDots } from "react-icons/bs";
 
 
 
@@ -76,6 +77,7 @@ function myPage( {auth} ) {
   
   console.log("mypage")
   console.log(currentUser)
+  console.log('setdogs', dogs.length)
 
  
   return (
@@ -123,7 +125,7 @@ function myPage( {auth} ) {
                       <Card.Img variant="top" style={{ width: '30rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
                       <Card.Body>
                         <Card.Title>
-                          { dog.name }
+                          { dog.name }   <a href="../chat"><BsChatDots /></a>
                         </Card.Title>
                         <Card.Text> 
                           { dog.name } wants to go to { dog.airport }
@@ -140,12 +142,14 @@ function myPage( {auth} ) {
           </div> 
           <div>
           <h2>{ currentUser && <div>---{currentUser.displayName? currentUser.displayName: currentUser.email}'s messages---</div> } </h2>
+          <p>You have {length} new messages</p>
             <Link href= "../chatroom" className="btn btn-primary w-500 mt-3">
-              click for chat
+              go to chatroom
             </Link>
           </div>
           <div>
           <h2> { currentUser && <div>---{currentUser.displayName? currentUser.displayName: currentUser.email}'s dogs---</div> } </h2>
+          <p>You have {dogs.length} dogs</p>
           <div>
             <Link href= "../admin" className="btn btn-primary w-500 mt-3">
               upload dogs  

@@ -3,9 +3,9 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Carousel, Form, Card, Container, Button, Nav, Navbar, Col, Row } from 'react-bootstrap'
+import { Carousel, Form, Card, Container, Button, Nav, Navbar, Col, Row, Alert, Overlay, Popover } from 'react-bootstrap'
 import { useAuth } from '../src/context/AuthContext'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 //import { useRouter } from 'next/navigation'
 import { useRouter } from 'next/router';
 import Link from 'next/link'
@@ -22,6 +22,9 @@ import Swal from 'sweetalert2';
 import 'animate.css';
 import { BsChatDots } from "react-icons/bs";
 import { BiDetail } from "react-icons/bi";
+import { db } from "../src/firebase"
+import { doc, getDoc } from "firebase/firestore";
+
 
 
 
@@ -54,6 +57,12 @@ export default function Home( {dogs} ) {
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [ favorites, setFavorite ] = useState([])
+  const [show, setShow] = useState(false);
+  const ref = useRef(null);
+  const [target, setTarget] = useState(null);
+  const [ name, setName ] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [newMessage, setNewMessage] = useState('');
 
   async function handleLogOut() {
   
@@ -69,6 +78,49 @@ export default function Home( {dogs} ) {
   
     }
   }
+
+  
+/*
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleChat = () => {
+    setIsOpen(!isOpen);
+  };
+
+
+  const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const handleInputChange = (event) => {
+    setNewMessage(event.target.value);
+  };
+
+  
+
+  const toggleChatWindow = () => {
+    setIsChatOpen(!isChatOpen);
+  };
+*/
+  async function openMsg(e, dog) {
+      setShow(!show);
+    	setTarget(e.target);
+      console.log('dog owner id', dog.uid)
+      const classRef = doc(db, "users", dog.uid);
+      console.log('ref',classRef)
+      const classSnap = await getDoc(classRef);
+      console.log('doc',classSnap)
+
+      console.log("Class data:", classSnap.data());
+      console.log('target', target)
+      setName(classSnap.data().displayName)
+
+  }
+
+  const handleSendMessage = (event, dog) => {
+    event.preventDefault();
+    setMessages([...messages, newMessage]);
+    setNewMessage('');
+  };
+  
   async function addFavorite(e, dogID) {
     e.preventDefault()
    
@@ -223,13 +275,13 @@ export default function Home( {dogs} ) {
             </Container>
 
             <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
-              <Row xs={2} md={2} className="g-4">
+              <Row style = {{ display: "flex", flexWrap: "wrap", gap: "12px"}}>
                 {dogs.result && dogs.result.map(dog => 
-                  <div key={dog._id}>
-                    <Col>
-                      <Card style={{ width: '30rem', height: '30rem' }}>
+                  <div key={dog._id} style = {{width: "fit-content"}}>
+                    <Col style = {{width: "fit-content"}}>
+                      <Card style={{ width: '20rem', height: '30rem' }}>
                     
-                        <Card.Img variant="top" style={{ width: '30rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
+                        <Card.Img variant="top" style={{ width: '20rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
                         <Card.Body>
                           <Card.Title>
                             { dog.name }
@@ -245,11 +297,39 @@ export default function Home( {dogs} ) {
                               }
                               Label = "Like"
                             />
-                            <a href="../chat"><BsChatDots /></a>
+                            <div ref ={ref}>
+                              <a onClick={ e => openMsg(e, dog) }><BsChatDots /></a>
+
+                              <Overlay
+                                show={show}
+                                target={target}
+                                placement="right"
+                                container={ref}
+                                containerPadding={20}
+                              >
+                                <Popover id="update-popover-contained">
+                                <Popover.Body>
+                                <Form onSubmit={e => handleSendMessage(e, dog)} >
+                                  <Form.Label>Message to <a href= "../detail">{name}</a> </Form.Label>
+                                  <Form.Control as="textarea" id = "message" rows={3} />
+                                  <br/>
+                                  <Button variant="primary" type="submit">
+                                    send
+                                  </Button>
+                                  </Form>
+                                  </Popover.Body>
+                                </Popover>
+                              </Overlay>
+                            </div>
+
+                            {!show && <a onClick={() => setShow(true)}><BsChatDots /></a>}
+    
+                           
 
                             <a href= "../detail"><BiDetail /> </a>
-                    
-                          </Card.Title>
+                            
+                      
+                        </Card.Title>
                           <Card.Text> 
                             { dog.name } wants to go to { dog.airport }
                           </Card.Text>
