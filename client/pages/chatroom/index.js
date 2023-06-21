@@ -86,7 +86,7 @@ function Chatroom( {auth} ) {
 		  </Head>
 		  <NavComp />
 
-			<Container>
+			<Container style = {{ minHeight: "100vh" }} >
 				<div>
 				<h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s chat</div> } </h2>
 				</div>

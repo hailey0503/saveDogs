@@ -89,8 +89,8 @@ function myPage( {auth} ) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavComp />
-      <Container style = {{ minHeight: "20vh" }}>
-     
+      <Container style = {{ minHeight: "40vh" }}>
+
       <Stack direction="horizontal" gap={2}>
     
         <div>
@@ -111,18 +111,17 @@ function myPage( {auth} ) {
       </Container>
     
       <Container style = {{ minHeight: "100vh" }}>
-      <div className = "w-300" style = {{ maxWidth: '400px'}}>
+      <div >
         <Stack gap={4}>
           <div className="favorites"> 
           <h2>{ currentUser && <div>---{currentUser.displayName? currentUser.displayName: currentUser.email}'s favorites---</div> } </h2>
-            <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
-              
+            <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "40vh" }}>
+            <Row style = {{ display: "flex", flexWrap: "wrap", gap: "12px"}}>
               {dogs_resp? dogs_resp.map(dog => 
-                <div key={dog.id}>
-                  <Col>
-                    <Card style={{ width: '30rem', height: '30rem' }}>
-                  
-                      <Card.Img variant="top" style={{ width: '30rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
+                <div key={dog.id} style = {{width: "fit-content"}}>
+                    <Col style = {{width: "fit-content"}}>
+                      <Card style={{ width: '20rem', height: '25rem' }}>
+                      <Card.Img variant="top" style={{ width: '19.9rem', height: '15rem'  }} src={" http://localhost:4800/" + dog.image } />
                       <Card.Body>
                         <Card.Title>
                           { dog.name }   <a href="../chat"><BsChatDots /></a>
@@ -138,9 +137,10 @@ function myPage( {auth} ) {
                   </Col>
                 </div>
               ):<h3>add favorite dogs</h3> }
+              </Row>
             </Container>    
           </div> 
-          <div>
+          <div style = {{ minHeight: "40vh" }}>
           <h2>{ currentUser && <div>---{currentUser.displayName? currentUser.displayName: currentUser.email}'s messages---</div> } </h2>
           <p>You have {length} new messages</p>
             <Link href= "../chatroom" className="btn btn-primary w-500 mt-3">
@@ -149,20 +149,21 @@ function myPage( {auth} ) {
           </div>
           <div>
           <h2> { currentUser && <div>---{currentUser.displayName? currentUser.displayName: currentUser.email}'s dogs---</div> } </h2>
-          <p>You have {dogs.length} dogs</p>
-          <div>
+          <div style = {{ minHeight: "10vh" }}>
+            <p>You have {dogs.length} dogs</p>
+         
             <Link href= "../admin" className="btn btn-primary w-500 mt-3">
-              upload dogs  
+              upload more dogs  
             </Link>
           </div>
-            <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
-              <Row xs={2} md={2} className="g-4">
+            <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "40vh" }}>
+            <Row style = {{ display: "flex", flexWrap: "wrap", gap: "12px"}}>
                 {dogs && dogs.map(dog => 
-                  <div key={dog._id}>
-                    <Col>
-                      <Card style={{ width: '30rem', height: '30rem' }}>
+                  <div key={dog._id}  style = {{width: "fit-content"}}>
+                    <Col  style = {{width: "fit-content"}}>
+                      <Card style={{ width: '20rem', height: '25rem' }}>
                     
-                        <Card.Img variant="top" style={{ width: '30rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
+                        <Card.Img variant="top" style={{ width: '19.9rem', height: '15rem'  }} src={" http://localhost:4800/" + dog.image } />
                         <Card.Body>
                         	<Card.Title>
                             	{ dog.name }
@@ -176,12 +177,10 @@ function myPage( {auth} ) {
                     </div>
                   )}
                 </Row>
-            </Container>
-
-          </div>
-        </Stack>
-  
-      </div>
+              </Container>
+            </div>
+          </Stack>
+        </div>
       </Container>  
     </>
    

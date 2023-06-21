@@ -23,7 +23,8 @@ import 'animate.css';
 import { BsChatDots } from "react-icons/bs";
 import { BiDetail } from "react-icons/bi";
 import { db } from "../src/firebase"
-import { doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+
 
 
 
@@ -60,9 +61,11 @@ export default function Home( {dogs} ) {
   const [show, setShow] = useState(false);
   const ref = useRef(null);
   const [target, setTarget] = useState(null);
-  const [ name, setName ] = useState(null);
+  const [ name, setName ] = useState("");
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [user, setUser] = useState(null);
+
 
   async function handleLogOut() {
   
@@ -79,47 +82,84 @@ export default function Home( {dogs} ) {
     }
   }
 
-  
-/*
-  const [isOpen, setIsOpen] = useState(false);
-
-  const toggleChat = () => {
-    setIsOpen(!isOpen);
-  };
-
-
-  const [isChatOpen, setIsChatOpen] = useState(false);
-
-  const handleInputChange = (event) => {
-    setNewMessage(event.target.value);
-  };
-
-  
-
-  const toggleChatWindow = () => {
-    setIsChatOpen(!isChatOpen);
-  };
-*/
   async function openMsg(e, dog) {
       setShow(!show);
     	setTarget(e.target);
-      console.log('dog owner id', dog.uid)
-      const classRef = doc(db, "users", dog.uid);
-      console.log('ref',classRef)
-      const classSnap = await getDoc(classRef);
-      console.log('doc',classSnap)
-
-      console.log("Class data:", classSnap.data());
-      console.log('target', target)
-      setName(classSnap.data().displayName)
-
+      console.log('cur user id', currentUser.uid)
+      //const classRef = doc(db, "users", dog.uid);
+      //console.log('ref',classRef)
+      if (currentUser.uid != dog.uid) {
+        const classSnap = await getDoc( doc(db, "users", dog.uid));
+        if (classSnap.exists()) {
+          // console.log("Document data:", docSnap.data())
+          setUser(classSnap.data())
+          setName(classSnap.data().displayName)
+          //console.log(user)
+          
+        } else {
+          // doc.data() will be undefined in this case
+          console.log("No such document!")
+        }
+      } else {
+        console.log("same user!")
+        alert("can't message to yourself")
+        setShow(false)
+      }
   }
 
-  const handleSendMessage = (event, dog) => {
+ async function handleSendMessage(event, dog) {
     event.preventDefault();
-    setMessages([...messages, newMessage]);
-    setNewMessage('');
+    console.log('114',user)
+    //combime both user's ids
+    const combinedId = currentUser.uid > user.uid
+      ? currentUser.uid + user.uid
+      : user.uid + currentUser.uid;
+    console.log('id',combinedId)
+    //check if there is a chat between these users
+      try {
+        const res = await getDoc(doc(db, "chats", combinedId))
+
+        if (!res.exists()) {
+          console.log('lalala')
+        //create a chat between two users
+          await setDoc(doc (db, "chats", combinedId), {messages: [] }) }
+        } catch (err) {}
+        //add to userChats 
+          await updateDoc(doc (db, "userChats", currentUser.uid), {
+            "name": name,
+            [combinedId+ ".userInfo"]: {
+              uid: user.uid,
+              displayName: name,
+              //photoURL: user.photoURL,
+            },
+            [combinedId + ".date"]: serverTimestamp(),
+          });
+          await updateDoc(doc(db, "userChats", user.uid), {
+            [combinedId + ".userInfo"]: {
+              uid: currentUser.uid,
+              displayName: currentUser.displayName,
+              //photoURL: currentUser.photoURL,
+            },
+            [combinedId + ".date"]: serverTimestamp(),
+          });
+          console.log([combinedId+ ".userInfo"])
+          console.log('end of update')
+       
+    
+        
+   // setNewMessage(event.target.message.value);
+   // setMessages([...messages, newMessage]);
+    setNewMessage(event.target.message.value)
+    console.log(event.target.message.value)
+    console.log(newMessage)
+    //setNewMessage('');
+    setUser(null);
+    setName("")
+    setShow(false)
+  
   };
+
+  
   
   async function addFavorite(e, dogID) {
     e.preventDefault()
@@ -172,7 +212,6 @@ export default function Home( {dogs} ) {
       }
     }
   }
-  console.log(favorites)
 
   return (
     
@@ -280,7 +319,6 @@ export default function Home( {dogs} ) {
                   <div key={dog._id} style = {{width: "fit-content"}}>
                     <Col style = {{width: "fit-content"}}>
                       <Card style={{ width: '20rem', height: '30rem' }}>
-                    
                         <Card.Img variant="top" style={{ width: '20rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
                         <Card.Body>
                           <Card.Title>
@@ -320,13 +358,10 @@ export default function Home( {dogs} ) {
                                   </Popover.Body>
                                 </Popover>
                               </Overlay>
+                              <a href= "../detail"><BiDetail /> </a>
                             </div>
 
-                            {!show && <a onClick={() => setShow(true)}><BsChatDots /></a>}
-    
-                           
-
-                            <a href= "../detail"><BiDetail /> </a>
+                          
                             
                       
                         </Card.Title>

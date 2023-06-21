@@ -12,8 +12,6 @@ function Search( {auth} ) {
   const [user, setUser] = useState(null);
   const [err, setErr] = useState(false);
 
-  const { currentUser } = useContext(AuthContext);
-
   const handleSearch = async () => {
     const q = query(
       collection(db, "users"),
