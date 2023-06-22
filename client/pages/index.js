@@ -232,9 +232,11 @@ export default function Home( {dogs} ) {
               <Navbar.Collapse id="navbar-dark-example">
               </Navbar.Collapse>
               <Nav>
-                
+             
               <Nav.Item> 
-                { currentUser? <Nav.Link href="../mypage">My Page</Nav.Link> :  <Nav.Link href="../login">Log In Here</Nav.Link> }
+            
+                { currentUser? <Nav.Link href={"../mypage/" + currentUser.uid}
+                           >My Page</Nav.Link> :  <Nav.Link href="../login">Log In Here</Nav.Link> }
               </Nav.Item>
               </Nav>
           </Container>

@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from 'react';
 import { useRouter } from "next/router";
 import { Col, Row, Card, Image, Navbar, Nav, Form, Container, Offcanvas, Button } from 'react-bootstrap';
 import Link from 'next/link'
-//import { useRouter, useSearchParams } from 'next/navigation';
+import NavComp from "../../comps/NavComp.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
 import Overlay from 'react-bootstrap/Overlay';
@@ -63,36 +63,7 @@ function detail({ auth }) {
 		  <meta name="viewport" content="width=device-width, initial-scale=1" />
 		  <link rel="icon" href="/favicon.ico" />
 		</Head>
-		{[false].map((expand) => (
-		  <Navbar key={expand} bg="dark" variant="dark" expand={expand} className="mb-3">
-			<Container fluid>
-			<Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
-			  <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
-			  <Navbar.Offcanvas
-				id={`offcanvasNavbar-expand-${expand}`}
-				aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-				placement="end"
-			  >
-				<Offcanvas.Header closeButton>
-				  <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
-				  { currentUser && <div>Hello {currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
-				  </Offcanvas.Title>
-				</Offcanvas.Header>
-				<Offcanvas.Body>
-				  <Nav className="justify-content-end flex-grow-1 pe-3">
-					<Nav.Link href="/">View my profile</Nav.Link>
-					<Nav.Link href="/admin">Upload dogs</Nav.Link>
-					<Nav.Link href="/admin">Manage my dogs</Nav.Link>
-					<Nav.Link href="../message">My Message</Nav.Link>
-					<Nav.Item> 
-					  <Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>
-					</Nav.Item>
-				  </Nav>
-				</Offcanvas.Body>
-			  </Navbar.Offcanvas>
-			</Container>
-		  </Navbar>
-		))}
+		<NavComp />
 		 <h2> About {thisdog.name} </h2> 
 		 <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
 			<Card style={{ width: '60rem', height:'40rem'}}>
