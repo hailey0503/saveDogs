@@ -38,6 +38,15 @@ function myPage( {auth} ) {
     if (myData != null) {
       const favDogs = myData.favorite
       console.log('fd',favDogs)
+
+      //optimize here using localstorage
+      /*
+
+      const dogs = JSON.parse(localStorage.getItem('dogs'));
+      const thisdog = dogs.result.filter(item => item._id === dog)[0];
+      console.log('ddd', dogs)
+      console.log('this', thisdog)
+ */
       const dogs = await fetch('http://localhost:4800/dogs/')
       const dogs_data = await dogs.json()
       const dogs_result = dogs_data.result
@@ -121,7 +130,7 @@ function myPage( {auth} ) {
             <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "40vh" }}>
             <Row style = {{ display: "flex", flexWrap: "wrap", gap: "12px"}}>
               {dogs_resp? dogs_resp.map(dog => 
-                <div key={dog.id} style = {{width: "fit-content"}}>
+                <div key={dog._id} style = {{width: "fit-content"}}>
                     <Col style = {{width: "fit-content"}}>
                       <Card style={{ width: '20rem', height: '25rem' }}>
                       <Card.Img variant="top" style={{ width: '19.9rem', height: '15rem'  }} src={" http://localhost:4800/" + dog.image } />
@@ -133,9 +142,9 @@ function myPage( {auth} ) {
                           { dog.name } wants to go to { dog.airport }
                         </Card.Text>
                         <Link href={{
-                            pathname: "../detail",
+                            pathname: `../detail/${dog._id}`,
                             query: {
-                              dog: dog
+                              dog: dog._id
                             }// the data
                           }} className="btn btn-primary w-500 mt-3">
                             click for detail

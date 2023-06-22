@@ -1,9 +1,10 @@
 import Head from 'next/head'
 import React from "react";
 import { useEffect, useState, useRef } from 'react';
+import { useRouter } from "next/router";
 import { Col, Row, Card, Image, Navbar, Nav, Form, Container, Offcanvas, Button } from 'react-bootstrap';
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation';
+//import { useRouter, useSearchParams } from 'next/navigation';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
 import Overlay from 'react-bootstrap/Overlay';
@@ -22,27 +23,25 @@ export const DEFAULT_DISTANCE_IN_KM = "1000"
 function detail({ auth }) {
 	const [ error, setError ] = useState('')
 	const router = useRouter()
-	const [ dog, setDog ] = useState("")
+	//const [ dog, setDog ] = useState("")
 	const [show, setShow] = useState(false);
  	const [target, setTarget] = useState(null);
   	const ref = useRef(null);
 	const { currentUser, logOut } = auth;
 	//const [isLoading, setLoading] = useState(false); 
 	//const handleClick = () => setLoading(true);
-	const searchParams = useSearchParams()
-	/*
-	const searchParams = useSearchParams()
-	//setDog(searchParams.get('dog'))
-	const dog = searchParams.get('dog')
-  	console.log('dog', dog)
-	*/
-	useEffect(() => {
-		
-		setDog(searchParams.get('dog'))
-		//const dog = searchParams.get('dog')
-		  console.log('dog', dog)
-	}),[];
 	
+  	console.log('query',router.query); 
+
+  	const { dog } = router.query; 
+	console.log('dog_id', dog)
+
+	const dogs = JSON.parse(localStorage.getItem('dogs'));
+	const thisdog = dogs.result.filter(item => item._id === dog)[0];
+	console.log('ddd', dogs)
+	console.log('this', thisdog)
+
+
 	async function handleLogOut() {
 	
 	  try {
@@ -94,13 +93,13 @@ function detail({ auth }) {
 			</Container>
 		  </Navbar>
 		))}
-		 <h2> About {dog.name} </h2> 
+		 <h2> About {thisdog.name} </h2> 
 		 <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
 			<Card style={{ width: '60rem', height:'40rem'}}>
 				<Card.Body>
 					<Row>
 						<Col>
-							<Image variant="left" src="http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdog_9.77c974bd.jpeg&w=640&q=75" roundedCircle
+							<Image variant="left" src={"http://localhost:4800/"+ thisdog.image} roundedCircle
 							style={{ width: '26rem', height:'30rem'}}/>
 								
 							<Card.Text variant = "right" >
@@ -115,7 +114,7 @@ function detail({ auth }) {
 							/>
 							<Card.Link href="#">add to favorite</Card.Link>
 							<Card.Link href="#">send message</Card.Link>
-							<p>{dog.message}</p>
+							<p>{thisdog.message}</p>
 							</Card.Text>
 						</Col>
 						<Col>

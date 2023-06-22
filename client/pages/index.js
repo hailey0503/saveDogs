@@ -45,8 +45,9 @@ export const getServerSideProps = async (ctx) => {
 
   return {
 
-    props: { dogs : data }  
-
+    props: { dogs : data } 
+   
+   
   }
   
 }
@@ -66,7 +67,8 @@ export default function Home( {dogs} ) {
   const [newMessage, setNewMessage] = useState('');
   const [user, setUser] = useState(null);
 
-
+  localStorage.setItem('dogs', JSON.stringify(dogs))
+  
   async function handleLogOut() {
   
     try {
@@ -363,9 +365,9 @@ export default function Home( {dogs} ) {
                                 </Popover>
                               </Overlay>
                               <Link href={{
-                                pathname: "../detail",
+                                pathname: `../detail/${dog._id}`,
                                 query: {
-                                  dog: dog
+                                  dog: dog._id
                                 }// the data
                               }} className="btn btn-primary w-500 mt-3">
                                 <BiDetail />
