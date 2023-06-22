@@ -3,7 +3,7 @@ import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Carousel, Form, Card, Container, Button, Nav, Navbar, Col, Row, Alert, Overlay, Popover } from 'react-bootstrap'
+import { Carousel, Form, Card, Container, Button, Nav, Navbar, Col, Row, InputGroup, Overlay, Popover } from 'react-bootstrap'
 import { useAuth } from '../src/context/AuthContext'
 import React, { useState, useRef } from 'react'
 //import { useRouter } from 'next/navigation'
@@ -287,9 +287,10 @@ export default function Home( {dogs} ) {
             <Container>
             <Form>
               <Row className="align-items-center">
-                <Col xs= {5} md = {6}>
+                <Col>
+                <InputGroup className="mb-3">
                   <Form.Select aria-label="Default select example" id = "airport">
-                    <option>Select Airport</option>
+                    <option>search by destination</option>
                     <option value="1">San Francisco</option>
                     <option value="2">New York</option>
                     <option value="3">Los Angeles</option>
@@ -297,17 +298,20 @@ export default function Home( {dogs} ) {
                     <option value="5">Vancouver</option>
                     <option value="6">Seattle</option>
                   </Form.Select>
+                  </InputGroup>
                 </Col>
               
-                <Col xs = {3} md = {2}>
-                <DatePicker selected={startDate} onChange={(date) => setStartDate(date)} /> 
-                </Col>
-                <Col xs = {3} md = {2}>
-                <DatePicker selected={endDate} onChange={(date) => setEndDate(date)} /> 
-                </Col>
-              
-                <Col xs= {2}>
-                <button className="btn btn-success" type="submit">Search</button>
+                <Col>
+                <InputGroup className="mb-3">
+                  <Form.Control
+                    placeholder="Search shelter location"
+                    aria-label="Recipient's username"
+                    aria-describedby="basic-addon2"
+                  />
+                  <Button variant="outline-secondary" id="button-addon2">
+                    Search
+                  </Button>
+                </InputGroup>
                 </Col>
               </Row>
             </Form>
@@ -358,12 +362,15 @@ export default function Home( {dogs} ) {
                                   </Popover.Body>
                                 </Popover>
                               </Overlay>
-                              <a href= "../detail"><BiDetail /> </a>
-                            </div>
-
-                          
-                            
-                      
+                              <Link href={{
+                                pathname: "../detail",
+                                query: {
+                                  dog: dog
+                                }// the data
+                              }} className="btn btn-primary w-500 mt-3">
+                                <BiDetail />
+                              </Link>    
+                            </div>                    
                         </Card.Title>
                           <Card.Text> 
                             { dog.name } wants to go to { dog.airport }

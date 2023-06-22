@@ -7,7 +7,9 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
 import Stack from 'react-bootstrap/Stack';
 import NavComp from "../../comps/NavComp.js";
+import Map from "../../comps/map.js";
 import { BsChatDots } from "react-icons/bs";
+
 
 
 
@@ -17,6 +19,7 @@ function myPage( {auth} ) {
   const [ userInfo, setUserInfo ] = useState('');
   const [ dogs_resp, setFavDogs ] = useState("")
   const [ dogs, setDogs ] = useState("")
+ 
 
   const loadUserInfo = async () => {
     const token = await currentUser.getIdToken();
@@ -129,7 +132,12 @@ function myPage( {auth} ) {
                         <Card.Text> 
                           { dog.name } wants to go to { dog.airport }
                         </Card.Text>
-                        <Link href= "../detail" className="btn btn-primary w-500 mt-3">
+                        <Link href={{
+                            pathname: "../detail",
+                            query: {
+                              dog: dog
+                            }// the data
+                          }} className="btn btn-primary w-500 mt-3">
                             click for detail
                         </Link>
                       </Card.Body>
@@ -176,6 +184,7 @@ function myPage( {auth} ) {
                       </Col>
                     </div>
                   )}
+          
                 </Row>
               </Container>
             </div>

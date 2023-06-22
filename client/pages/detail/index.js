@@ -3,7 +3,7 @@ import React from "react";
 import { useEffect, useState, useRef } from 'react';
 import { Col, Row, Card, Image, Navbar, Nav, Form, Container, Offcanvas, Button } from 'react-bootstrap';
 import Link from 'next/link'
-import { useRouter } from 'next/router';
+import { useRouter, useSearchParams } from 'next/navigation';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
 import Overlay from 'react-bootstrap/Overlay';
@@ -12,63 +12,37 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Checkbox from "@mui/material/Checkbox";
+import { GoogleMap, InfoWindowF, MarkerF, useJsApiLoader } from "@react-google-maps/api"
 
+//import { Field, Form, Formik } from "formik";
+//import * as Yup from 'yup';
 
-
+export const DEFAULT_DISTANCE_IN_KM = "1000"
 
 function detail({ auth }) {
 	const [ error, setError ] = useState('')
 	const router = useRouter()
-	const [ dogs, setDogs ] = useState("")
+	const [ dog, setDog ] = useState("")
 	const [show, setShow] = useState(false);
  	const [target, setTarget] = useState(null);
   	const ref = useRef(null);
 	const { currentUser, logOut } = auth;
 	//const [isLoading, setLoading] = useState(false); 
 	//const handleClick = () => setLoading(true);
-
-	const loadMyDogs = async () => {
-		const token = await currentUser.getIdToken();
-		console.log(token)
-		const cur_uid = currentUser.uid
-
-
-		const res = await fetch('http://localhost:4800/users', {
-  				headers: {authorization: `Bearer ${token}`}
-		})
-		const response = await res.json()
-		console.log(response.result)
-		const dogs = response.result.filter(item => item.uid === cur_uid )
-		console.log(dogs)
-		setDogs(dogs)
-	  
-	}
-
+	const searchParams = useSearchParams()
+	/*
+	const searchParams = useSearchParams()
+	//setDog(searchParams.get('dog'))
+	const dog = searchParams.get('dog')
+  	console.log('dog', dog)
+	*/
 	useEffect(() => {
-		if (currentUser) {
-			loadMyDogs();
-		}
-	}, [currentUser]);
+		
+		setDog(searchParams.get('dog'))
+		//const dog = searchParams.get('dog')
+		  console.log('dog', dog)
+	}),[];
 	
-	const updateClick = async (event) => {
-		setShow(!show);
-    	setTarget(event.target);
-	};
-
-	
-
-	
-	
-	
-	const saveChanges = async () => {
-		const token = await currentUser.getIdToken();
-		const res = await axios.put(
-			'/users/${currentUser.uid}', 
-			{ updates: {name} },
-			{ header: {authtoken: token }}
-		);	
-	};
-  
 	async function handleLogOut() {
 	
 	  try {
@@ -120,19 +94,15 @@ function detail({ auth }) {
 			</Container>
 		  </Navbar>
 		))}
-		 <h2> about this dog</h2>
+		 <h2> About {dog.name} </h2> 
 		 <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
-            
-			
-				<Card style={{ width: '60rem', height:'40rem'}}>
-					<Card.Body>
+			<Card style={{ width: '60rem', height:'40rem'}}>
+				<Card.Body>
+					<Row>
 						<Col>
-					<Image variant="left" src="http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdog_9.77c974bd.jpeg&w=640&q=75" roundedCircle
-					style={{ width: '26rem', height:'30rem'}}/>
-						</Col>
-							
-							<Card.Title></Card.Title>
-						
+							<Image variant="left" src="http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdog_9.77c974bd.jpeg&w=640&q=75" roundedCircle
+							style={{ width: '26rem', height:'30rem'}}/>
+								
 							<Card.Text variant = "right" >
 							<FormControlLabel
 								control = {
@@ -143,19 +113,19 @@ function detail({ auth }) {
 								}
 								Label = "Like"
 							/>
-							</Card.Text>
-							
 							<Card.Link href="#">add to favorite</Card.Link>
 							<Card.Link href="#">send message</Card.Link>
-							
-					</Card.Body>
-				</Card>
-			 
-			  
-            </Container>
-			
-	  </>
-	 
+							<p>{dog.message}</p>
+							</Card.Text>
+						</Col>
+						<Col>
+							<h3>google map here</h3>
+						</Col>
+					</Row>	
+				</Card.Body>
+			</Card>	 	  
+        </Container>		
+	  </> 
 	)
   }
   
