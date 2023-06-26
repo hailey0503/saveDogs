@@ -169,7 +169,7 @@ function myPage( {auth} ) {
           <div style = {{ minHeight: "10vh" }}>
             <p>You have {dogs.length} dogs</p>
          
-            <Link href= "../admin" className="btn btn-primary w-500 mt-3">
+            <Link href= "../admin/${currentUser.uid}" className="btn btn-primary w-500 mt-3">
               upload more dogs  
             </Link>
           </div>

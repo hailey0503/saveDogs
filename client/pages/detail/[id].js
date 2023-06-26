@@ -5,15 +5,14 @@ import { useRouter } from "next/router";
 import { Col, Row, Card, Image, Navbar, Nav, Form, Container, Offcanvas, Button } from 'react-bootstrap';
 import Link from 'next/link'
 import NavComp from "../../comps/NavComp.js";
+import Map from "../../comps/map.js";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../../src/app/routes';
-import Overlay from 'react-bootstrap/Overlay';
-import Popover from 'react-bootstrap/Popover';
 import FormControlLabel from "@mui/material/FormControlLabel";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Checkbox from "@mui/material/Checkbox";
-import { GoogleMap, InfoWindowF, MarkerF, useJsApiLoader } from "@react-google-maps/api"
+import { GoogleMap, InfoWindowF, MarkerF, useJsApiLoader, useLoadScript } from "@react-google-maps/api"
 
 //import { Field, Form, Formik } from "formik";
 //import * as Yup from 'yup';
@@ -28,7 +27,7 @@ function detail({ auth }) {
  	const [target, setTarget] = useState(null);
   	const ref = useRef(null);
 	const { currentUser, logOut } = auth;
-	//const [isLoading, setLoading] = useState(false); 
+	 const [isLoading, setLoading] = useState(false); 
 	//const handleClick = () => setLoading(true);
 	
   	console.log('query',router.query); 
@@ -40,6 +39,15 @@ function detail({ auth }) {
 	const thisdog = dogs.result.filter(item => item._id === dog)[0];
 	console.log('ddd', dogs)
 	console.log('this', thisdog)
+
+	const { isLoaded, loadError } = useLoadScript({
+		
+		googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+		
+	})
+	if (loadError) {
+		console.log("Map cannot be loaded right now, sorry.")
+	  }
 
 
 	async function handleLogOut() {
@@ -89,7 +97,9 @@ function detail({ auth }) {
 							</Card.Text>
 						</Col>
 						<Col>
-							<h3>google map here</h3>
+						 
+							{!isLoaded? <div>Loading...</div>: <div><Map location={[ 40,  -73.9 ]} /></div>}
+							
 						</Col>
 					</Row>	
 				</Card.Body>

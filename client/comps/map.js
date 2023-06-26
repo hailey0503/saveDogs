@@ -1,19 +1,23 @@
 import { useMemo } from "react";
-import { GoogleMap, useLoadScript, Marker } from "@react-google-maps/api";
-import { withPublic} from '../src/app/routes';
+import { GoogleMap, Marker } from "@react-google-maps/api";
+import { withProtected} from '../src/app/routes';
 
-function Map({auth}) {
+function Map({auth, location}) {
  
   const { currentUser } = auth
-  const center = useMemo(() => ({ lat: 44, lng: -80 }), []);
+  const center = useMemo(() => ({ lat: location[0], lng: location[1] }), []);
 
   return (
-	<GoogleMap zoom={10} center={center} mapContainerClassName="map-container">
+	<GoogleMap 
+      zoom={8} 
+      center={center} 
+      mapContainerClassName="map-container"
+  >
 	<Marker position={center} />
   </GoogleMap>
   );
 };
 
-export default withPublic(Map);
+export default withProtected(Map);
 
 

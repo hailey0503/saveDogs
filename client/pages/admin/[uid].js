@@ -20,12 +20,31 @@ function Admin({auth}) {
     event.preventDefault()
     console.log( event.target.image.files[0])
     // Get data from the form.
+    let dest = ""
+    if (event.target.airport.value === '1') {
+      dest = "San Francisco"
+    }
+    if (event.target.airport.value === '2') {
+      dest = "New York"
+    }
+    if (event.target.airport.value === '3') {
+      dest = "Los Angeles"
+    }
+    if (event.target.airport.value === '4') {
+      dest = "Toronto"
+    }
+    if (event.target.airport.value === '5') {
+      dest = "Vancouver"
+    }
+    if (event.target.airport.value === '6') {
+      dest = "Seattle"
+    }
     const data = new FormData()
     data.append('name', event.target.name.value)
     data.append('contact', event.target.contact.value)
     data.append('email', event.target.email.value)
-    data.append('kakao', event.target.kakao.value)
-    data.append('airport', event.target.airport.value)
+    data.append('kakao', event.target.address.value)
+    data.append('airport', dest)
     data.append('message', event.target.message.value)
     data.append('testImage', event.target.image.files[0])
     data.append('uid', currentUser.uid)
@@ -100,8 +119,8 @@ function Admin({auth}) {
         </Row>
         <Row>
           <Col>
-              <Form.Label>Kakao ID</Form.Label>
-              <Form.Control type="kakaoID" id = "kakao" placeholder="ID" />	
+              <Form.Label>Address</Form.Label>
+              <Form.Control type="address" id = "address" placeholder="your address" />	
           </Col>
           <Col>
               <Form.Label>Destination Airport</Form.Label>
