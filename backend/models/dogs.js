@@ -14,7 +14,7 @@ const dogSchema = new Schema({
 		type: String,
 		required: true
 	},
-	kakao: {
+	address: {
 		type: String,
 		required: true
 	},

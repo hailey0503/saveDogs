@@ -43,7 +43,7 @@ function Admin({auth}) {
     data.append('name', event.target.name.value)
     data.append('contact', event.target.contact.value)
     data.append('email', event.target.email.value)
-    data.append('kakao', event.target.address.value)
+    data.append('address', event.target.address.value)
     data.append('airport', dest)
     data.append('message', event.target.message.value)
     data.append('testImage', event.target.image.files[0])

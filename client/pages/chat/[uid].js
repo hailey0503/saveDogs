@@ -1,7 +1,7 @@
 import React from 'react'
 import Sidebar from '../../comps/sidebar.js'
 import Chat from '../../comps/chat.js'
-import { withProtected } from '../../src/app/routes';
+import { withProtected } from '../../src/app/routes.js';
 
 function chat({auth}){
 	const { currentUser } = auth;

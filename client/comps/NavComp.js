@@ -37,10 +37,10 @@ const NavComp = () => {
 				  </Offcanvas.Header>
 				  <Offcanvas.Body>
 					<Nav className="justify-content-end flex-grow-1 pe-3">
-					<Nav.Link href={"/mypage/" + currentUser.uid}>View my profile</Nav.Link>
-					<Nav.Link href={"/admin/" + currentUser.uid}>Upload dogs</Nav.Link>
-					<Nav.Link href={"/mydogs/" + currentUser.uid}>Manage my dogs</Nav.Link>
-					<Nav.Link href={"../message/" + currentUser.uid}>My Message</Nav.Link>
+					<Nav.Link href={"/mypage/${currentUser.uid}" + currentUser.uid}>View my profile</Nav.Link>
+					<Nav.Link href={"/admin/${currentUser.uid}" + currentUser.uid}>Upload dogs</Nav.Link>
+					<Nav.Link href={"/mydogs/${currentUser.uid}" + currentUser.uid}>Manage my dogs</Nav.Link>
+					<Nav.Link href={"../message/${currentUser.uid}" + currentUser.uid}>My Message</Nav.Link>
 					  <Nav.Item> 
 						<Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>
 					  </Nav.Item>

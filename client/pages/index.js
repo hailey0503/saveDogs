@@ -76,7 +76,7 @@ export default function Home( {dogs} ) {
       setError("")
       await logOut();
       console.log("you are logged out")
-      return router.push("../login")
+      return router.push("../../login")
     } catch {
   
       setError("Failed to Log Out")
@@ -148,9 +148,7 @@ export default function Home( {dogs} ) {
           console.log('end of update')
        
     
-        
-   // setNewMessage(event.target.message.value);
-   // setMessages([...messages, newMessage]);
+  
     setNewMessage(event.target.message.value)
     console.log(event.target.message.value)
     console.log(newMessage)
@@ -351,7 +349,7 @@ export default function Home( {dogs} ) {
                                 target={target}
                                 placement="right"
                                 container={ref}
-                                containerPadding={20}
+                                containerPadding={10}
                               >
                                 <Popover id="update-popover-contained">
                                 <Popover.Body>
@@ -366,20 +364,20 @@ export default function Home( {dogs} ) {
                                   </Popover.Body>
                                 </Popover>
                               </Overlay>
-                              <Link href={{
-                                pathname: `../detail/${dog._id}`,
-                                query: {
-                                  dog: dog._id
-                                }// the data
-                              }} className="btn btn-primary w-500 mt-3">
-                                <BiDetail />
-                              </Link>    
+                               
                             </div>                    
                         </Card.Title>
                           <Card.Text> 
                             { dog.name } wants to go to { dog.airport }
                           </Card.Text>
-                         
+                          <Link href={{
+                            pathname: `../detail/${dog._id}`,
+                            query: {
+                              dog: dog._id
+                            }// the data
+                          }} className="btn btn-primary w-500 mt-3">
+                            click for detail
+                        </Link>
                         </Card.Body>
                       </Card>
                     </Col>

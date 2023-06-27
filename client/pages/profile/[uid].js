@@ -90,7 +90,7 @@ function Profile({auth}) {
       setError(error.message)
     });
     alert('User Profile Updated Successfully');
-    router.push('./mypage')
+    router.push(`../mypage/${currentUser.uid}`)
   }
   return (
     <>
@@ -117,9 +117,9 @@ function Profile({auth}) {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                  <Nav.Link href="/mypage">View my page</Nav.Link>
-                  <Nav.Link href="/admin">Manage my dogs</Nav.Link>
-                  <Nav.Link href="../message">My Message</Nav.Link>
+                  <Nav.Link href="/mypage/${currentUser.uid}">View my page</Nav.Link>
+                  <Nav.Link href="/admin/${currentUser.uid}">Manage my dogs</Nav.Link>
+                  <Nav.Link href="../message/${currentUser.uid}">My Message</Nav.Link>
                   <Nav.Item> 
                     <Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>
                   </Nav.Item>

@@ -19,8 +19,9 @@ function myPage( {auth} ) {
   const [ userInfo, setUserInfo ] = useState('');
   const [ dogs_resp, setFavDogs ] = useState("")
   const [ dogs, setDogs ] = useState("")
- 
-
+  
+  console.log('currentUser', currentUser)
+  console.log('image', currentUser.image)
   const loadUserInfo = async () => {
     const token = await currentUser.getIdToken();
     console.log(token)
@@ -106,17 +107,28 @@ function myPage( {auth} ) {
       <Stack direction="horizontal" gap={2}>
     
         <div>
+          {!currentUser.photoURL?
           <Image
                 style={{ height: '10rem'  }}
                 className="d-block w-100"
                 src="http://localhost:3000/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Fdog_9.77c974bd.jpeg&w=640&q=75"
                 roundedCircle 
-              />
+              />: <Image
+              style={{ height: '10rem'  }}
+              className="d-block w-100"
+              src="currentUser.files[0].name"
+              roundedCircle 
+            />}
           
         </div>
         <div>
           <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s page</div> } </h2>
-          <Link href = '/profile' className = 'profile-update'>update profile</Link>
+          <Link href= {{
+                            pathname: `../profile/${currentUser.uid}`,
+                            query: {
+                              uid: currentUser.uid
+                            }// the data
+                          }} className = 'profile-update'>update profile</Link>
         </div>
        
        </Stack>
@@ -169,7 +181,12 @@ function myPage( {auth} ) {
           <div style = {{ minHeight: "10vh" }}>
             <p>You have {dogs.length} dogs</p>
          
-            <Link href= "../admin/${currentUser.uid}" className="btn btn-primary w-500 mt-3">
+            <Link href= {{
+                            pathname: `../admin/${currentUser.uid}`,
+                            query: {
+                              uid: currentUser.uid
+                            }// the data
+                          }} className="btn btn-primary w-500 mt-3">
               upload more dogs  
             </Link>
           </div>

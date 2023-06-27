@@ -8,7 +8,7 @@ export function withPublic(Components) {
 	const router = useRouter()
 	//console.log(auth.currentUser)
 	if (auth.currentUser) {
-		router.replace("/mypage")
+		router.replace("/mypage/${currentUser.uid}")
 		return <h1>loading...</h1>
 	}
 	return <Components auth = {auth} {...props}/>
@@ -21,7 +21,7 @@ export function withProtected(Components) {
 	  const router = useRouter()
 	  //console.log(auth.currentUser)
 	  if (!auth.currentUser) {
-		  router.replace("login")
+		  router.replace("../login")
 		  return <h1>loading...</h1>
 	  }
 	  return <Components auth = {auth} {...props}/>

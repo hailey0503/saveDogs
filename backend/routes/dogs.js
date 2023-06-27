@@ -44,7 +44,7 @@ router.post("/register", async (req, res) => {
 				image: req.file.path,
 				contact: req.body.contact,
 				email: req.body.email,
-				kakao: req.body.kakao,
+				address: req.body.address,
 				airport: req.body.airport,
 				message: req.body.message,
 				uid: req.body.uid
