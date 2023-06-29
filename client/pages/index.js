@@ -5,7 +5,7 @@ import styles from '../styles/Home.module.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Carousel, Form, Card, Container, Button, Nav, Navbar, Col, Row, InputGroup, Overlay, Popover } from 'react-bootstrap'
 import { useAuth } from '../src/context/AuthContext'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 //import { useRouter } from 'next/navigation'
 import { useRouter } from 'next/router';
 import Link from 'next/link'
@@ -24,6 +24,7 @@ import { BsChatDots } from "react-icons/bs";
 import { BiDetail } from "react-icons/bi";
 import { db } from "../src/firebase"
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
+import DisplayDogs from "../comps/displayDogs";
 
 
 
@@ -63,9 +64,13 @@ export default function Home( {dogs} ) {
   const ref = useRef(null);
   const [target, setTarget] = useState(null);
   const [ name, setName ] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [newMessage, setNewMessage] = useState('');
-  const [user, setUser] = useState(null);
+  const [ messages, setMessages ] = useState([]);
+  const [ newMessage, setNewMessage ] = useState('');
+  const [ user, setUser ] = useState(null);
+  const [ value, setValue ] = useState('');
+  const setAirport = useRef(false);
+  const [ thisdogs, setThisDogs ] = useState(dogs.result)
+  //const [ isToggled, setIsToggled ] = useState(false);
 
   localStorage.setItem('dogs', JSON.stringify(dogs))
   
@@ -83,6 +88,49 @@ export default function Home( {dogs} ) {
   
     }
   }
+  async function handleSelect(e) {
+    console.log('e', e)
+    setValue(e.target.value);
+    console.log('dest', value)
+    setAirport.current = true;
+    
+  }
+  
+                
+  useEffect(() => {
+    if (setAirport.current) {
+      console.log('dest', value)
+    
+    if (value === "1") {
+      console.log("11")
+      setThisDogs(thisdogs.filter(item => item.airport === "San Francisco"));
+      console.log("do1", thisdogs)
+    }
+    else if (value === "2") {
+      console.log("22")
+      setThisDogs(thisdogs.filter(item => item.airport === "New York"));
+      console.log("do2", dogs)
+    }
+    else if (value === "3") {
+      console.log("33")
+      setThisDogs(thisdogs.filter(item => item.airport === "Los Angeles"));
+    }
+    else if (value === "4") {
+      console.log("22")
+      setThisDogs(thisdogs.result.filter(item => item.airport === "Toronto"));
+    }
+    else if (value === "5") {
+      console.log("22")
+      setThisDogs(thisdogs.result.filter(item => item.airport === "Vancouver"));
+    }
+    else if (value === "6") {
+      console.log("22")
+      setThisDogs(thisdogs.result.filter(item => item.airport === "Seattle"));
+    }
+      setAirport.current = false;
+    }
+  }, [value]);
+
 
   async function openMsg(e, dog) {
       setShow(!show);
@@ -160,7 +208,7 @@ export default function Home( {dogs} ) {
   };
 
   
-  
+  console.log('dogs206',dogs.result)
   async function addFavorite(e, dogID) {
     e.preventDefault()
    
@@ -291,12 +339,13 @@ export default function Home( {dogs} ) {
               <Row className="align-items-center">
                 <Col>
                 <InputGroup className="mb-3">
-                  <Form.Select aria-label="Default select example" id = "airport">
+                  <Form.Select aria-label="Default select example" id = "airport" onChange= {e =>  handleSelect(e)}>
+                
                     <option>search by destination</option>
                     <option value="1">San Francisco</option>
                     <option value="2">New York</option>
                     <option value="3">Los Angeles</option>
-                    <option value="4">Toronto</option>
+                    <option value="4">Toronto</option>``
                     <option value="5">Vancouver</option>
                     <option value="6">Seattle</option>
                   </Form.Select>
@@ -321,7 +370,7 @@ export default function Home( {dogs} ) {
 
             <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
               <Row style = {{ display: "flex", flexWrap: "wrap", gap: "12px"}}>
-                {dogs.result && dogs.result.map(dog => 
+                {thisdogs && thisdogs.map(dog => 
                   <div key={dog._id} style = {{width: "fit-content"}}>
                     <Col style = {{width: "fit-content"}}>
                       <Card style={{ width: '20rem', height: '30rem' }}>
