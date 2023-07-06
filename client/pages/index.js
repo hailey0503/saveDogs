@@ -385,12 +385,12 @@ export default function Home( {dogs, userprofile} ) {
             </Container>
 
             <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
-              <Row style = {{ display: "flex", flexWrap: "wrap", gap: "12px"}}>
+              <Row style = {{ display: "flex", flexWrap: "wrap", gap: "40px", width:'80rem', paddingLeft:'2.5rem'}}>
                 {thisdogs && thisdogs.map(dog => 
                   <div key={dog._id} style = {{width: "fit-content"}}>
                     <Col style = {{width: "fit-content"}}>
                       <Card style={{ width: '20rem', height: '30rem' }}>
-                        <Card.Img variant="top" style={{ width: '20rem', height: '18rem'  }} src={" http://localhost:4800/" + dog.image } />
+                        <Card.Img variant="top" style={{ width: '19.9rem', height: '18rem'}} src={" http://localhost:4800/" + dog.image } />
                         <Card.Body style={{ width: '20rem', height: '12rem', padding: 10, paddingBottom:15}}>
                           <Card.Title style = {{display: 'flex', alignItems: 'center', paddingTop: 5}}>
                             { dog.name }

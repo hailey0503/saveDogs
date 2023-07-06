@@ -111,11 +111,10 @@ function Login ( {auth} ) {
 	style = {{ minHeight: "100vh" }}>
 	
 	<div className = "w-100" style = {{ maxWidth: '400px'}}>
-		
-      	<Button variant="primary" size="lg" onClick = { handleClick }><p>Log in with Google</p></Button>
-		
+      	<button className="googleLogInButton"  onClick = { handleClick }>Log in with Google</button>
+	
 		<Card>
-			<Card.Body>
+			<Card.Body style={{margin:'3px'}}>
 				<h2 className = "text-center mb-4">Log In</h2> 
 				{ error && <Alert variant = "danger"> { error } </Alert> }
 				<Form onSubmit={handleSubmit}>

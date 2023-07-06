@@ -13,6 +13,7 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import Checkbox from "@mui/material/Checkbox";
 import { GoogleMap, InfoWindowF, MarkerF, useJsApiLoader, useLoadScript } from "@react-google-maps/api"
+import { BsChatDots } from "react-icons/bs";
 
 //import { Field, Form, Formik } from "formik";
 //import * as Yup from 'yup';
@@ -82,18 +83,9 @@ function detail({ auth }) {
 							style={{ width: '26rem', height:'30rem'}}/>
 								
 							<Card.Text variant = "right" >
-							<FormControlLabel
-								control = {
-									<Checkbox
-										icon = {<FavoriteBorderIcon />}
-										checkedIcon = {<FavoriteIcon />}
-									/>
-								}
-								Label = "Like"
-							/>
-							<Card.Link href="#">add to favorite</Card.Link>
-							<Card.Link href="#">send message</Card.Link>
-							<p>{thisdog.message}</p>
+							<a><BsChatDots /></a>
+							<Card.Link href={"../chatroom/" + currentUser.uid}>send message</Card.Link>
+							<div className="detailMessage">{thisdog.message}</div>
 							</Card.Text>
 						</Col>
 						<Col>

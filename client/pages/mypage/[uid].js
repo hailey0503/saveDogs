@@ -27,30 +27,24 @@ function myPage( {auth} ) {
     console.log(token)
 
   }
+
+
+  
+
   const loadMyFavDogs = async () => {
     const cur_uid = currentUser.uid
     console.log('cuid', cur_uid)
 
-    const res = await fetch('http://localhost:4800/userprofile/')
-    const response = await res.json()
-    console.log('mypage 30', response)
-    const myData = response.result.filter(item => item.uid === cur_uid)[0]
+    const res = JSON.parse(localStorage.getItem('userprofile')).result;
+    console.log('res',res)
+    const myData = res.filter(item => item.uid === cur_uid)[0]
     console.log(myData)
     if (myData != null) {
       const favDogs = myData.favorite
       console.log('fd',favDogs)
 
-      //optimize here using localstorage
-      /*
-
-      const dogs = JSON.parse(localStorage.getItem('dogs'));
-      const thisdog = dogs.result.filter(item => item._id === dog)[0];
-      console.log('ddd', dogs)
-      console.log('this', thisdog)
- */
-      const dogs = await fetch('http://localhost:4800/dogs/')
-      const dogs_data = await dogs.json()
-      const dogs_result = dogs_data.result
+      const dogs_result = await JSON.parse(localStorage.getItem('dogs')).result
+      
       console.log('resp',dogs_result)
       var dogs_resp = []
 
@@ -148,7 +142,7 @@ function myPage( {auth} ) {
                       <Card.Img variant="top" style={{ width: '19.9rem', height: '15rem'  }} src={" http://localhost:4800/" + dog.image } />
                       <Card.Body>
                         <Card.Title>
-                          { dog.name }   <a href="../chat"><BsChatDots /></a>
+                          { dog.name }   <a href={"../chatroom/" + currentUser.uid}><BsChatDots /></a>
                         </Card.Title>
                         <Card.Text> 
                           { dog.name } wants to go to { dog.airport }
