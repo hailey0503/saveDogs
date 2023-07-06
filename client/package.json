@@ -34,6 +34,7 @@
     "react-icons": "^4.9.0",
     "react-router-dom": "^6.8.2",
     "sharp": "^0.31.3",
-    "sweetalert2": "^11.7.5"
+    "sweetalert2": "^11.7.5",
+    "validator": "^13.9.0"
   }
 }

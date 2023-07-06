@@ -24,7 +24,7 @@ import { BsChatDots } from "react-icons/bs";
 import { BiDetail } from "react-icons/bi";
 import { db } from "../src/firebase"
 import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from "firebase/firestore";
-import DisplayDogs from "../comps/displayDogs";
+
 
 
 
@@ -34,6 +34,7 @@ const inter = Inter({ subsets: ['latin'] })
 export const getServerSideProps = async (ctx) => {
   
   const res = await fetch('http://localhost:4800/dogs/');
+  const res_profile = await fetch('http://localhost:4800/userprofile/');
 
   ctx.res.setHeader(
     "Cache-Control",
@@ -41,19 +42,21 @@ export const getServerSideProps = async (ctx) => {
   );
 
   const data = await res.json();
+  const user_data = await res_profile.json()
   
-  console.log(data.result)
+  console.log('index 47',data.result)
+  console.log('index 48',user_data.result)
 
   return {
 
-    props: { dogs : data } 
+    props: { dogs : data, userprofile: user_data } 
    
    
   }
   
 }
 
-export default function Home( {dogs} ) {
+export default function Home( {dogs, userprofile} ) {
   const [ error, setError ] = useState('');
   const { currentUser, logOut } = useAuth();
   const router = useRouter();
@@ -70,9 +73,10 @@ export default function Home( {dogs} ) {
   const [ value, setValue ] = useState('');
   const setAirport = useRef(false);
   const [ thisdogs, setThisDogs ] = useState(dogs.result)
-  //const [ isToggled, setIsToggled ] = useState(false);
+
 
   localStorage.setItem('dogs', JSON.stringify(dogs))
+  localStorage.setItem('userprofile', JSON.stringify(userprofile))
   
   async function handleLogOut() {
   
@@ -103,31 +107,35 @@ export default function Home( {dogs} ) {
     
     if (value === "1") {
       console.log("11")
-      setThisDogs(thisdogs.filter(item => item.airport === "San Francisco"));
+      setThisDogs(dogs.result.filter(item => item.airport === "San Francisco"));
       console.log("do1", thisdogs)
     }
     else if (value === "2") {
       console.log("22")
-      setThisDogs(thisdogs.filter(item => item.airport === "New York"));
+      setThisDogs(dogs.result.filter(item => item.airport === "New York"));
       console.log("do2", dogs)
     }
     else if (value === "3") {
       console.log("33")
-      setThisDogs(thisdogs.filter(item => item.airport === "Los Angeles"));
+      setThisDogs(dogs.result.filter(item => item.airport === "Los Angeles"));
     }
     else if (value === "4") {
       console.log("22")
-      setThisDogs(thisdogs.result.filter(item => item.airport === "Toronto"));
+      setThisDogs(dogs.result.filter(item => item.airport === "Toronto"));
     }
     else if (value === "5") {
       console.log("22")
-      setThisDogs(thisdogs.result.filter(item => item.airport === "Vancouver"));
+      setThisDogs(dogs.result.filter(item => item.airport === "Vancouver"));
     }
     else if (value === "6") {
       console.log("22")
-      setThisDogs(thisdogs.result.filter(item => item.airport === "Seattle"));
+      setThisDogs(dogs.result.filter(item => item.airport === "Seattle"));
+    }
+    else {
+      setThisDogs(dogs.result)
     }
       setAirport.current = false;
+      
     }
   }, [value]);
 
@@ -144,7 +152,7 @@ export default function Home( {dogs} ) {
           // console.log("Document data:", docSnap.data())
           setUser(classSnap.data())
           setName(classSnap.data().displayName)
-          //console.log(user)
+      
           
         } else {
           // doc.data() will be undefined in this case
@@ -207,11 +215,9 @@ export default function Home( {dogs} ) {
   
   };
 
-  
-  console.log('dogs206',dogs.result)
   async function addFavorite(e, dogID) {
     e.preventDefault()
-   
+    
     if (!currentUser) {
       Swal.fire({title: 'please sign in first',
       icon: 'info',
@@ -224,40 +230,50 @@ export default function Home( {dogs} ) {
       footer: '<a href="../login">Sign in Here</a>'
     })
     } else {
+      const userFavorite = userprofile.result.filter(item => item.uid === currentUser.uid)[0].favorite
+      
+      console.log("234",userFavorite)
+      console.log('235', userFavorite.includes(dogID))
       const {value, checked} = e.target
       if (checked) {
-        const data = {
-          uid: currentUser.uid,
-          favorite: [dogID]
-        }
-  
-        const token = await currentUser.getIdToken();
-        const endpoint = "http://localhost:4800/userprofile"
-      // Form the request for sending data to the server.
-        const options = {
-          // The method is POST because we are sending data.
-          method: 'POST',
-          // Tell the server we're sending JSON.
-          //headers: {authorization: `Bearer ${token}`},
-          // Body of the request is the JSON data we created above.
-          headers: {
-            'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-          
-        }
-        console.log('107',data)
-        // Send the form data to our forms API on Vercel and get a response.
-        const response = await fetch(endpoint, options)
+        if (!userFavorite.includes(dogID)) {
+        
+          const data = {
+            uid: currentUser.uid,
+            favorite: [dogID]
+          }
+    
+          const token = await currentUser.getIdToken();
+          const endpoint = "http://localhost:4800/userprofile"
+        // Form the request for sending data to the server.
+          const options = {
+            // The method is POST because we are sending data.
+            method: 'POST',
+            // Tell the server we're sending JSON.
+            //headers: {authorization: `Bearer ${token}`},
+            // Body of the request is the JSON data we created above.
+            headers: {
+              'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(data),
+            
+          }
+          console.log('107',data)
+          // Send the form data to our forms API on Vercel and get a response.
+          const response = await fetch(endpoint, options)
 
-        // Get the response data from server as JSON.
-        // If server returns the name submitted, that means the form works.
-        const result = await response.json()
-        console.log(result)
-        alert(`successfully added to favorite`)
-        //router.reload()
-        //setFavorite(pre => [...pre, dogID])
-      }
+          // Get the response data from server as JSON.
+          // If server returns the name submitted, that means the form works.
+          const result = await response.json()
+          console.log(result)
+          alert(`successfully added to favorite`)
+          //router.reload()
+          //setFavorite(pre => [...pre, dogID])
+        }
+        else {
+          alert(`you already favorited this dog!`)
+        }
+      }  
     }
   }
 
@@ -290,82 +306,82 @@ export default function Home( {dogs} ) {
       </nav>
       
       <main className={styles.main}>
-        <div>
+        <div className = {styles.homeContainer}>
         <div className="Home">
+          <Carousel style = {{paddingBottom:30}}>
+            <Carousel.Item>
+              <Image
+                style={{ height: '30rem'  }}
+                className="d-block w-100"
+                src={Dog8}
+                alt="First slide"
+              />
+              <Carousel.Caption>
+                <h3>Dog Transport</h3>
+                <p>Help Dogs to Meet New Family</p>
+              </Carousel.Caption>
+            </Carousel.Item>
+
+            <Carousel.Item>
+              <Image
+                style={{ height: '30rem'  }}
+                className="d-block w-100"
+                src={Dog9}
+                alt="Third slide"
+              />
+              <Carousel.Caption>
+                <h3>Travel with dogs</h3>
+                <p>Dogs Travel with You</p>
+              </Carousel.Caption>
+            </Carousel.Item>
+
+            <Carousel.Item>
+              <Image
+                style={{ height: '30rem'  }}
+                className="d-block w-100"
+                src={Dog10}
+                alt="Third slide"
+              />
+              <Carousel.Caption>
+                <h3>Third slide label</h3>
+                <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+              </Carousel.Caption>
+            </Carousel.Item>
+          </Carousel>
+
           <Container>
-            <Carousel>
-              <Carousel.Item>
-                <Image
-                  style={{ height: '30rem'  }}
-                  className="d-block w-100"
-                  src={Dog8}
-                  alt="First slide"
-                />
-                <Carousel.Caption>
-                  <h3>Dog Transport</h3>
-                  <p>Help Dogs to Meet New Family</p>
-                </Carousel.Caption>
-              </Carousel.Item>
-
-              <Carousel.Item>
-                <Image
-                  style={{ height: '30rem'  }}
-                  className="d-block w-100"
-                  src={Dog9}
-                  alt="Third slide"
-                />
-                <Carousel.Caption>
-                  <h3>Travel with dogs</h3>
-                  <p>Dogs Travel with You</p>
-                </Carousel.Caption>
-              </Carousel.Item>
-
-              <Carousel.Item>
-                <Image
-                  style={{ height: '30rem'  }}
-                  className="d-block w-100"
-                  src={Dog10}
-                  alt="Third slide"
-                />
-                <Carousel.Caption>
-                  <h3>Third slide label</h3>
-                  <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-                </Carousel.Caption>
-              </Carousel.Item>
-            </Carousel>
-
-            <Container>
-            <Form>
-              <Row className="align-items-center">
-                <Col>
-                <InputGroup className="mb-3">
-                  <Form.Select aria-label="Default select example" id = "airport" onChange= {e =>  handleSelect(e)}>
+            <Container className='fileter' style = {{paddingBottom: 20}}>
+              <Form>
+                <Row className="align-items-center">
+                  <Col>
+                  <InputGroup className="mb-3">
+                    <Form.Select aria-label="Default select example" id = "airport" onChange= {e =>  handleSelect(e)}>
+                  
+                      <option value = "0">search by destination</option>
+                      <option value="1">San Francisco</option>
+                      <option value="2">New York</option>
+                      <option value="3">Los Angeles</option>
+                      <option value="4">Toronto</option>``
+                      <option value="5">Vancouver</option>
+                      <option value="6">Seattle</option>
+                    </Form.Select>
+                    </InputGroup>
+                  </Col>
                 
-                    <option>search by destination</option>
-                    <option value="1">San Francisco</option>
-                    <option value="2">New York</option>
-                    <option value="3">Los Angeles</option>
-                    <option value="4">Toronto</option>``
-                    <option value="5">Vancouver</option>
-                    <option value="6">Seattle</option>
-                  </Form.Select>
+                  <Col>
+                  <InputGroup className="mb-3">
+                    <Form.Control
+                      placeholder="Search shelter location"
+                      aria-label="Recipient's username"
+                      aria-describedby="basic-addon2"
+                    />
+                    <Button variant="outline-secondary" id="button-addon2">
+                      Search
+                    </Button>
                   </InputGroup>
-                </Col>
-              
-                <Col>
-                <InputGroup className="mb-3">
-                  <Form.Control
-                    placeholder="Search shelter location"
-                    aria-label="Recipient's username"
-                    aria-describedby="basic-addon2"
-                  />
-                  <Button variant="outline-secondary" id="button-addon2">
-                    Search
-                  </Button>
-                </InputGroup>
-                </Col>
-              </Row>
-            </Form>
+                  </Col>
+                </Row>
+              </Form>
             </Container>
 
             <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
@@ -374,11 +390,11 @@ export default function Home( {dogs} ) {
                   <div key={dog._id} style = {{width: "fit-content"}}>
                     <Col style = {{width: "fit-content"}}>
                       <Card style={{ width: '20rem', height: '30rem' }}>
-                        <Card.Img variant="top" style={{ width: '20rem', height: '20rem'  }} src={" http://localhost:4800/" + dog.image } />
-                        <Card.Body>
-                          <Card.Title>
+                        <Card.Img variant="top" style={{ width: '20rem', height: '18rem'  }} src={" http://localhost:4800/" + dog.image } />
+                        <Card.Body style={{ width: '20rem', height: '12rem', padding: 10, paddingBottom:15}}>
+                          <Card.Title style = {{display: 'flex', alignItems: 'center', paddingTop: 5}}>
                             { dog.name }
-                      
+
                             <FormControlLabel
                               control = {
                                 <Checkbox
@@ -389,6 +405,7 @@ export default function Home( {dogs} ) {
                                 />
                               }
                               Label = "Like"
+                              style = {{paddingLeft: 10}}
                             />
                             <div ref ={ref}>
                               <a onClick={ e => openMsg(e, dog) }><BsChatDots /></a>
@@ -401,22 +418,23 @@ export default function Home( {dogs} ) {
                                 containerPadding={10}
                               >
                                 <Popover id="update-popover-contained">
-                                <Popover.Body>
-                                <Form onSubmit={e => handleSendMessage(e, dog)} >
-                                  <Form.Label>Message to <a href= "../detail">{name}</a> </Form.Label>
-                                  <Form.Control as="textarea" id = "message" rows={3} />
-                                  <br/>
-                                  <Button variant="primary" type="submit">
-                                    send
-                                  </Button>
-                                  </Form>
+                                  <Popover.Body>
+                                    <Form onSubmit={e => handleSendMessage(e, dog)} >
+                                      <Form.Label>Message to <a href= "../detail">{name}</a> </Form.Label>
+                                      <Form.Control as="textarea" id = "message" rows={3} />
+                                      <br/>
+                                      <Button variant="primary" type="submit">
+                                        send
+                                      </Button>
+                                    </Form>
                                   </Popover.Body>
                                 </Popover>
                               </Overlay>
                                
                             </div>                    
                         </Card.Title>
-                          <Card.Text> 
+                        <div className='cardMessageandButton'  style = {{alignItems: 'center', height: '7rem'}}>
+                          <Card.Text style = {{display: 'flex', alignItems: 'center', height: '3.5em'}}> 
                             { dog.name } wants to go to { dog.airport }
                           </Card.Text>
                           <Link href={{
@@ -424,9 +442,11 @@ export default function Home( {dogs} ) {
                             query: {
                               dog: dog._id
                             }// the data
-                          }} className="btn btn-primary w-500 mt-3">
+                            }} className="btn btn-primary " >
                             click for detail
-                        </Link>
+                          </Link>
+                        </div>
+                         
                         </Card.Body>
                       </Card>
                     </Col>

@@ -8,6 +8,7 @@ import { withPublic } from '../../src/app/routes';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { collection, doc, addDoc, setDoc } from "firebase/firestore";
 import { db } from "../../src/firebase"
+import validator from 'validator'
 
 
 function Register( { auth }) {
@@ -18,6 +19,8 @@ function Register( { auth }) {
 	const { signUp, currentUser} = auth
 	const [ error, setError ] = useState('')
 	const [ loading, setLoading ] = useState(false)
+	const [ emailError, setEmailError ] = useState('')
+	
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
@@ -29,6 +32,13 @@ function Register( { auth }) {
     	const email = emailRef.current.value;
     	const password = passwordlRef.current.value;
     	//const file = e.target[3].files[0];
+		if (validator.isEmail(email)) {
+			setEmailError('Valid Email')
+		  } else {
+			setEmailError('Enter valid Email!')
+			alert(emailError)
+		  }
+		
 
 		try {
 			setError('')

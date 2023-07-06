@@ -106,7 +106,7 @@ function myPage( {auth} ) {
 
       <Stack direction="horizontal" gap={2}>
     
-        <div>
+        <div className='myPageDisplayName' style = {{padding: 30, paddingBottom: 30}}>
           {!currentUser.photoURL?
           <Image
                 style={{ height: '10rem'  }}
@@ -137,8 +137,8 @@ function myPage( {auth} ) {
       <Container style = {{ minHeight: "100vh" }}>
       <div >
         <Stack gap={4}>
-          <div className="favorites"> 
-          <h2>{ currentUser && <div>---{currentUser.displayName? currentUser.displayName: currentUser.email}'s favorites---</div> } </h2>
+          <div className="favorites" > 
+          <h2>{ currentUser && <div className="myHomeFavoriteDivider" style = {{padding: 30, paddingTop: 20, paddingBottom: 40}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s favorites</div> } </h2>
             <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "40vh" }}>
             <Row style = {{ display: "flex", flexWrap: "wrap", gap: "12px"}}>
               {dogs_resp? dogs_resp.map(dog => 
@@ -169,16 +169,24 @@ function myPage( {auth} ) {
               </Row>
             </Container>    
           </div> 
-          <div style = {{ minHeight: "40vh" }}>
-          <h2>{ currentUser && <div>---{currentUser.displayName? currentUser.displayName: currentUser.email}'s messages---</div> } </h2>
+          <div style = {{ minHeight: "30vh" }}>
+          <h2>{ currentUser && <div className="myHomeMessageDivider" style = {{padding: 30, paddingBottom: 20}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s messages</div> } </h2>
+          <Container className="myHomeNumMessage" style = {{padding: 50,  paddingBottom: 40}}>
           <p>You have {length} new messages</p>
-            <Link href= "../chatroom" className="btn btn-primary w-500 mt-3">
+            <Link href= {{
+                            pathname: `../chatroom/${currentUser.uid}`,
+                            query: {
+                              uid: currentUser.uid
+                            }// the data
+                          }}  className="btn btn-primary w-500 mt-3">
               go to chatroom
             </Link>
+            </Container>             
+        
           </div>
-          <div>
-          <h2> { currentUser && <div>---{currentUser.displayName? currentUser.displayName: currentUser.email}'s dogs---</div> } </h2>
           <div style = {{ minHeight: "10vh" }}>
+          <h2> { currentUser && <div className="myHomeMyDogs" style = {{padding: 30, paddingTop: 20, paddingBottom: 40}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s dogs</div> } </h2>
+          <div className="myHomeNumDogs" style = {{padding: 50,  paddingTop: 10, paddingBottom: 40}}>
             <p>You have {dogs.length} dogs</p>
          
             <Link href= {{
@@ -190,6 +198,8 @@ function myPage( {auth} ) {
               upload more dogs  
             </Link>
           </div>
+            
+          
             <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "40vh" }}>
             <Row style = {{ display: "flex", flexWrap: "wrap", gap: "12px"}}>
                 {dogs && dogs.map(dog => 
