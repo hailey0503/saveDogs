@@ -21,7 +21,7 @@ const NavComp = () => {
 	return (
 		<>
 		{[false].map((expand) => (
-			<Navbar key={expand} bg="dark" variant="dark" expand={expand} className="mb-3">
+			<Navbar key={expand}  variant="dark" expand={expand} className="navbar">
 			  <Container fluid>
 			  <Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
 				<Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
@@ -32,11 +32,11 @@ const NavComp = () => {
 				>
 				  <Offcanvas.Header closeButton>
 					<Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
-					{ currentUser && <div>Hello {currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
+					{ currentUser && <div style={{color:"#3A98B9"}}>Hello {currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
 					</Offcanvas.Title>
 				  </Offcanvas.Header>
 				  <Offcanvas.Body>
-					<Nav className="justify-content-end flex-grow-1 pe-3">
+					<Nav className="justify-content-end flex-grow-1 pe-3" style = {{color:"#3A98B9"}}>
 					<Nav.Link href={"/mypage/" + currentUser.uid}>View my profile</Nav.Link>
 					<Nav.Link href={"/admin/" + currentUser.uid}>Upload dogs</Nav.Link>
 					<Nav.Link href={"/mydogs/" + currentUser.uid}>Manage my dogs</Nav.Link>

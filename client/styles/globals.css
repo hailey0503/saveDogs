@@ -113,6 +113,41 @@ a {
   padding: 20px;
   
 }
+.navbar {
+  background: #E8D5C4 !important;
+  text-decoration: #00000010;
+}
+.profile-update{
+  background: #E8D5C4 !important;
+  border: #00000010;
+  border-radius: 12px;
+  padding: 10px
+}
+.username {
+  color: #3A98B9 !important;
+}
+
+.btn {
+  background: #3A98B9 !important;
+  border:#00000010 !important;
+}
+.edit {
+  display: flex;
+  margin: 10px;
+}
+
+.float-container {
+  border: 3px solid #fff;
+  padding: 20px;
+  grid-gap: 20px; 
+}
+
+.float-child {
+  width: 50%;
+  float: left;
+  padding: 10px;
+  
+}  
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;

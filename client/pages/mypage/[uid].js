@@ -116,13 +116,15 @@ function myPage( {auth} ) {
           
         </div>
         <div>
-          <h2> { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}'s page</div> } </h2>
+          <h2> { currentUser && <div className = "username">{currentUser.displayName? currentUser.displayName: currentUser.email}'s page</div> } </h2>
           <Link href= {{
                             pathname: `../profile/${currentUser.uid}`,
                             query: {
                               uid: currentUser.uid
                             }// the data
-                          }} className = 'profile-update'>update profile</Link>
+                          }} className="btn btn-primary w-500 mt-3">
+              update profile 
+            </Link>
         </div>
        
        </Stack>
@@ -132,7 +134,7 @@ function myPage( {auth} ) {
       <div >
         <Stack gap={4}>
           <div className="favorites" > 
-          <h2>{ currentUser && <div className="myHomeFavoriteDivider" style = {{padding: 30, paddingTop: 20, paddingBottom: 40}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s favorites</div> } </h2>
+          <h2>{ currentUser && <div className="username" style = {{padding: 30, paddingTop: 20, paddingBottom: 40}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s favorites</div> } </h2>
             <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "40vh" }}>
             <Row style = {{ display: "flex", flexWrap: "wrap", gap: "12px"}}>
               {dogs_resp? dogs_resp.map(dog => 
@@ -164,7 +166,7 @@ function myPage( {auth} ) {
             </Container>    
           </div> 
           <div style = {{ minHeight: "30vh" }}>
-          <h2>{ currentUser && <div className="myHomeMessageDivider" style = {{padding: 30, paddingBottom: 20}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s messages</div> } </h2>
+          <h2>{ currentUser && <div className="username" style = {{padding: 30, paddingBottom: 20}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s messages</div> } </h2>
           <Container className="myHomeNumMessage" style = {{padding: 50,  paddingBottom: 40}}>
           <p>You have {length} new messages</p>
             <Link href= {{
@@ -179,7 +181,7 @@ function myPage( {auth} ) {
         
           </div>
           <div style = {{ minHeight: "10vh" }}>
-          <h2> { currentUser && <div className="myHomeMyDogs" style = {{padding: 30, paddingTop: 20, paddingBottom: 40}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s dogs</div> } </h2>
+          <h2> { currentUser && <div className="username" style = {{padding: 30, paddingTop: 20, paddingBottom: 40}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s dogs</div> } </h2>
           <div className="myHomeNumDogs" style = {{padding: 50,  paddingTop: 10, paddingBottom: 40}}>
             <p>You have {dogs.length} dogs</p>
          

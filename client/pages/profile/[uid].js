@@ -7,6 +7,7 @@ import { withProtected } from '../../src/app/routes';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation' 
 import { updateProfile } from "firebase/auth";
+import NavComp from "../../comps/NavComp.js";
 
 
 function Profile({auth}) {
@@ -100,37 +101,9 @@ function Profile({auth}) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      {[false].map((expand) => (
-        <Navbar key={expand} bg="dark" variant="dark" expand={expand} className="mb-3">
-          <Container fluid>
-          <Navbar.Brand href="/">Dog Transportation</Navbar.Brand>
-            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
-            <Navbar.Offcanvas
-              id={`offcanvasNavbar-expand-${expand}`}
-              aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-              placement="end"
-            >
-              <Offcanvas.Header closeButton>
-                <Offcanvas.Title id={`offcanvasNavbarLabel-expand-${expand}`}>
-                { currentUser && <div>{currentUser.displayName? currentUser.displayName: currentUser.email}</div> }
-                </Offcanvas.Title>
-              </Offcanvas.Header>
-              <Offcanvas.Body>
-                <Nav className="justify-content-end flex-grow-1 pe-3">
-                  <Nav.Link href="/mypage/${currentUser.uid}">View my page</Nav.Link>
-                  <Nav.Link href="/admin/${currentUser.uid}">Manage my dogs</Nav.Link>
-                  <Nav.Link href="../message/${currentUser.uid}">My Message</Nav.Link>
-                  <Nav.Item> 
-                    <Nav.Link onClick = { handleLogOut }>Log Out</Nav.Link>
-                  </Nav.Item>
-                </Nav>
-              </Offcanvas.Body>
-            </Navbar.Offcanvas>
-          </Container>
-        </Navbar>
-      ))}
+      <NavComp />
       <main className={styles.main}>
-      <h2> { currentUser && <div>Hello, {currentUser.displayName? currentUser.displayName: currentUser.email}! </div> } </h2>
+      <h2> { currentUser && <div className='username'> Hello, {currentUser.displayName? currentUser.displayName: currentUser.email}! </div> } </h2>
       <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "30vh" }}>
       <Row>
        
@@ -140,7 +113,7 @@ function Profile({auth}) {
         
       </Row>
     </Container>
-      <div className="Profile">
+      <div className="username" >
         <Form onSubmit={update}>
           <Row>
             <Col>

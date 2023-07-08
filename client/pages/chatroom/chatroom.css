@@ -49,15 +49,15 @@
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
-	background-color: #1877f2;
-	color: white;
+	background-color: #E8D5C4;
+	color: #3A98B9;
 }
 .chatOnline { 
 	flex: 3
 }
 
 .chatMenuWrap, .chatBoxWrap, .chatOnlineWrap {
-	background-color: rgb(149, 198, 228);
+	background-color: #FFF1DC;
 	padding: 10px;
 	height: 100%;
 }

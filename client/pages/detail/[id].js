@@ -73,19 +73,22 @@ function detail({ auth }) {
 		  <link rel="icon" href="/favicon.ico" />
 		</Head>
 		<NavComp />
-		 <h2> About {thisdog.name} </h2> 
+		<div classNmae = "dogname-detail" style = {{color: "#3A98B9", paddingTop: "2rem",  paddingLeft: "30px", fontSize: "40px"}}>
+		 About {thisdog.name} 
+		 </div>
 		 <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "100vh" }}>
+			
 			<Card style={{ width: '60rem', height:'40rem'}}>
 				<Card.Body>
 					<Row>
 						<Col>
 							<Image variant="left" src={"http://localhost:4800/"+ thisdog.image} roundedCircle
-							style={{ width: '26rem', height:'30rem'}}/>
+							style={{ width: '26rem', height:'25rem'}}/>
 								
-							<Card.Text variant = "right" >
+							<Card.Text style={{paddingTop:"2rem", color: "#3A98B9", fontSize:"20px"}} >
 							<a><BsChatDots /></a>
 							<Card.Link href={"../chatroom/" + currentUser.uid}>send message</Card.Link>
-							<div className="detailMessage">{thisdog.message}</div>
+							<div className="detailMessage" >{thisdog.message}</div>
 							</Card.Text>
 						</Col>
 						<Col>

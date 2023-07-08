@@ -23,7 +23,7 @@ app.use('/uploads', uploadsRoutes);
 app.use('/userprofile', userProfileRoutes);
 
 const dbURL = process.env.DB_URL;
-const port = process.env.PORT;
+const port = process.env.PORT||8000;
 
 
 mongoose.connect(dbURL, { useNewUrlParser: true, useUnifiedTopology: true})
