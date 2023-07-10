@@ -69,9 +69,6 @@ export default function Home({ dogs, userprofile }) {
   const [error, setError] = useState("");
   const { currentUser, logOut } = useAuth();
   const router = useRouter();
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [favorites, setFavorite] = useState([]);
   const [show, setShow] = useState(false);
   const ref = useRef(null);
   const [target, setTarget] = useState(null);

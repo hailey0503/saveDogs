@@ -106,7 +106,7 @@ a {
   margin-bottom: 15px;
   border-radius: 8px;
   border: none;
-  background-color: #0D6EFD;
+  background-color: #3A98B9;
   width: 400px
 }
 .detailMessage {
@@ -148,8 +148,30 @@ a {
   padding: 10px;
   
 }  
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
-  }
+.searchForm {
+  background-color: #00000000;
 }
+*:focus {
+  outline-color: #3A98B9;
+}
+.userChat {
+  cursor: pointer;
+}
+.userChat.hover {
+  background-color: #E8D5C4;
+}
+.userChatImage {
+  
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+    
+    
+}
+.opponentUser {
+  font-weight: 600;
+ 
+}
+

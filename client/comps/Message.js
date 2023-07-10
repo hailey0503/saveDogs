@@ -1,10 +1,17 @@
 import "./message.css";
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { withProtected} from '../src/app/routes';
+import { doc, onSnapshot } from "firebase/firestore";
 
 function Message({auth, own}) {
  
 	const { currentUser } = auth
+	const [ chat , setChats ] = useState([])
+
+	// use firebase snapshot to get realtime chat
+	useEffect(() => {
+
+	}, [])
 	
 	return (
 		<div className={own ? "message own" : "message"}>

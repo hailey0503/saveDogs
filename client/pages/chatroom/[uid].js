@@ -10,6 +10,7 @@ import { db } from "../../src/firebase";
 import NavComp from "../../comps/NavComp.js";
 import Message from "../../comps/Message.js";
 import Conversation from "../../comps/Conversation.js";
+import Search from "../../comps/search.js";
 
 function Chatroom({ auth }) {
   const [error, setError] = useState("");
@@ -39,10 +40,12 @@ function Chatroom({ auth }) {
 
   const handleSelect = async () => {
     //check whether the group(chats in firestore) exists, if not create
+    //combime both user's ids
     const combinedId =
       currentUser.uid > user.uid
         ? currentUser.uid + user.uid
         : user.uid + currentUser.uid;
+    console.log("id", combinedId);
 
     try {
       const res = await getDoc(doc(db, "chats", combinedId));
@@ -56,7 +59,7 @@ function Chatroom({ auth }) {
           [combinedId + ".userInfo"]: {
             uid: user.uid,
             displayName: user.displayName,
-            photoURL: user.photoURL,
+            //photoURL: user.photoURL,
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
@@ -65,7 +68,7 @@ function Chatroom({ auth }) {
           [combinedId + ".userInfo"]: {
             uid: currentUser.uid,
             displayName: currentUser.displayName,
-            photoURL: currentUser.photoURL,
+            //photoURL: currentUser.photoURL,
           },
           [combinedId + ".date"]: serverTimestamp(),
         });
@@ -77,6 +80,76 @@ function Chatroom({ auth }) {
     setUserName("");
   };
 
+  async function openMsg(e, dog) {
+    setShow(!show);
+    setTarget(e.target);
+    console.log("cur user id", currentUser.uid);
+    //const classRef = doc(db, "users", dog.uid);
+    //console.log('ref',classRef)
+    if (currentUser.uid != dog.uid) {
+      const classSnap = await getDoc(doc(db, "users", dog.uid));
+      if (classSnap.exists()) {
+        // console.log("Document data:", docSnap.data())
+        setUser(classSnap.data());
+        setUserName(classSnap.data().displayName);
+      } else {
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+      }
+    } else {
+      console.log("same user!");
+      alert("can't message to yourself");
+      setShow(false);
+    }
+  }
+
+  async function handleSendMessage(event, dog) {
+    event.preventDefault();
+    console.log("114", user);
+    //combime both user's ids
+    const combinedId =
+      currentUser.uid > user.uid
+        ? currentUser.uid + user.uid
+        : user.uid + currentUser.uid;
+    console.log("id", combinedId);
+    //check if there is a chat between these users
+    try {
+      const res = await getDoc(doc(db, "chats", combinedId));
+
+      if (!res.exists()) {
+        console.log("lalala");
+        //create a chat between two users
+        await setDoc(doc(db, "chats", combinedId), { messages: [] });
+      }
+    } catch (err) {}
+    //add to userChats
+    await updateDoc(doc(db, "userChats", currentUser.uid), {
+      [combinedId + ".userInfo"]: {
+        uid: currentUser.uid,
+        displayName: currentUser.displayName,
+        //photoURL: user.photoURL,
+      },
+      [combinedId + ".date"]: serverTimestamp(),
+    });
+    await updateDoc(doc(db, "userChats", user.uid), {
+      [combinedId + ".userInfo"]: {
+        uid: currentUser.uid,
+        displayName: currentUser.displayName,
+        //photoURL: currentUser.photoURL,
+      },
+      [combinedId + ".date"]: serverTimestamp(),
+    });
+    console.log([combinedId + ".userInfo"]);
+    console.log("end of update");
+
+    setNewMessage(event.target.message.value);
+    console.log(event.target.message.value);
+    console.log(newMessage);
+    //setNewMessage('');
+    setUser(null);
+    setUserName("");
+    setShow(false);
+  }
   return (
     <>
       <Head>
@@ -104,7 +177,8 @@ function Chatroom({ auth }) {
         <div className="chat">
           <div className="chatMenu">
             <div className="chatMenuWrap">
-              <input placeholder="Search people" className="chatMenuInput" />
+              <Search />
+
               <Conversation />
               <Conversation />
               <Conversation />
