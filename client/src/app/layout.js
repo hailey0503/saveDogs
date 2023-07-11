@@ -11,7 +11,9 @@ export default function RootLayout({ children }) {
       <head />
       <body>
         <AuthProvider>
+         <ChatContextProvider>
           {children}
+          </ChatContextProvider>
         </AuthProvider>
       </body>
     </html>

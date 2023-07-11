@@ -36,7 +36,12 @@ import "animate.css";
 import { BsChatDots } from "react-icons/bs";
 import { BiDetail } from "react-icons/bi";
 import { db } from "../src/firebase";
+import { v4 as uuid } from "uuid";
 import {
+  arrayUnion,
+  
+  Timestamp,
+ 
   doc,
   getDoc,
   setDoc,
@@ -161,6 +166,8 @@ export default function Home({ dogs, userprofile }) {
   async function handleSendMessage(event, dog) {
     event.preventDefault();
     console.log("114", user);
+    setNewMessage(event.target.message.value);
+    console.log('new msg', newMessage)
     //combime both user's ids
     const combinedId =
       currentUser.uid > user.uid
@@ -179,7 +186,7 @@ export default function Home({ dogs, userprofile }) {
     } catch (err) {}
     //add to userChats
     await updateDoc(doc(db, "userChats", currentUser.uid), {
-      name: name,
+     
       [combinedId + ".userInfo"]: {
         uid: user.uid,
         displayName: name,
@@ -195,10 +202,18 @@ export default function Home({ dogs, userprofile }) {
       },
       [combinedId + ".date"]: serverTimestamp(),
     });
+    await updateDoc(doc(db, "chats", combinedId), {
+      messages: arrayUnion({
+        id: uuid(),
+        text: event.target.message.value,
+        senderId: currentUser.uid,
+        date: Timestamp.now(),
+      }),
+    });
     console.log([combinedId + ".userInfo"]);
     console.log("end of update");
 
-    setNewMessage(event.target.message.value);
+    
     console.log(event.target.message.value);
     console.log(newMessage);
     //setNewMessage('');

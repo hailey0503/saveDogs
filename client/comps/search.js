@@ -1,7 +1,5 @@
-import Head from 'next/head'
+
 import React,  { useState } from 'react';
-import { Col, Row, Card, Navbar, Nav, Container, Offcanvas, Image } from 'react-bootstrap';
-import Link from 'next/link'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { withProtected } from '../src/app/routes';
 import { collection, query, where, getDocs, setDoc, getDoc, updateDoc, doc, serverTimestamp, QuerySnapshot } from "firebase/firestore";

@@ -1,23 +1,42 @@
 import Head from "next/head";
 import "./chatroom.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Col, Row, Card, Navbar, Nav, Container } from "react-bootstrap";
 import Link from "next/link";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { withProtected } from "../../src/app/routes";
-import { collection, query, where, getDoc, setDoc } from "firebase/firestore";
+import { collection, query, where, getDoc, setDoc, doc, onSnapshot } from "firebase/firestore";
 import { db } from "../../src/firebase";
 import NavComp from "../../comps/NavComp.js";
 import Message from "../../comps/Message.js";
 import Conversation from "../../comps/Conversation.js";
 import Search from "../../comps/search.js";
+import { useChatAuth } from "../../src/context/ChatContext";
 
 function Chatroom({ auth }) {
   const [error, setError] = useState("");
   const { currentUser, logOut } = auth;
-  const [userName, setUserName] = useState("");
-  const [user, setUser] = useState(null);
+  const { data } = useChatAuth()
+  const [ userName, setUserName] = useState("");
+  const [ user, setUser] = useState(null);
+  const [ messages, setMessages ] =useState([])
 
+  useEffect(() => {
+    const getChats = () => {
+      const unsub = onSnapshot(doc(db, "userChats", data.chatId), (doc) => {
+        console.log("currnet data: ", doc.data());
+        doc.exists() && setMessages(doc.data().messages);
+      });
+      return () => {
+        unsub();
+      };
+    };
+   
+  }, [data]);
+
+  console.log("msgs", Object.entries(messages));
+
+ 
   //search an user
   async function handleSearch() {
     const q = query(
@@ -178,25 +197,18 @@ function Chatroom({ auth }) {
           <div className="chatMenu">
             <div className="chatMenuWrap">
               <Search />
-
               <Conversation />
-              <Conversation />
-              <Conversation />
-              <Conversation />
+             
             </div>
           </div>
           <div className="chatBox">
             <div className="chatBoxWrap">
               <div className="chatBoxTop">
-                <Message />
-                <Message own={true} />
-                <Message />
-                <Message own={true} />
-                <Message />
-                <Message own={true} />
-                <Message />
-                <Message own={true} />
-                <Message />
+				{messages.map((m)=>(
+					<Message message={m} key={m.id}/>
+				))}
+				<Message />
+               
               </div>
               <div className="chatBoxBottem">
                 <textarea
