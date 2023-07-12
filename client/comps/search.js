@@ -79,11 +79,6 @@ function Search( {auth} ) {
     console.log([combinedId + ".userInfo"]);
     console.log("end of update");
 
-    //setNewMessage(event.target.message.value);
-    //console.log(event.target.message.value);
-    //console.log(newMessage);
-    //setNewMessage('');
-    //setNewMessage('');
     setUser(null);
    // setUserName("");
    // setShow(false);
@@ -102,9 +97,7 @@ function Search( {auth} ) {
       </div>
       {err && <span>User not found!</span>}
       {user && 
-        <div className="userChat" onClick={(e) =>
-                                            handleSelect(e)
-                                          }>
+        <div className="userChat" onClick={(e) => handleSelect(e)}>
           <div className="userChatInfo" style = {{paddingTop: "15px", paddingLeft: "5px"}}>
             <img
               className='userChatImage'

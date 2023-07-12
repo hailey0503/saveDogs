@@ -5,14 +5,15 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { db } from "../src/firebase";
 import { useChatAuth } from "../src/context/ChatContext";
 
-function Message({ auth, own, message }) {
+function Message({ auth, own, message, }) {
   const { currentUser } = auth;
-  const { data } = useChatAuth()
+  //const { data } = useChatAuth()
   const [chats, setChats] = useState([]);
   console.log('me', message)
   
   
   // use firebase snapshot to get realtime chat
+  /*
   useEffect(() => {
     const getChats = () => {
       const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
@@ -31,15 +32,15 @@ function Message({ auth, own, message }) {
   const handleSelect = (user) => {
 	dispatch({type: CHANGE_USER, payload: user})
   };
-
+*/
   return (
     <div className="chats">
       <div className={own ? "message own" : "message"}>
-        {Object.entries(chats)?.map((chat) => (
+       
           <div
             className="messageTop"
-            key={chat[0]}
-            onClick={() => handleSelect(chat[1].userInfo)}
+            key={message[1].id}
+            onClick={() => handleSelect()}
           >
             <img
               className="messageImage"
@@ -49,13 +50,13 @@ function Message({ auth, own, message }) {
               alt=""
             />
             <div className="messageText">
-              <span>{chat[1].userInfo.displayName}</span>
-              <p>{chat[1].userInfo.lastMessage?.text}</p>
+              <span>{message[1].text}</span>
+              <p>{}</p>
             </div>
 
-            <div className="messageBottom">date</div>
+            <div className="messageBottom">{message[1].date.toDate().toLocaleTimeString() + " " + message[1].date.toDate().toDateString()}</div>
           </div>
-        ))}
+       
       </div>
     </div>
   );

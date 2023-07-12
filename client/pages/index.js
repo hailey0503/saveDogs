@@ -39,9 +39,7 @@ import { db } from "../src/firebase";
 import { v4 as uuid } from "uuid";
 import {
   arrayUnion,
-  
   Timestamp,
- 
   doc,
   getDoc,
   setDoc,
@@ -283,6 +281,10 @@ export default function Home({ dogs, userprofile }) {
       }
     }
   }
+  const handleOverlayClose = () => {
+    setShow(false);
+  };
+
 
   return (
     <>
@@ -449,7 +451,7 @@ export default function Home({ dogs, userprofile }) {
                                   Label="Like"
                                   style={{ paddingLeft: 10 }}
                                 />
-                                <div ref={ref}>
+                                <div style={{padding:"8px 11px 11px"}} ref={ref}>
                                   <a onClick={(e) => openMsg(e, dog)}>
                                     <BsChatDots />
                                   </a>
@@ -460,7 +462,10 @@ export default function Home({ dogs, userprofile }) {
                                     placement="right"
                                     container={ref}
                                     containerPadding={10}
-                                  >
+                                    onHide={handleOverlayClose}
+                                    rootClose
+                                   >
+                                  
                                     <Popover id="update-popover-contained">
                                       <Popover.Body>
                                         <Form
@@ -482,18 +487,22 @@ export default function Home({ dogs, userprofile }) {
                                           <Form.Control
                                             as="textarea"
                                             id="message"
-                                            rows={3}
+                                            rows={6}
+                                            cols = {80}
+                                           
+                                            onClick={(e)=>{e.stopPropagation()} }
                                           />
-                                          <br />
+                                        <br />
                                           <Button
                                             variant="primary"
                                             type="submit"
                                           >
-                                            send
+                                            Send
                                           </Button>
                                         </Form>
                                       </Popover.Body>
                                     </Popover>
+                                   
                                   </Overlay>
                                 </div>
                               </Card.Title>
