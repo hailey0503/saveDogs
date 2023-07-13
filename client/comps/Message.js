@@ -7,7 +7,6 @@ import { useChatAuth } from "../src/context/ChatContext";
 
 function Message({ auth, own, message }) {
   const { currentUser } = auth;
-  //const { data } = useChatAuth()
   const [chats, setChats] = useState([]);
   console.log("me", message);
 
@@ -27,17 +26,17 @@ function Message({ auth, own, message }) {
   }, [currentUser.uid]);
 
   console.log("chats", Object.entries(chats));
-
+*/
   const handleSelect = (user) => {
 	dispatch({type: CHANGE_USER, payload: user})
   };
-*/
+
   return (
     <div className="chats">
-      <div className={message[1].senderId === currentUser.uid ? "message own" : "message"}>
+      <div className={message.senderId === currentUser.uid ? "message own" : "message"}>
         <div
           className="messageTop"
-          key={message[1].id}
+          key={message.id}
           onClick={() => handleSelect()}
         >
           <img
@@ -47,13 +46,13 @@ function Message({ auth, own, message }) {
             }
             alt=""
           />
-          <p className="messageText"> {message[1].text}</p>
+          <p className="messageText"> {message.text}</p>
         </div>
 
         <div className="messageBottom">
-          {message[1].date.toDate().toLocaleTimeString() +
+          {message.date.toDate().toLocaleTimeString() +
             " " +
-            message[1].date.toDate().toDateString()}
+            message.date.toDate().toDateString()}
         </div>
       </div>
     </div>

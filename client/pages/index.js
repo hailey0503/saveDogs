@@ -451,6 +451,7 @@ export default function Home({ dogs, userprofile }) {
                                   display: "flex",
                                   alignItems: "center",
                                   paddingTop: 5,
+                                  paddingLeft: "5px"
                                 }}
                               >
                                 {dog.name}
@@ -508,6 +509,7 @@ export default function Home({ dogs, userprofile }) {
                                             id="message"
                                             rows={6}
                                             cols = {80}
+                                         
                                            
                                             onClick={(e)=>{e.stopPropagation()} }
                                           />
@@ -535,6 +537,7 @@ export default function Home({ dogs, userprofile }) {
                                     display: "flex",
                                     alignItems: "center",
                                     height: "3.5em",
+                                    paddingLeft: "5px"
                                   }}
                                 >
                                   {dog.name} wants to go to {dog.airport}

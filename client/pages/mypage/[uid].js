@@ -9,6 +9,7 @@ import Stack from 'react-bootstrap/Stack';
 import NavComp from "../../comps/NavComp.js";
 import Map from "../../comps/map.js";
 import { BsChatDots } from "react-icons/bs";
+import "./mypage.css";
 
 
 
@@ -96,11 +97,11 @@ function myPage( {auth} ) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <NavComp />
-      <Container style = {{ minHeight: "40vh" }}>
+      <Container style = {{ minHeight: "50vh" }}>
 
       <Stack direction="horizontal" gap={2}>
     
-        <div className='myPageDisplayName' style = {{padding: 30, paddingBottom: 30}}>
+        <div className='myPageDisplayName' style = {{padding: 30, paddingBottom: 30, paddingTop: "5rem"}}>
           {!currentUser.photoURL?
           <Image
                 style={{ height: '10rem'  }}
@@ -116,14 +117,14 @@ function myPage( {auth} ) {
           
         </div>
         <div>
-          <h2> { currentUser && <div className = "username">{currentUser.displayName? currentUser.displayName: currentUser.email}'s page</div> } </h2>
+          <h2> { currentUser && <div className = "username_profile" style= {{color: "#3A98B9", paddingBottom:"1rem"}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s page</div> } </h2>
           <Link href= {{
                             pathname: `../profile/${currentUser.uid}`,
                             query: {
                               uid: currentUser.uid
                             }// the data
-                          }} className="btn btn-primary w-500 mt-3">
-              update profile 
+                          }} >
+              <button className='updateButton' >Update Profile</button>
             </Link>
         </div>
        
@@ -131,12 +132,14 @@ function myPage( {auth} ) {
       </Container>
     
       <Container style = {{ minHeight: "100vh" }}>
-      <div >
-        <Stack gap={4}>
+      <div className="mypage">
+       
           <div className="favorites" > 
-          <h2>{ currentUser && <div className="username" style = {{padding: 30, paddingTop: 20, paddingBottom: 40}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s favorites</div> } </h2>
-            <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "40vh" }}>
-            <Row style = {{ display: "flex", flexWrap: "wrap", gap: "12px"}}>
+          <div className="fav_left">
+          <h2>{ currentUser && <div className="username">{currentUser.displayName? currentUser.displayName: currentUser.email}'s favorites</div> } </h2>
+          </div>
+          <div className='fav_right'>
+            <Row style = {{ display: "flex", flexWrap: "wrap", gap: "15px", paddingLeft:"6rem"}}>
               {dogs_resp? dogs_resp.map(dog => 
                 <div key={dog._id} style = {{width: "fit-content"}}>
                     <Col style = {{width: "fit-content"}}>
@@ -154,8 +157,9 @@ function myPage( {auth} ) {
                             query: {
                               dog: dog._id
                             }// the data
-                          }} className="btn btn-primary w-500 mt-3">
-                            click for detail
+                          }} >
+                            <button className='detailButton'> click for detail</button>
+                           
                         </Link>
                       </Card.Body>
                     </Card>
@@ -163,40 +167,51 @@ function myPage( {auth} ) {
                 </div>
               ):<h3>add favorite dogs</h3> }
               </Row>
-            </Container>    
+              </div>
+            
           </div> 
-          <div style = {{ minHeight: "30vh" }}>
-          <h2>{ currentUser && <div className="username" style = {{padding: 30, paddingBottom: 20}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s messages</div> } </h2>
-          <Container className="myHomeNumMessage" style = {{padding: 50,  paddingBottom: 40}}>
-          <p>You have {length} new messages</p>
+          <div  className="myHomeNumMessage">
+            <div className='message_left'>
+              <div>
+          <h2>{ currentUser && <div className="username" style = {{padding: 30, paddingBottom: 40 }}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s messages</div> } </h2>
+            <div style={{paddingLeft: "3.5rem"}}>
             <Link href= {{
                             pathname: `../chatroom/${currentUser.uid}`,
                             query: {
                               uid: currentUser.uid
                             }// the data
-                          }}  className="btn btn-primary w-500 mt-3">
-              go to chatroom
+                          }}  >
+              <button className='chatButton'> go to chatroom</button>
             </Link>
-            </Container>             
-        
+            </div>
+            </div>
           </div>
-          <div style = {{ minHeight: "10vh" }}>
-          <h2> { currentUser && <div className="username" style = {{padding: 30, paddingTop: 20, paddingBottom: 40}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s dogs</div> } </h2>
+          <div className='message_right' style={{paddingTop: "15rem"}}>
+            <p>You have {length} new messages</p>
+            
+            </div>
+          </div>
+
           <div className="myHomeNumDogs" style = {{padding: 50,  paddingTop: 10, paddingBottom: 40}}>
-            <p>You have {dogs.length} dogs</p>
-         
+          <div className='numDog_left'>
+          <h2> { currentUser && <div className="username" style = {{padding: 30, paddingTop: 20, paddingBottom: 40}}>{currentUser.displayName? currentUser.displayName: currentUser.email}'s dogs</div> } </h2>
+       
+          <div style={{paddingLeft: "3.5rem"}}>
             <Link href= {{
                             pathname: `../admin/${currentUser.uid}`,
                             query: {
                               uid: currentUser.uid
                             }// the data
-                          }} className="btn btn-primary w-500 mt-3">
-              upload more dogs  
+                          }} >
+             <button className='uploadButton' > upload more dogs</button>
             </Link>
           </div>
+          </div>
             
-          
+          <div className='numDog_right'>
             <Container className = "d-flex align-items-center justify-content-center" style = {{ minHeight: "40vh" }}>
+            {dogs.length === 0 && <p>You have {dogs.length} dogs</p>}
+         
             <Row style = {{ display: "flex", flexWrap: "wrap", gap: "12px"}}>
                 {dogs && dogs.map(dog => 
                   <div key={dog._id}  style = {{width: "fit-content"}}>
@@ -219,10 +234,10 @@ function myPage( {auth} ) {
           
                 </Row>
               </Container>
+              </div>
             </div>
-          </Stack>
         </div>
-      </Container>  
+     </Container>
     </>
    
   )

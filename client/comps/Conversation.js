@@ -28,6 +28,7 @@ function Conversation({ auth, getChats, setUser, setCombinedId }) {
   console.log("chats", Object.entries(chats));
 
   const handleSelect = (user) => {
+    console.log('31')
     setUser(user)
     const combinedId =
     currentUser.uid > user.uid
@@ -35,7 +36,8 @@ function Conversation({ auth, getChats, setUser, setCombinedId }) {
       : user.uid + currentUser.uid;
     console.log("id", combinedId);
     setCombinedId(combinedId)
-    getChats(combinedId)
+    getChats(combinedId) //chat not coming right after
+    console.log('40')
   };
 
   return (
@@ -43,7 +45,7 @@ function Conversation({ auth, getChats, setUser, setCombinedId }) {
       {Object.entries(chats)?.map((chat) => (
       
         <div className="conversation"
-             key={chat[1].userInfo.uid} >
+             key={chat[0]} >
           <div
             className="conversationChoice"
             onClick={() => handleSelect(chat[1].userInfo)}
@@ -55,7 +57,7 @@ function Conversation({ auth, getChats, setUser, setCombinedId }) {
               }
               alt=""
             />
-
+              
             <span className="conversationName">
               {chat[1].userInfo.displayName}
             </span>

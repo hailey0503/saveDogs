@@ -31,7 +31,7 @@ function Chatroom({ auth }) {
 
   const [userName, setUserName] = useState("");
   const [combinedId, setCombinedId] = useState("");
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState([]);//([])
   const [searchUserName, setSearchUserName] = useState("");
 
   const [err, setErr] = useState(false);
@@ -43,23 +43,22 @@ function Chatroom({ auth }) {
   useEffect(() => {
 	console.log("useEffect")
 	if (combinedId) {
+		const fetchChats = () => {
+		
+			const unsub = onSnapshot(doc(db, "chats", combinedId), (doc) => {
+			
+			  doc.exists() && setMessages(doc.data().messages);
+			});
+			return () => {
+			  unsub();
+			};
+		  };
 		fetchChats()
 	}	
 	
   }, [user]);
-  
-  const fetchChats = () => {
-		
-	const unsub = onSnapshot(doc(db, "chats", combinedId), (doc) => {
-	  console.log("currnet data: ", doc.data());
-	  doc.exists() && setMessages(doc.data());
-	});
-	return () => {
-	  unsub();
-	};
-  };
 
-  console.log("msgs", Object.entries(messages));
+	//console.log("msgs", Object.entries(messages));
 
   const handleSearch = async () => {
 	
@@ -110,6 +109,7 @@ function Chatroom({ auth }) {
     //delete name in search bar
     setUserName("");
   };
+  
   const handleSelectSearch = async () => {
     //check whether the group(chats in firestore) exists, if not create
     //combime both user's ids
@@ -121,6 +121,7 @@ function Chatroom({ auth }) {
     console.log("id", combinedId);
     setCombinedId(combinedId);
     getChats(combinedId);
+	setSearchUserName("")
   };
 
   async function createChats(combinedId) {
@@ -145,50 +146,23 @@ function Chatroom({ auth }) {
       [combinedId + ".date"]: serverTimestamp(),
     });
   }
-  /*
-  async function handleSendMessage(event, dog) {
-    event.preventDefault();
-    console.log("114", user);
-    //combime both user's ids
-    const combinedId =
-      currentUser.uid > user.uid
-        ? currentUser.uid + user.uid
-        : user.uid + currentUser.uid;
-    console.log("id", combinedId);
-	setCombinedId(combinedId)
-    //check if there is a chat between these users
-    try {
-      const res = await getDoc(doc(db, "chats", combinedId));
+  async function handleKeySend(e) {
+	e.code === 'Enter' && handleSend()
 
-      if (!res.exists()) {
-        console.log("lalala");
-        //create a chat between two users
-        await createChats(combinedId);
-      }
-    } catch (err) {
-      setErr(err);
-      console.log("err175", err);
-    }
-    //add to userChats
-    addUserChats();
-
-    console.log([combinedId + ".userInfo"]);
-    console.log("end of update");
-
-    setUser(null);
-    setUserName("");
-    setShow(false);
   }
-  */
+  
   async function handleSend() {
     console.log("handlesend");
     if (img) {
+		////later 
     } else {
+		
       await updateDoc(doc(db, "userChats", currentUser.uid), {
         [combinedId + ".userInfo"]: {
           uid: user.uid,
           displayName: user.displayName,
           //photoURL: user.photoURL,
+		  text
         },
         [combinedId + ".date"]: serverTimestamp(),
       });
@@ -197,9 +171,11 @@ function Chatroom({ auth }) {
           uid: currentUser.uid,
           displayName: currentUser.displayName,
           //photoURL: currentUser.photoURL,
+		  text
         },
         [combinedId + ".date"]: serverTimestamp(),
       });
+	 
       await updateDoc(doc(db, "chats", combinedId), {
         messages: arrayUnion({
           id: uuid(),
@@ -209,7 +185,9 @@ function Chatroom({ auth }) {
         }),
       });
       console.log("updateDoc 29");
-      getChats(combinedId);
+     // getChats(combinedId);
+	  setText("")
+	  setImg("")
     }
   }
   return (
@@ -251,7 +229,7 @@ function Chatroom({ auth }) {
 
                 {err && <span>User not found!</span>}
 				{searchUserName===currentUser.displayName && <span>It is you!</span>}
-                {user && (
+                {searchUserName && (
                   <div
                     className="userChat"
                     onClick={(e) => handleSelectSearch(e)}
@@ -287,20 +265,25 @@ function Chatroom({ auth }) {
           <div className="chatBox">
             <div className="chatBoxWrap">
               <div className="chatBoxTop">
-                {messages.length > 0 &&
-                  Object.entries(messages)?.map((m) => (
-                    <Message message={m} key={m[0].id} />
+                {
+                 messages?.map((m) => (
+                    <Message message={m} key={m.id}/>
                   ))}
               </div>
               <div className="chatBoxBottom">
-                <textarea
+                <input
                   className="chatMessageInput"
                   placeholder="write something here"
                   type="text"
+				  onKeyDown={handleKeySend}
                   onChange={(e) => setText(e.target.value)}
 				 
                   value={text}
-                ></textarea>
+                ></input>
+				<div className="send">
+					<input type = "file" style={{display:"none"}} id="file" onChange={e=>setImg(e.target.files[0])}>
+					</input>
+				</div>
                 <button className="chatSubmitButton" onClick={handleSend}>
                   Send
                 </button>

@@ -1,0 +1,116 @@
+.mypage {
+	
+	display: flex;
+  	flex-direction: column;
+}
+.favorites {
+	flex: 3;
+	display: flex;
+	padding: 3rem;
+}
+.fav_left {
+	flex:3;
+}
+.username {
+	justify-content: center;
+  	align-items: center;
+	padding-top: 10rem;
+	padding-left: 4rem;
+
+}
+.fav_right {
+	height: 90vh;
+	flex:6;
+	overflow-y: scroll;
+}
+.myHomeNumMessage {
+	
+	flex: 2;
+	display: flex;
+	padding: 3rem;
+	display: flex;
+	justify-content: center;
+}
+.message_left {
+	flex:3;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+.message_right {
+	flex: 6;
+	padding-left: 6rem;
+	display: flex;
+	justify-content: center;
+	height: 60vh;
+
+}
+
+.myHomeNumDogs {
+	flex:3;
+	display: flex;
+	overflow-y: scroll;
+}
+.numDog_left {
+	flex:3;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	
+  
+}
+
+.numDog_right {
+	flex: 6;
+	padding-left: 6rem;
+	overflow-y: scroll;
+	height: 70vh;
+}
+.updateButton {
+	width: 120px;
+	height: 40px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	background-color: #3A98B9;
+	color: white;
+	
+}
+.updateButton:hover {background-color:  #E8D5C4; color:  #3A98B9}
+
+.detailButton {
+	width: 120px;
+	height: 40px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	background-color: #E8D5C4;
+	color: #3A98B9;
+	
+}
+.detailButton:hover {background-color: #3A98B9; color: white}
+
+.chatButton {
+	width: 170px;
+	height: 40px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	background-color: #3A98B9;
+	color: white;
+	
+}
+.chatButton:hover {background-color:  #E8D5C4; color:  #3A98B9}
+
+.uploadButton{
+	width: 170px;
+	height: 40px;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+	background-color: #3A98B9;
+	color: white;
+	
+}
+
+.uploadButton:hover {background-color:  #E8D5C4; color:  #3A98B9}
