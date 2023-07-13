@@ -14,44 +14,55 @@ import {
   setDoc,
   updateDoc,
   doc,
+  Timestamp,
   serverTimestamp,
   onSnapshot,
+  arrayUnion,
 } from "firebase/firestore";
 import { db } from "../../src/firebase";
 import NavComp from "../../comps/NavComp.js";
 import Message from "../../comps/Message.js";
 import Conversation from "../../comps/Conversation.js";
-import Search from "../../comps/search.js";
-import Input from "../../comps/Input.js"
-import { useChatAuth } from "../../src/context/ChatContext";
+import { v4 as uuid } from "uuid";
 
 function Chatroom({ auth }) {
   const [error, setError] = useState("");
   const { currentUser, logOut } = auth;
-  const { data } = useChatAuth();
+
   const [userName, setUserName] = useState("");
-  const [combinedId, setCombinedId ] = useState("")
+  const [combinedId, setCombinedId] = useState("");
   const [messages, setMessages] = useState([]);
   const [searchUserName, setSearchUserName] = useState("");
 
   const [err, setErr] = useState(false);
   const [user, setUser] = useState(null);
-/*
+
+  const [text, setText] = useState("");
+  const [img, setImg] = useState(null);
+  
   useEffect(() => {
-    const getChats = () => {
-      const unsub = onSnapshot(doc(db, "userChats", user.chatId), (doc) => {
-        console.log("currnet data: ", doc.data());
-        doc.exists() && setMessages(doc.data().messages);
-      });
-      return () => {
-        unsub();
-      };
-    };
+	console.log("useEffect")
+	if (combinedId) {
+		fetchChats()
+	}	
+	
   }, [user]);
-*/
+  
+  const fetchChats = () => {
+		
+	const unsub = onSnapshot(doc(db, "chats", combinedId), (doc) => {
+	  console.log("currnet data: ", doc.data());
+	  doc.exists() && setMessages(doc.data());
+	});
+	return () => {
+	  unsub();
+	};
+  };
+
   console.log("msgs", Object.entries(messages));
 
   const handleSearch = async () => {
+	
     const q = query(
       collection(db, "users"),
       where("displayName", "==", searchUserName)
@@ -79,28 +90,26 @@ function Chatroom({ auth }) {
   };
 
   const getChats = async (combinedId) => {
-	try {
-		const res = await getDoc(doc(db, "chats", combinedId));
-		// no chat b/w two ppl
-		if (!res.exists()) {
-		  //create a chat in chats collection
-		  await createChats(combinedId);
-		  await addUserChats();
-		} else {
-		  //chats exists
-		  setMessages(res.data().messages);
-		  //setMessages
-		  console.log('messages101',res.data().messages)
-		}
-	  } catch (error) {
-		  console.error(error)
-	  }
-	  // unclick opponent user by clicking it
-	  
-	  //delete name in search bar
-	  setUserName("");
+    try {
+      const res = await getDoc(doc(db, "chats", combinedId));
+      // no chat b/w two ppl
+      if (!res.exists()) {
+        //create a chat in chats collection
+        await createChats(combinedId);
+        await addUserChats();
+      } else {
+        //chats exists
+        setMessages(res.data().messages);
+        //setMessages
+        console.log("messages101", res.data().messages);
+      }
+    } catch (error) {
+      console.error(error);
+    }
 
-  }
+    //delete name in search bar
+    setUserName("");
+  };
   const handleSelectSearch = async () => {
     //check whether the group(chats in firestore) exists, if not create
     //combime both user's ids
@@ -110,34 +119,10 @@ function Chatroom({ auth }) {
         : user.uid + currentUser.uid;
 
     console.log("id", combinedId);
-	setCombinedId(combinedId)
-	getChats(combinedId);
-    
+    setCombinedId(combinedId);
+    getChats(combinedId);
   };
-/*
-  async function openMsg(e, dog) {
-    setShow(!show);
-    setTarget(e.target);
-    console.log("cur user id", currentUser.uid);
-    //const classRef = doc(db, "users", dog.uid);
-    //console.log('ref',classRef)
-    if (currentUser.uid != dog.uid) {
-      const classSnap = await getDoc(doc(db, "users", dog.uid));
-      if (classSnap.exists()) {
-        // console.log("Document data:", docSnap.data())
-        setUser(classSnap.data());
-        setUserName(classSnap.data().displayName);
-      } else {
-        // doc.data() will be undefined in this case
-        console.log("No such document!");
-      }
-    } else {
-      console.log("same user!");
-      alert("can't message to yourself");
-      setShow(false);
-    }
-  }
-*/
+
   async function createChats(combinedId) {
     await setDoc(doc(db, "chats", combinedId), { messages: [] });
   }
@@ -160,6 +145,7 @@ function Chatroom({ auth }) {
       [combinedId + ".date"]: serverTimestamp(),
     });
   }
+  /*
   async function handleSendMessage(event, dog) {
     event.preventDefault();
     console.log("114", user);
@@ -193,6 +179,39 @@ function Chatroom({ auth }) {
     setUserName("");
     setShow(false);
   }
+  */
+  async function handleSend() {
+    console.log("handlesend");
+    if (img) {
+    } else {
+      await updateDoc(doc(db, "userChats", currentUser.uid), {
+        [combinedId + ".userInfo"]: {
+          uid: user.uid,
+          displayName: user.displayName,
+          //photoURL: user.photoURL,
+        },
+        [combinedId + ".date"]: serverTimestamp(),
+      });
+      await updateDoc(doc(db, "userChats", user.uid), {
+        [combinedId + ".userInfo"]: {
+          uid: currentUser.uid,
+          displayName: currentUser.displayName,
+          //photoURL: currentUser.photoURL,
+        },
+        [combinedId + ".date"]: serverTimestamp(),
+      });
+      await updateDoc(doc(db, "chats", combinedId), {
+        messages: arrayUnion({
+          id: uuid(),
+          text: text,
+          senderId: currentUser.uid,
+          date: Timestamp.now(),
+        }),
+      });
+      console.log("updateDoc 29");
+      getChats(combinedId);
+    }
+  }
   return (
     <>
       <Head>
@@ -221,16 +240,17 @@ function Chatroom({ auth }) {
           <div className="chatMenu">
             <div className="chatMenuWrap">
               <div className="search">
-                <div className="searchForm">
-                  <input
-                    type="text"
-                    placeholder="Find a user"
-                    onKeyDown={handleKey}
-                    onChange={(e) => setSearchUserName(e.target.value)}
-                    value={searchUserName}
-                  />
-                </div>
+                <input
+                  className="chatMenuInput"
+                  type="text"
+                  placeholder="Search a user"
+                  onKeyDown={handleKey}
+                  onChange={(e) => setSearchUserName(e.target.value)}
+                  value={searchUserName}
+                />
+
                 {err && <span>User not found!</span>}
+				{searchUserName===currentUser.displayName && <span>It is you!</span>}
                 {user && (
                   <div
                     className="userChat"
@@ -257,21 +277,39 @@ function Chatroom({ auth }) {
                   </div>
                 )}
               </div>
-              <Conversation getChats={getChats} setUser={setUser} setCombinedId={setCombinedId} />
+              <Conversation
+                getChats={getChats}
+                setUser={setUser}
+                setCombinedId={setCombinedId}
+              />
             </div>
           </div>
           <div className="chatBox">
             <div className="chatBoxWrap">
               <div className="chatBoxTop">
-                {messages.length > 0 && Object.entries(messages)?.map((m) => (
-					
-                  <Message message={m} key={m[0].id} />
-                ))}
+                {messages.length > 0 &&
+                  Object.entries(messages)?.map((m) => (
+                    <Message message={m} key={m[0].id} />
+                  ))}
               </div>
-              <div className="chatBoxBottem">
-               <Input combinedId={combinedId} user={user} getChats={getChats} />
+              <div className="chatBoxBottom">
+                <textarea
+                  className="chatMessageInput"
+                  placeholder="write something here"
+                  type="text"
+                  onChange={(e) => setText(e.target.value)}
+				 
+                  value={text}
+                ></textarea>
+                <button className="chatSubmitButton" onClick={handleSend}>
+                  Send
+                </button>
+                
               </div>
             </div>
+          </div>
+          <div className="chatOnline ">
+            <div className="chatOnlineWrap "></div>
           </div>
         </div>
       </Container>

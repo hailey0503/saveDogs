@@ -12,7 +12,7 @@ function Conversation({ auth, getChats, setUser, setCombinedId }) {
 
 
 
-  useEffect(() => {
+  useEffect(() => { //this lists the friends names
     const fetchChats = () => {
       const unsub = onSnapshot(doc(db, "userChats", currentUser.uid), (doc) => {
         console.log("currnet data: ", doc.data());
