@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Inter } from "@next/font/google";
 import styles from "../styles/Home.module.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+
 import {
   Carousel,
   Form,
@@ -46,6 +47,7 @@ import {
   updateDoc,
   serverTimestamp,
 } from "firebase/firestore";
+import toast, { Toaster } from 'react-hot-toast';
 
 const inter = Inter({ subsets: ["latin"] });
 export const getServerSideProps = async (ctx) => {
@@ -86,6 +88,16 @@ export default function Home({ dogs, userprofile }) {
   localStorage.setItem("dogs", JSON.stringify(dogs));
   localStorage.setItem("userprofile", JSON.stringify(userprofile));
 
+  function notify_favorite () {
+    
+    toast.success('successfully added to favorite');
+  }
+  
+  function notify_send_message() {
+    toast('Message sent!', {
+      icon: '👏',
+    });
+  }
   async function handleLogOut() {
     try {
       setError("");
@@ -210,7 +222,7 @@ export default function Home({ dogs, userprofile }) {
     });
     console.log([combinedId + ".userInfo"]);
     console.log("end of update");
-
+    notify_send_message()
     
     console.log(event.target.message.value);
     console.log(newMessage);
@@ -218,6 +230,7 @@ export default function Home({ dogs, userprofile }) {
     setUser(null);
     setName("");
     setShow(false);
+
   }
 
   async function addFavorite(e, dogID) {
@@ -272,7 +285,9 @@ export default function Home({ dogs, userprofile }) {
           // If server returns the name submitted, that means the form works.
           const result = await response.json();
           console.log(result);
-          alert(`successfully added to favorite`);
+          //alert(`successfully added to favorite`);
+          notify_favorite()
+          
           //router.reload()
           //setFavorite(pre => [...pre, dogID])
         } else {
@@ -439,7 +454,7 @@ export default function Home({ dogs, userprofile }) {
                                 }}
                               >
                                 {dog.name}
-
+                                <div>
                                 <FormControlLabel
                                   control={
                                     <Checkbox
@@ -447,10 +462,14 @@ export default function Home({ dogs, userprofile }) {
                                       checkedIcon={<FavoriteIcon />}
                                       onChange={(e) => addFavorite(e, dog._id)}
                                     />
+                                    
                                   }
                                   Label="Like"
                                   style={{ paddingLeft: 10 }}
+                                 
                                 />
+                                 <Toaster />
+                                </div>
                                 <div style={{padding:"8px 11px 11px"}} ref={ref}>
                                   <a onClick={(e) => openMsg(e, dog)}>
                                     <BsChatDots />
@@ -504,6 +523,7 @@ export default function Home({ dogs, userprofile }) {
                                     </Popover>
                                    
                                   </Overlay>
+                                  <Toaster />
                                 </div>
                               </Card.Title>
                               <div

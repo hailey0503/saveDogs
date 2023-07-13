@@ -1,6 +1,7 @@
 import React from 'react'
 import { useAuth } from '../context/AuthContext'
 import { useRouter } from 'next/navigation'
+import { RotatingLines } from 'react-loader-spinner'
 
 export function withPublic(Components) {
   return function withPublic(props) {
@@ -9,7 +10,15 @@ export function withPublic(Components) {
 	//console.log(auth.currentUser)
 	if (auth.currentUser) {
 		router.replace(`../mypage/${auth.currentUser.uid}`)
-		return <h1>loading...</h1>
+		
+		return <RotatingLines
+		strokeColor="pink"
+		strokeWidth="5"
+		animationDuration="0.75"
+		width="64"
+		visible={true}
+	  />
+	  
 	}
 	return <Components auth = {auth} {...props}/>
   }
@@ -22,7 +31,13 @@ export function withProtected(Components) {
 	  //console.log(auth.currentUser)
 	  if (!auth.currentUser) {
 		  router.replace("../login")
-		  return <h1>loading...</h1>
+		  return <RotatingLines
+		  strokeColor="pink"
+		  strokeWidth="5"
+		  animationDuration="0.75"
+		  width="64"
+		  visible={true}
+		/>
 	  }
 	  return <Components auth = {auth} {...props}/>
 	}
