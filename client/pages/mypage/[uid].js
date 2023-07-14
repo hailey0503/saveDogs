@@ -143,13 +143,32 @@ function myPage( {auth} ) {
               {dogs_resp? dogs_resp.map(dog => 
                 <div key={dog._id} style = {{width: "fit-content"}}>
                     <Col style = {{width: "fit-content"}}>
-                      <Card style={{ width: '20rem', height: '25rem' }}>
-                      <Card.Img variant="top" style={{ width: '19.9rem', height: '15rem'  }} src={" http://localhost:4800/" + dog.image } />
-                      <Card.Body>
-                        <Card.Title>
+                    <Card style={{ width: "20rem", height: "30rem" }}>
+                      <Card.Img variant="top" style={{  width: "19.9rem", height: "18rem" }} src={" http://localhost:4800/" + dog.image } />
+                      <Card.Body
+                      style={{
+                        width: "20rem",
+                        height: "12rem",
+                        padding: 10,
+                        paddingBottom: 15,
+                      }}>
+                        <Card.Title
+                         style={{
+                          display: "flex",
+                          alignItems: "center",
+                          paddingTop: 5,
+                          paddingLeft: "5px"
+                        }}>
                           { dog.name }   <a href={"../chatroom/" + currentUser.uid}><BsChatDots /></a>
                         </Card.Title>
-                        <Card.Text> 
+                        <Card.Text
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          height: "3.5em",
+                          paddingLeft: "5px",
+                         
+                        }}> 
                           { dog.name } wants to go to { dog.airport }
                         </Card.Text>
                         <Link href={{

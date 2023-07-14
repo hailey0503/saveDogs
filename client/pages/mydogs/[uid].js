@@ -96,6 +96,9 @@ function mydogs({ auth }) {
     router.reload();
   };
 
+  const handleOverlayClose = () => {
+    setShow(false);
+  };
   const handleSubmit = async (event, dog) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault();
@@ -197,7 +200,8 @@ function mydogs({ auth }) {
                       </Card.Text>
                       <div className="float-container">
                         <div ref={ref}>
-                          <Button className="float-child" onClick={updateClick}>
+                          <Button className="float-child" onClick={updateClick}
+                          >
                             <GrEdit />
                           </Button>
 
@@ -207,9 +211,10 @@ function mydogs({ auth }) {
                             placement="right"
                             container={ref}
                             containerPadding={20}
+                                   
                           >
                             <Popover id="update-popover-contained">
-                              <Popover.Body>
+                              <Popover.Body width="40rem" height="90">
                                 <Form onSubmit={(e) => handleSubmit(e, dog)}>
                                   <Row>
                                     <Col>
@@ -218,6 +223,7 @@ function mydogs({ auth }) {
                                         type="text"
                                         id="name"
                                         placeholder={dog.name}
+                                      
                                       />
                                     </Col>
                                     <Col>
@@ -276,7 +282,9 @@ function mydogs({ auth }) {
                                   <Form.Control
                                     as="textarea"
                                     id="message"
-                                    rows={3}
+                                    rows={6}
+                                    cols = {150}
+                                    
                                   />
                                   <br />
                                   <Button variant="primary" type="submit">

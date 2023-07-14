@@ -537,7 +537,8 @@ export default function Home({ dogs, userprofile }) {
                                     display: "flex",
                                     alignItems: "center",
                                     height: "3.5em",
-                                    paddingLeft: "5px"
+                                    paddingLeft: "5px",
+                                   
                                   }}
                                 >
                                   {dog.name} wants to go to {dog.airport}
