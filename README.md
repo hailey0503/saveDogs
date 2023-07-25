@@ -1,20 +1,34 @@
 # saveDogs
 Save Dogs
-Save Dogs Logo
 
+****Volunteers, shelters, and new dog families meet here!****
 Save Dogs is a project aimed at facilitating the adoption of stray dogs from South Korea to overseas countries. Our service connects volunteer transporters with dog shelters, ensuring a safe and reliable journey for the rescued dogs.
 
-Introduction
+****Product Overview****
 In South Korea, there is a significant number of stray dogs in need of homes. However, finding suitable adopters locally can be challenging. Save Dogs addresses this issue by coordinating international adoptions. We match volunteer transporters who are traveling to specific destinations with dog shelters that have dogs ready for adoption.
 
-Features
-Transporter Matching: Our platform allows transporters traveling abroad to offer their help in transporting dogs. Dog shelters can search for available transporters heading to their destination and request assistance.
+****Features****
 
-Shelter Matching: Shelters can list dogs available for adoption, including their profiles, photos, and medical histories. Transporters can search for shelters in their destination country and choose dogs to transport based on their preferences.
+Shelter-Volunteer Matching: Shelters can list dogs available for adoption, including their profiles, photos, and medical histories. Transporters can search for shelters in their destination country and choose dogs to transport based on their preferences.
 
-Booking and Tracking: Once a transporter and shelter are matched, they can communicate and make arrangements through our platform. Transporters can update the status of the journey, allowing shelters and adopters to track the dog's progress.
+Easy communication: Once a transporter and shelter are matched, they can communicate and make arrangements through our platform. Transporters can update the status of the journey, allowing shelters and adopters to track the dog's progress via an in-app real-time chat feature.
 
-Community and Reviews: Our service includes a community section where transporters, shelters, and adopters can share their experiences, provide feedback, and support each other in the adoption process.
+Reliable Community and Reviews: Our service includes a community section where transporters, shelters, and adopters can share their experiences, provide feedback, and support each other in the adoption process.
+
+
+🚧 This product is currently under construction, and we are actively working on enhancing it to provide you with an exceptional user experience.
+
+🔨 Our dedicated team is focused on ensuring seamless functionality and working tirelessly to eliminate any bugs that may arise during development.
+
+💻 With a strong emphasis on UI/UX design, we are constantly refining the interface to create an intuitive and visually appealing experience for our users.
+
+📈 Rest assured, we have exciting plans to introduce more features that will elevate the product's capabilities and cater to your evolving needs.
+
+🛠️ Your feedback and support are highly valuable to us as we strive to deliver a top-notch Full Stack application that exceeds your expectations.
+
+Stay tuned for updates as we continue to evolve and improve this project. Thank you for being part of our journey!
+
+Feel free to explore the project's code and documentation to get a glimpse of what's to come. Let's build something amazing together! 😊
 
 Technologies Used
 The Save Dogs project utilizes the following technologies:
