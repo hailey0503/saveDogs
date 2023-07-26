@@ -30,13 +30,37 @@ Stay tuned for updates as we continue to evolve and improve this project. Thank 
 
 Feel free to explore the project's code and documentation to get a glimpse of what's to come. Let's build something amazing together! 😊
 
-Technologies Used
+Technologies Used & System Architecture
 The Save Dogs project utilizes the following technologies:
 
-Client: Next.js 13, React, HTML, CSS, JavaScript
-Backend: Node.js, Express.js, Mongoose, MongoDB
-Authentication: Firebase auth
-Deployment: AWS
+Next.js application with Node.js, MongoDB, Firebase, Google Maps API, Vercel, Docker, and AWS EC2 might look like the following:
+
+1. **Frontend:**
+   - Next.js: React-based framework for server-rendered React applications.
+   - Google Maps API: Integration for interactive map features.
+
+2. **Backend:**
+   - Node.js: Server-side runtime for building scalable network applications.
+   - MongoDB: NoSQL database for storing and retrieving data.
+   - Firebase: Backend-as-a-Service (BaaS) for authentication, real-time database, and cloud functions.
+
+3. **Deployment and Hosting:**
+   - Vercel: Deploy Next.js applications with ease and continuous deployment.
+   - Docker: Containerization for easy deployment and scaling.
+   - AWS EC2: Virtual server instances for hosting backend services.
+
+**System Flow:**
+1. Frontend is built using Next.js, which allows for server-side rendering and improves the user experience with faster page loads.
+2. The frontend communicates with the backend, which is powered by Node.js, using RESTful APIs or GraphQL for data exchange.
+3. MongoDB stores and retrieves data for various features of the application, providing a scalable and flexible database solution.
+4. Firebase handles user authentication and real-time data synchronization, ensuring a smooth user experience.
+5. Google Maps API is integrated into the frontend to provide interactive map features for users.
+6. Vercel is used for hosting and deploying the frontend application, providing automatic deployment with GitHub integration.
+7. Docker allows for easy containerization of the backend services, ensuring consistent deployment across different environments.
+8. For more complex backend requirements or long-running tasks, some services can be deployed on AWS EC2 instances for scalability and performance.
+
+
+
 Getting Started
 To set up and run the Save Dogs project locally, please follow the instructions in the client and backend directories.
 
